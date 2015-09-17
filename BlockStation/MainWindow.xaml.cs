@@ -51,7 +51,7 @@ namespace BlockStation
             server = s;
 
             //!
-            ServerDir.Content = server.dir;
+            //ServerDir.Content = server.dir;
 
             // Servereinstellungen laden
             loadServerInfo();
@@ -68,8 +68,7 @@ namespace BlockStation
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
             server.start_server();
-            ReloadServer.IsEnabled = true;
-            Shutdown.IsEnabled = true;
+            StopServer.IsEnabled = true;
             StartServer.IsEnabled = false;
             EnterCommand.IsEnabled = true;
             CommandBar.IsEnabled = true;
@@ -97,18 +96,6 @@ namespace BlockStation
             CommandBar.Text = "";
         }
 
-        private void Shutdown_Click(object sender, RoutedEventArgs e)
-        {
-            server.stop_server();
-            ReloadServer.IsEnabled = false;
-            Shutdown.IsEnabled = false;
-            StartServer.IsEnabled = true;
-            EnterCommand.IsEnabled = false;
-            CommandBar.IsEnabled = false;
-            updateTimer.Enabled = false;
-            RestartServer.IsEnabled = false;
-        }
-
         private void MainWindow1_Closed(object sender, EventArgs e)
         {
             if(server.IsServerRunning())
@@ -129,8 +116,8 @@ namespace BlockStation
             Dispatcher.Invoke(new Action(() =>
             {
                 ServerOutput.Text = server.getServerOutput();
-                ServerStatus.Content = server.ServerStatus;
-                ServerTitle.Content = server.prop_server_name;
+                //ServerStatus.Content = server.ServerStatus;
+                ServerName.Content = server.prop_server_name;
             }
             ));
         }
@@ -241,6 +228,17 @@ namespace BlockStation
         private void toolServerProperties_Click(object sender, RoutedEventArgs e)
         {
             tabControl.SelectedValue = tabServerProperties;
+        }
+
+        private void StopServer_Click(object sender, RoutedEventArgs e)
+        {
+            server.stop_server();
+            StopServer.IsEnabled = false;
+            StartServer.IsEnabled = true;
+            EnterCommand.IsEnabled = false;
+            CommandBar.IsEnabled = false;
+            updateTimer.Enabled = false;
+            RestartServer.IsEnabled = false;
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlockStation"
         mc:Ignorable="d"
-        Title="BlockStation " MinHeight="350" MinWidth="704.449" Width="647.549" Height="678.382" WindowStartupLocation="CenterScreen" Icon="logo.ico" Closed="MainWindow1_Closed">
+        Title="BlockStation " MinHeight="350" MinWidth="704.449" Width="772.449" Height="705.382" WindowStartupLocation="CenterScreen" Icon="logo.ico" Closed="MainWindow1_Closed">
 
     <Grid Margin="0">
         <Grid.Background>
@@ -19,16 +19,15 @@
             <RowDefinition Height="359*"/>
             <RowDefinition Height="11*"/>
         </Grid.RowDefinitions>
-        <TabControl x:Name="tabControl" Margin="10" Grid.RowSpan="2" Grid.ColumnSpan="2">
-            <TabItem x:Name="tabOverview" Header="Übersicht" Height="22" Margin="-2,0"/>
-            <TabItem x:Name="tabServerConsole" Header="Server Konsole" Margin="2,0,-6,0" Height="22">
+        <TabControl x:Name="tabControl" Margin="10,75,9,10" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <TabItem x:Name="tabServerConsole" Header="Server Konsole" Margin="-2,0" Height="22">
                 <Grid Background="White">
                     <TextBox x:Name="ServerOutput" Margin="10,10,10,43" TextWrapping="Wrap" Background="Black" Foreground="White" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" TextChanged="ServerOutput_TextChanged" FontFamily="Courier New" IsReadOnly="True" BorderBrush="Black"/>
                     <TextBox x:Name="CommandBar" Margin="10,0,10,10" TextWrapping="Wrap" ToolTip="Befehl eingeben..." IsEnabled="False" VerticalAlignment="Bottom" Height="28"/>
                     <Button x:Name="EnterCommand" Content="Enter" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="28" Click="EnterCommand_Click" IsEnabled="False" IsDefault="True" HorizontalAlignment="Right" Width="76"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="tabServerProperties" Header="Einstellungen" Margin="70,0,-74,0" Height="22">
+            <TabItem x:Name="tabServerProperties" Header="Einstellungen" Margin="66,0,-70,0" Height="22">
                 <Grid Background="White">
                     <GroupBox x:Name="Allgemein" Header="Allgemein" Margin="10,10,10,0" VerticalAlignment="Top" Height="86" BorderBrush="Black">
                         <Grid Margin="0,0,-2,-10">
@@ -94,14 +93,20 @@
                             <TextBox x:Name="enable_query" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="407,35,0,0"/>
                         </Grid>
                     </GroupBox>
-                    <Button x:Name="Apply" Content="Einstellungen übernehmen" Margin="0,0,10,14" Click="Apply_Click" HorizontalAlignment="Right" Width="224" IsEnabled="False" Height="41" VerticalAlignment="Bottom"/>
+                    <Button x:Name="Apply" Content="Einstellungen übernehmen" Margin="0,0,10,14" Click="Apply_Click" HorizontalAlignment="Right" Width="224" Height="41" VerticalAlignment="Bottom"/>
                     <Button x:Name="Help" Content="Hilfe öffnen" Margin="10,0,0,14" Click="Help_Click" HorizontalAlignment="Left" Width="224" Height="41" VerticalAlignment="Bottom"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="tabWhitelist" Header="Whitelist" Height="22" Margin="-77,0,71,0">
+            <TabItem x:Name="tabWhitelist" Header="Whitelist" Height="22" Margin="-81,0,75,0">
                 <Grid Background="White"/>
             </TabItem>
         </TabControl>
+        <Grid Height="70" VerticalAlignment="Top" Grid.ColumnSpan="2" Background="White">
+            <Label x:Name="ServerName" Content="Unbekannter Server" FontSize="48" Margin="10,0,0,0" FontFamily="Microsoft YaHei UI Light" BorderBrush="Black" Foreground="Black" Background="White"/>
+            <Button x:Name="StartServer" Content="Starten" HorizontalAlignment="Right" Margin="0,6,6,0" VerticalAlignment="Top" Width="100" Click="StartServer_Click"/>
+            <Button x:Name="StopServer" Content="Ausschalten" Margin="0,25,6,0" VerticalAlignment="Top" Click="StopServer_Click" HorizontalAlignment="Right" Width="100" IsEnabled="False"/>
+            <Button x:Name="RestartServer" Content="Neustarten" HorizontalAlignment="Right" Margin="0,44,6,6" Width="100" Click="RestartServer_Click" IsEnabled="False"/>
+        </Grid>
 
     </Grid>
 </Window>
