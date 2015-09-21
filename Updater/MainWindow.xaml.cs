@@ -31,7 +31,7 @@ namespace Updater
 
             // Lädt die Updatedatei herunter
             var downloader = new WebClient();
-            downloader.DownloadFile("https://raw.githubusercontent.com/haecker-felix/BlockStation/master/BlockStation/blockstation.update", System.IO.Path.GetTempPath() + "blocklauncher.update");
+            downloader.DownloadFile("https://raw.githubusercontent.com/haecker-felix/BlockStation/master/BlockStation/blockstation.update", System.IO.Path.GetTempPath() + "blockstation.update");
             StreamReader update_file = new StreamReader(System.IO.Path.GetTempPath() + "blockstation.update");
             update_file.Close();
 
