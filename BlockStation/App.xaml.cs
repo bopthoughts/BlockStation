@@ -27,7 +27,7 @@
         public static string AppVersion = "Preview";
         public static string AppVersionText = "INDEV";
         public static string BuildDate = "16.09.2015";
-        public static string BuildVersion = "16092015r3";
+        public static string BuildVersion = "20150919";
         public static string CopyHint = "Sie sind nicht zur Weitergabe dieses Programmes berechtigt.";
         public static string Autor = "Felix Häcker";
         //-----------------------------------------------------------------------------------------------

@@ -13,5 +13,6 @@ namespace Updater
     /// </summary>
     public partial class App : Application
     {
+        public static string BuildVersion { get; internal set; }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlockStation"
         mc:Ignorable="d"
-        Title="ServerSelector" Height="201" Width="641">
+        Title="ServerSelector" Height="201" Width="641" ResizeMode="NoResize">
     <Grid>
         <Label x:Name="label" Content="Bitte wählen sie einen PocketMine-MP Server aus." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="456"/>
         <TextBox x:Name="ServerDir" Height="23" Margin="10,36,21,0" TextWrapping="Wrap" VerticalAlignment="Top" IsEnabled="False"/>
@@ -14,9 +14,9 @@
         <Button x:Name="button1" Content="PocketMine Homepage öffnen" Margin="422,64,21,0" VerticalAlignment="Top" Height="23" Click="button1_Click"/>
         <Button x:Name="OpenServer" Content="Öffnen" Margin="105,64,0,0" VerticalAlignment="Top" Height="23" Click="button2_Click" IsEnabled="False" HorizontalAlignment="Left" Width="110"/>
         <Button x:Name="Info" Content="Info" Margin="330,64,0,0" VerticalAlignment="Top" Height="23" Click="Info_Click" HorizontalAlignment="Left" Width="87"/>
-        <Label x:Name="label2" Content="Es ist eine neue Version von BlockStation verfügbar." HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" FontWeight="Bold" Foreground="Red"/>
-        <Button x:Name="OpenUpdater" Content="Updater öffnen" HorizontalAlignment="Left" Margin="330,140,0,0" VerticalAlignment="Top" Width="136"/>
-        <Button x:Name="SearchUpdates" Content="Nach Updates suchen" HorizontalAlignment="Left" Margin="471,140,0,0" VerticalAlignment="Top" Width="152" Click="SearchUpdates_Click"/>
+        <Label x:Name="updatetext" Content="" Margin="10,123,0,0" FontWeight="Bold" Foreground="Red" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="306"/>
+        <Button x:Name="OpenUpdater" Content="Updater öffnen" Margin="319,123,0,0" IsEnabled="False" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="138" Click="OpenUpdater_Click"/>
+        <Button x:Name="SearchUpdates" Content="Nach Updates suchen" Margin="460,123,0,0" Click="SearchUpdates_Click" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="154"/>
 
     </Grid>
 </Window>

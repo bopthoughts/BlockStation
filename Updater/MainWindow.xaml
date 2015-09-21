@@ -8,9 +8,11 @@
         Title="Updater" Height="151" Width="467">
     <Grid>
         <Label x:Name="label" Content="Es ist eine neue Version von BlockStation verfügbar! Das Update wird empfohlen." Margin="10,10,10,0" VerticalAlignment="Top" Height="27"/>
-        <Button x:Name="button" Content="Neue Version installieren!" HorizontalAlignment="Center" Margin="0,77,0,0" VerticalAlignment="Top" Width="292"/>
-        <ProgressBar HorizontalAlignment="Left" Height="30" Margin="84,42,0,0" VerticalAlignment="Top" Width="292" Value="1"/>
-        <Label x:Name="label1" Content="Update wird heruntergeladen..." HorizontalAlignment="Left" Margin="84,42,0,0" VerticalAlignment="Top" Width="292" Height="30"/>
+        <Button x:Name="button" Content="Neue Version installieren!" HorizontalAlignment="Center" Margin="10,37,10,0" VerticalAlignment="Top" Width="439"/>
+        <Label x:Name="Verfügbare_Build_" Content="Verfügbare Build:" HorizontalAlignment="Left" Margin="11,62,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label2" Content="Hinweis:" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="new_build" Content="00000000" HorizontalAlignment="Left" Margin="112,62,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="update_hint" Content="-" HorizontalAlignment="Left" Margin="64,88,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
