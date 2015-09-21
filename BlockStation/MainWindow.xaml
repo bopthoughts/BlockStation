@@ -112,18 +112,18 @@
                         <ColumnDefinition Width="79*"/>
                     </Grid.ColumnDefinitions>
                     <Label x:Name="label" Content="Mithilfe der Whitelistfunktion können nur bestimmte Spieler auf den Server zugelassen werden." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <ListView x:Name="Whitelist" Margin="10,41,10,38" BorderBrush="Black" Grid.ColumnSpan="2">
+                    <ListView x:Name="Whitelist" Margin="10,41,10,38" BorderBrush="Black" Grid.ColumnSpan="2" IsEnabled="False">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn/>
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button x:Name="AddPlayerToWhitelist" Content="Spieler hinzufügen" Margin="155,0,0,10" Click="AddPlayerToWhitelist_Click" Height="23" VerticalAlignment="Bottom" Grid.Column="1" BorderBrush="Black" HorizontalAlignment="Left" Width="146"/>
+                    <Button x:Name="AddPlayerToWhitelist" Content="Spieler hinzufügen" Margin="155,0,0,10" Click="AddPlayerToWhitelist_Click" Height="23" VerticalAlignment="Bottom" Grid.Column="1" BorderBrush="Black" HorizontalAlignment="Left" Width="146" IsEnabled="False"/>
                     <Button x:Name="ActivateWhitelist" Content="Aktivieren" Margin="0,10,10,0" VerticalAlignment="Top" RenderTransformOrigin="0.28,-0.45" HorizontalAlignment="Right" Width="75" Click="ActivateWhitelist_Click" Grid.Column="1"/>
                     <Button x:Name="DeactivateWhitelist" Content="Deaktiviern" HorizontalAlignment="Right" Margin="0,10,90,0" VerticalAlignment="Top" Width="75" Click="DeactivateWhitelist_Click" Grid.Column="1"/>
-                    <Button x:Name="AddPlayerToWhitelist_Copy" Content="Spieler entfernen" Margin="0,0,10,10" Click="Help_Click" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="164" Grid.Column="1" BorderBrush="Black"/>
-                    <TextBox x:Name="AddPlayerToWhitelistName" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Width="182" Grid.ColumnSpan="2" BorderBrush="Black" Height="23" VerticalAlignment="Bottom"/>
+                    <Button x:Name="AddPlayerToWhitelist_Copy" Content="Spieler entfernen" Margin="0,0,10,10" Click="Help_Click" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="164" Grid.Column="1" BorderBrush="Black" IsEnabled="False"/>
+                    <TextBox x:Name="AddPlayerToWhitelistName" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Width="182" Grid.ColumnSpan="2" BorderBrush="Black" Height="23" VerticalAlignment="Bottom" IsEnabled="False"/>
                 </Grid>
             </TabItem>
         </TabControl>

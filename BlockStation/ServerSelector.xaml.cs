@@ -91,7 +91,7 @@ namespace BlockStation
             downloader.DownloadFile("https://raw.githubusercontent.com/haecker-felix/BlockStation/master/BlockStation/blockstation.update", System.IO.Path.GetTempPath() + "blocklauncher.update");
 
             StreamReader streamReader = new StreamReader(System.IO.Path.GetTempPath() + "blockstation.update");
-            string update = streamReader.ReadToEnd();
+            string update = streamReader.ReadLine();
             streamReader.Close();
 
             if(Int32.Parse(update) > Int32.Parse(App.BuildVersion))
@@ -115,6 +115,7 @@ namespace BlockStation
 
             updater.Verb = "runas";
             System.Diagnostics.Process.Start(updater);
+            this.Close();
         }
     }
 }
