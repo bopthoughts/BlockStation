@@ -8,9 +8,21 @@ using System.Windows.Input;
 using System.Threading;
 using System.IO;
 using Kajabity.Tools.Java;
+using Microsoft.VisualBasic;
 
 namespace BlockStation
 {
+    public class Player
+    {
+        public string Name { get; set; }
+
+        public override string ToString()
+        {
+            return this.Name;
+        }
+
+    }
+
 
     public class PocketMine_MP_Server
     {
@@ -52,10 +64,14 @@ namespace BlockStation
         public string prop_gamemode = "";
         public string prop_level_type = "";
 
-
+        // Whitelist Player
+    
+        public List<Player> whitelist_player;
 
         public PocketMine_MP_Server(string d)
         {
+            whitelist_player = new List<Player>();
+
             dir = d;
             read_server_props();
         }
@@ -96,8 +112,8 @@ namespace BlockStation
                     return;
                 }
 
-                PocketMineProcess.BeginOutputReadLine();
                 PocketMineProcess.StandardInput.WriteLine("bin\\php\\php.exe " + "PocketMine-MP.phar --disable-ansi %*");
+                PocketMineProcess.BeginOutputReadLine();
                 IsServerRunning();
 
             }
@@ -108,6 +124,9 @@ namespace BlockStation
         {
             ServerOutput += "\n";
             ServerOutput += e.Data;
+
+            if (ServerOutput.Length > 20000)
+                ServerOutput = ServerOutput.Substring(20000, 0); 
         }
 
         // Lädt den Server neu
@@ -158,7 +177,8 @@ namespace BlockStation
         // Sendet ein Befehl an den Server
         public void send_command (string command)
         {
-            PocketMineProcess.StandardInput.WriteLine(command);
+            if(PocketMineProcess != null)
+                PocketMineProcess.StandardInput.WriteLine(command);
         }
 
         // Lese Servereinstellungen
@@ -224,44 +244,44 @@ namespace BlockStation
                 "auto-save=" + prop_auto_save
             };
             System.IO.File.WriteAllLines(dir + "server.properties", lines);
+        }
 
-            // FEHLERHAFTER CODE!!!!!!!!!!!!
+        // Lese Whitelist
+        public void read_whitelist()
+        {
+            StreamReader tmp = new StreamReader(dir + "white-list.txt");
 
-            ////FileStream fileStream = new FileStream(dir + "server.properties", FileMode.Open);
-            ////JavaProperties server_settings = new JavaProperties();
-            ////server_settings.Load(fileStream);
-            ////fileStream.Close();
+            string line;
+            int counter = 0;
 
-            ////server_settings.SetProperty("server-name", prop_server_name);
-            ////server_settings.SetProperty("server-port", prop_server_port);
-            ////server_settings.SetProperty("memory-limit", prop_memory_limit);
-            ////server_settings.SetProperty("gamemode", prop_gamemode);
-            ////server_settings.SetProperty("max-players", prop_max_players);
-            ////server_settings.SetProperty("spawn-protection", prop_spawn_protection);
-            ////server_settings.SetProperty("white-list", prop_white_list);
-            ////server_settings.SetProperty("enable-query", prop_enable_query);
-            ////server_settings.SetProperty("enable-rcon", prop_enable_rcon);
-            ////server_settings.SetProperty("motd", prop_motd);
-            ////server_settings.SetProperty("announce-player-achievements", prop_announce_player_achievements);
-            ////server_settings.SetProperty("allow-flight", prop_allow_flight);
-            ////server_settings.SetProperty("spawn-animals", prop_spawn_animals);
-            ////server_settings.SetProperty("spawn-mobs", prop_spawn_mobs);
-            ////server_settings.SetProperty("force-gamemode", prop_force_gamemode);
-            ////server_settings.SetProperty("hardcore", prop_hardcore);
-            ////server_settings.SetProperty("pvp", prop_pvp);
-            ////server_settings.SetProperty("difficulty", prop_difficulty);
-            ////server_settings.SetProperty("generator-settings", prop_generator_settings);
-            ////server_settings.SetProperty("level-name", prop_level_name);
-            ////server_settings.SetProperty("level-seed", prop_level_seed);
-            ////server_settings.SetProperty("level-type", prop_level_type);
-            ////server_settings.SetProperty("rcon.password", prop_rcon_password);
-            ////server_settings.SetProperty("auto-save", prop_auto_save);
+            while ((line = tmp.ReadLine()) != null)
+            {
+                whitelist_player.Add(new Player { Name = line });
+                counter++;
+            }
 
-            ////FileStream outStream = File.OpenWrite(dir + "server.properties");
-            ////server_settings.Store(outStream, "BlockStation");
-            ////outStream.Flush();
-            ////outStream.Close();
-            ////outStream = null;
+            tmp.Close();
+        }
+
+        // Spieler zur Whitelist hinzufügen
+        public void add_player_to_whitelist(Player player)
+        {
+            whitelist_player.Add(player);
+            send_command("whitelist add" + player.Name);
+        }
+
+        // Spieler von der Whitelist entfernen
+        public void remove_player_from_whitelist (Player player)
+        {
+            whitelist_player.Remove(player);
+            send_command("whitelist remove" + player.Name);
+        }
+
+        // Whitelist schreiben
+        public void write_whitelist()
+        {
+            StreamReader tmp = new StreamReader(dir + "white-list.txt");
+            tmp.Close();
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Windows;
-using Microsoft.Win32;
-using System.Threading;
 using System.Windows.Controls;
 using System.Timers;
+using System.Collections.Generic;
+using System.IO;
 
 namespace BlockStation
 {
@@ -14,6 +13,7 @@ namespace BlockStation
 
         PocketMine_MP_Server server;
         System.Timers.Timer updateTimer;
+
 
         // Server Propteries
         public string prop_server_name = "";
@@ -50,12 +50,25 @@ namespace BlockStation
             //Setzt den Server
             server = s;
 
-            //!
-            //ServerDir.Content = server.dir;
+            //Whitelist einstellungen laden
+            if (server.prop_white_list == "1")
+            {
+                ActivateWhitelist.IsEnabled = false;
+            }
+            else if(server.prop_white_list == "0")
+            {
+                DeactivateWhitelist.IsEnabled = false;
+            }
+            else
+            {
+                MessageBox.Show("Es konnte nicht geprüft werden, ob die Whitelist aktiviert ist.", "Fehler!");
+            }
+            Whitelist.ItemsSource = server.whitelist_player;
 
             // Servereinstellungen laden
             loadServerInfo();
             loadServerProperties();
+            server.read_whitelist();
 
 
             // Timer für updates
@@ -73,7 +86,7 @@ namespace BlockStation
             EnterCommand.IsEnabled = true;
             CommandBar.IsEnabled = true;
             RestartServer.IsEnabled = true;
-
+            HelpCommand.IsEnabled = true;
             updateTimer.Enabled = true;
 
 
@@ -113,13 +126,46 @@ namespace BlockStation
 
         private void loadServerInfo()
         {
-            Dispatcher.Invoke(new Action(() =>
+            Query.MCQuery query = new Query.MCQuery();
+            query.Connect("localhost");
+            try
             {
-                ServerOutput.Text = server.getServerOutput();
-                //ServerStatus.Content = server.ServerStatus;
-                ServerName.Content = server.prop_server_name;
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    ServerOutput.Text = server.getServerOutput();
+                    ServerName.Content = server.prop_server_name;
+                    var info = query.Info();
+                    if (query.Success())
+                    {
+
+                        query_status.Content = "Online";
+                        query_status.Foreground = System.Windows.Media.Brushes.Green;
+                        query_motd.Content = info.Name;
+                        query_player_online.Content = info.OnlinePlayers;
+                        query_max_player.Content = info.MaxPlayers;
+                        query_latency.Content = info.Latency;
+                        query_pm_version.Content = info.Plugins;
+                    }
+                    else
+                    {
+                        query_status.Content = "Offline";
+                        query_status.Foreground = System.Windows.Media.Brushes.Red;
+                        query_motd.Content = "";
+                        query_player_online.Content = "";
+                        query_max_player.Content = "";
+                        query_latency.Content = "";
+                        query_pm_version.Content = "";
+                    }
+                }
+                ));
             }
-            ));
+            catch
+            {
+                Console.WriteLine("Aborted.");
+            }
+
+
+            
         }
 
         private void loadServerProperties()
@@ -215,21 +261,6 @@ namespace BlockStation
             loadServerProperties();
         }
 
-        private void ReloadServer_Click(object sender, RoutedEventArgs e)
-        {
-            server.reload_server();
-        }
-
-        private void ToolServerConsole_Click(object sender, RoutedEventArgs e)
-        {
-            tabControl.SelectedValue = tabServerConsole;
-        }
-
-        private void toolServerProperties_Click(object sender, RoutedEventArgs e)
-        {
-            tabControl.SelectedValue = tabServerProperties;
-        }
-
         private void StopServer_Click(object sender, RoutedEventArgs e)
         {
             server.stop_server();
@@ -239,6 +270,44 @@ namespace BlockStation
             CommandBar.IsEnabled = false;
             updateTimer.Enabled = false;
             RestartServer.IsEnabled = false;
+            HelpCommand.IsEnabled = false;
+            loadServerInfo();
+        }
+
+        private void DeactivateWhitelist_Click(object sender, RoutedEventArgs e)
+        {
+            server.prop_white_list = "0";
+            server.send_command("whitelist off");
+            loadServerProperties();
+            ActivateWhitelist.IsEnabled = true;
+            DeactivateWhitelist.IsEnabled = false;
+        }
+
+        private void ActivateWhitelist_Click(object sender, RoutedEventArgs e)
+        {
+            server.prop_white_list = "1";
+            server.send_command("whitelist on");
+            loadServerProperties();
+            ActivateWhitelist.IsEnabled = false;
+            DeactivateWhitelist.IsEnabled = true;
+        }
+
+        private void RefreshSettings_Click(object sender, RoutedEventArgs e)
+        {
+            loadServerInfo();
+            loadServerProperties();
+        }
+
+        private void HelpCommand_Click(object sender, RoutedEventArgs e)
+        {
+            server.send_command("help");
+        }
+
+        private void AddPlayerToWhitelist_Click(object sender, RoutedEventArgs e)
+        {
+            Player tmp = new Player();
+            tmp.Name = AddPlayerToWhitelistName.Text;
+            server.add_player_to_whitelist(tmp);
         }
     }
 }

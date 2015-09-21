@@ -62,6 +62,7 @@
     <Compile Include="JavaPropertyReader.cs" />
     <Compile Include="JavaPropertyWriter.cs" />
     <Compile Include="ParseException.cs" />
+    <Compile Include="Query.cs" />
     <Compile Include="ServerSelector.xaml.cs">
       <DependentUpon>ServerSelector.xaml</DependentUpon>
     </Compile>

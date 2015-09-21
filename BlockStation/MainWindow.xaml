@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlockStation"
         mc:Ignorable="d"
-        Title="BlockStation " MinHeight="350" MinWidth="704.449" Width="772.449" Height="705.382" WindowStartupLocation="CenterScreen" Icon="logo.ico" Closed="MainWindow1_Closed">
+        Title="BlockStation "  Width="776" Height="567.525" WindowStartupLocation="CenterScreen" Icon="logo.ico" Closed="MainWindow1_Closed">
 
     <Grid Margin="0">
         <Grid.Background>
@@ -19,93 +19,135 @@
             <RowDefinition Height="359*"/>
             <RowDefinition Height="11*"/>
         </Grid.RowDefinitions>
-        <TabControl x:Name="tabControl" Margin="10,75,9,10" Grid.RowSpan="2" Grid.ColumnSpan="2">
+        <TabControl x:Name="tabControl" Margin="10,75,10,49" Grid.ColumnSpan="2">
             <TabItem x:Name="tabServerConsole" Header="Server Konsole" Margin="-2,0" Height="22">
                 <Grid Background="White">
                     <TextBox x:Name="ServerOutput" Margin="10,10,10,43" TextWrapping="Wrap" Background="Black" Foreground="White" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" TextChanged="ServerOutput_TextChanged" FontFamily="Courier New" IsReadOnly="True" BorderBrush="Black"/>
-                    <TextBox x:Name="CommandBar" Margin="10,0,10,10" TextWrapping="Wrap" ToolTip="Befehl eingeben..." IsEnabled="False" VerticalAlignment="Bottom" Height="28"/>
-                    <Button x:Name="EnterCommand" Content="Enter" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="28" Click="EnterCommand_Click" IsEnabled="False" IsDefault="True" HorizontalAlignment="Right" Width="76"/>
+                    <TextBox x:Name="CommandBar" Margin="85,0,10,10" TextWrapping="Wrap" ToolTip="Befehl eingeben..." IsEnabled="False" VerticalAlignment="Bottom" Height="28" FontFamily="Courier New" FontSize="24"/>
+                    <Button x:Name="EnterCommand" Content="Enter" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="28" Click="EnterCommand_Click" IsEnabled="False" HorizontalAlignment="Right" Width="76" IsDefault="True"/>
+                    <Button x:Name="HelpCommand" Content="Hilfe" Margin="10,0,0,10" VerticalAlignment="Bottom" Height="28" Click="HelpCommand_Click" IsEnabled="False" HorizontalAlignment="Left" Width="76"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabServerProperties" Header="Einstellungen" Margin="66,0,-70,0" Height="22">
                 <Grid Background="White">
-                    <GroupBox x:Name="Allgemein" Header="Allgemein" Margin="10,10,10,0" VerticalAlignment="Top" Height="86" BorderBrush="Black">
-                        <Grid Margin="0,0,-2,-10">
-                            <Label x:Name="label1" Content="Name:" HorizontalAlignment="Left" Margin="19,5,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label2" Content="Port:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="380,5,0,0"/>
-                            <Label x:Name="label10" Content="Nachricht:" HorizontalAlignment="Left" Margin="0,31,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label5" Content="Max. Spieleranzahl:" HorizontalAlignment="Left" Margin="303,31,0,0" VerticalAlignment="Top"/>
-                            <TextBox x:Name="server_name" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="230" Margin="68,9,0,0"/>
-                            <TextBox x:Name="motd" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="230" Margin="68,35,0,0"/>
-                            <TextBox x:Name="server_port" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="92" Margin="419,9,0,0"/>
-                            <TextBox x:Name="max_players" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="92" Margin="419,35,0,0"/>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox x:Name="World" Header="Welt" Margin="10,101,10,0" VerticalAlignment="Top" Height="136" BorderBrush="Black">
-                        <Grid Margin="0,0,-2,-10">
-                            <Label x:Name="label22" Content="Leveltyp:" HorizontalAlignment="Left" Margin="90,5,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label20" Content="Levelname:" HorizontalAlignment="Left" Margin="77,31,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label19" Content="Generator Einstellungen:" HorizontalAlignment="Left" Margin="303,5,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label24" Content="Automatisches Speichern:" HorizontalAlignment="Left" Margin="0,83,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label13" Content="Tiere spawnen:" HorizontalAlignment="Left" Margin="57,57,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.105,-0.385"/>
-                            <Label x:Name="label14" Content="Monster spawnen:" HorizontalAlignment="Left" Margin="336,57,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.079,-0.423"/>
-                            <Label x:Name="test" Content="Levelseed:" HorizontalAlignment="Left" Margin="379,31,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label6" Content="Spawn Schutzbereich:" HorizontalAlignment="Left" Margin="318,83,0,0" VerticalAlignment="Top"/>
-                            <TextBox x:Name="level_name" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="151,35,0,0"/>
-                            <TextBox x:Name="level_type" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="151,9,0,0"/>
-                            <TextBox x:Name="spawn_animals" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="151,61,0,0"/>
-                            <TextBox x:Name="auto_save" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="151,87,0,0"/>
-                            <TextBox x:Name="spawn_protection" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="448,87,0,0"/>
-                            <TextBox x:Name="generator_settings" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="448,9,0,0"/>
-                            <TextBox x:Name="spawn_mobs" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="448,61,0,0"/>
-                            <TextBox x:Name="level_seed" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="448,35,0,0"/>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox x:Name="Game" Header="Spiel" Margin="10,242,10,0" VerticalAlignment="Top" Height="138" BorderBrush="Black">
-                        <Grid Margin="0,0,-2,-10">
-                            <Label x:Name="label18" Content="Schwierigkeitsgrad:" HorizontalAlignment="Left" Margin="310,31,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label15" Content="Spielmodus erzwingen:" HorizontalAlignment="Left" Margin="0,31,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label12" Content="Fliegen erlauben:" HorizontalAlignment="Left" Margin="322,5,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label16" Content="Hardcore Modus:" HorizontalAlignment="Left" Margin="30,57,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label11" Content="Spieler Achivements:" HorizontalAlignment="Left" Margin="303,57,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label4" Content="Spielmodus:" HorizontalAlignment="Left" Margin="58,83,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label17" Content="PVP erlauben:" HorizontalAlignment="Left" Margin="49,5,0,0" VerticalAlignment="Top"/>
-                            <TextBox x:Name="pvp" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="161" Margin="137,9,0,0"/>
-                            <TextBox x:Name="force_gamemode" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="161" Margin="137,35,0,0"/>
-                            <TextBox x:Name="hardcore" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="161" Margin="137,61,0,0"/>
-                            <TextBox x:Name="gamemode" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="161" Margin="137,87,0,0"/>
-                            <TextBox x:Name="allow_flight" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="427,9,0,0"/>
-                            <TextBox x:Name="difficulty" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="427,35,0,0"/>
-                            <TextBox x:Name="announce_player_achievements" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="427,61,0,0"/>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox x:Name="Other" Header="Sonstiges" Margin="10,385,10,0" VerticalAlignment="Top" Height="113" BorderBrush="Black">
-                        <Grid Margin="0,0,-2,-10">
-                            <Label x:Name="label8" Content="RCON aktivieren:" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label23" Content="RCON Passwort:" HorizontalAlignment="Left" Margin="4,31,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label3" Content="Maximaler RAM:" HorizontalAlignment="Left" Margin="305,5,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label9" Content="Query aktivieren:" HorizontalAlignment="Left" Margin="303,31,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="label7" Content="Whitelist:" HorizontalAlignment="Left" Margin="40,57,0,0" VerticalAlignment="Top"/>
-                            <TextBox x:Name="enable_rcon" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Margin="104,9,0,0"/>
-                            <TextBox x:Name="memory_limit" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="407,9,0,0"/>
-                            <TextBox x:Name="rcon_password" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Margin="104,35,0,0"/>
-                            <TextBox x:Name="white_list" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Margin="104,61,0,0"/>
-                            <TextBox x:Name="enable_query" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="407,35,0,0"/>
-                        </Grid>
-                    </GroupBox>
-                    <Button x:Name="Apply" Content="Einstellungen übernehmen" Margin="0,0,10,14" Click="Apply_Click" HorizontalAlignment="Right" Width="224" Height="41" VerticalAlignment="Bottom"/>
-                    <Button x:Name="Help" Content="Hilfe öffnen" Margin="10,0,0,14" Click="Help_Click" HorizontalAlignment="Left" Width="224" Height="41" VerticalAlignment="Bottom"/>
+                    <Button x:Name="Apply" Content="Einstellungen übernehmen" Margin="0,0,10,10" Click="Apply_Click" HorizontalAlignment="Right" Width="224" Height="41" VerticalAlignment="Bottom"/>
+                    <Button x:Name="Help" Content="Hilfe öffnen" Margin="10,0,0,10" Click="Help_Click" HorizontalAlignment="Left" Width="224" Height="41" VerticalAlignment="Bottom"/>
+                    <Button x:Name="RefreshSettings" Content="Einstellungen aktualisieren" Margin="239,0,239,10" Click="RefreshSettings_Click" HorizontalAlignment="Center" Width="261" Height="41" VerticalAlignment="Bottom"/>
+                    <Grid Margin="0,0,0,56">
+                        <ScrollViewer>
+                            <Grid Background="White" Height="504" Width="639">
+                                <GroupBox x:Name="Allgemein1" Header="Allgemein" Margin="10,10,0,0" VerticalAlignment="Top" Height="86" BorderBrush="Black" HorizontalAlignment="Left" Width="618">
+                                    <Grid Margin="0,0,-2,-10">
+                                        <Label x:Name="label21" Content="Name:" HorizontalAlignment="Left" Margin="19,5,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label25" Content="Port:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="380,5,0,0"/>
+                                        <Label x:Name="label26" Content="Nachricht:" HorizontalAlignment="Left" Margin="0,31,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label27" Content="Max. Spieleranzahl:" HorizontalAlignment="Left" Margin="303,31,0,0" VerticalAlignment="Top"/>
+                                        <TextBox x:Name="server_name" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="230" Margin="68,9,0,0"/>
+                                        <TextBox x:Name="motd" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="230" Margin="68,35,0,0"/>
+                                        <TextBox x:Name="server_port" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="179" Margin="419,9,0,0"/>
+                                        <TextBox x:Name="max_players" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="179" Margin="419,35,0,0"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox x:Name="World1" Header="Welt" Margin="10,101,0,0" VerticalAlignment="Top" Height="136" BorderBrush="Black" HorizontalAlignment="Left" Width="618">
+                                    <Grid Margin="0,0,-2,-10">
+                                        <Label x:Name="label28" Content="Leveltyp:" HorizontalAlignment="Left" Margin="90,5,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label29" Content="Levelname:" HorizontalAlignment="Left" Margin="77,31,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label30" Content="Generator Einstellungen:" HorizontalAlignment="Left" Margin="303,5,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label31" Content="Automatisches Speichern:" HorizontalAlignment="Left" Margin="0,83,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label32" Content="Tiere spawnen:" HorizontalAlignment="Left" Margin="57,57,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.105,-0.385"/>
+                                        <Label x:Name="label33" Content="Monster spawnen:" HorizontalAlignment="Left" Margin="336,57,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.079,-0.423"/>
+                                        <Label x:Name="test1" Content="Levelseed:" HorizontalAlignment="Left" Margin="379,31,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label34" Content="Spawn Schutzbereich:" HorizontalAlignment="Left" Margin="318,83,0,0" VerticalAlignment="Top"/>
+                                        <TextBox x:Name="level_name" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="151,35,0,0"/>
+                                        <TextBox x:Name="level_type" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="151,9,0,0"/>
+                                        <TextBox x:Name="spawn_animals" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="151,61,0,0"/>
+                                        <TextBox x:Name="auto_save" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="147" Margin="151,87,0,0"/>
+                                        <TextBox x:Name="spawn_protection" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Margin="448,87,0,0"/>
+                                        <TextBox x:Name="generator_settings" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Margin="448,9,0,0"/>
+                                        <TextBox x:Name="spawn_mobs" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Margin="448,61,0,0"/>
+                                        <TextBox x:Name="level_seed" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Margin="448,35,0,0"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox x:Name="Game" Header="Spiel" Margin="10,242,0,0" VerticalAlignment="Top" Height="138" BorderBrush="Black" HorizontalAlignment="Left" Width="618">
+                                    <Grid Margin="0,0,-2,-10">
+                                        <Label x:Name="label35" Content="Schwierigkeitsgrad:" HorizontalAlignment="Left" Margin="310,31,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label36" Content="Spielmodus erzwingen:" HorizontalAlignment="Left" Margin="0,31,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label37" Content="Fliegen erlauben:" HorizontalAlignment="Left" Margin="322,5,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label38" Content="Hardcore Modus:" HorizontalAlignment="Left" Margin="30,57,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label39" Content="Spieler Achivements:" HorizontalAlignment="Left" Margin="303,57,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label40" Content="Spielmodus:" HorizontalAlignment="Left" Margin="58,83,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label41" Content="PVP erlauben:" HorizontalAlignment="Left" Margin="49,5,0,0" VerticalAlignment="Top"/>
+                                        <TextBox x:Name="pvp" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="161" Margin="137,9,0,0"/>
+                                        <TextBox x:Name="force_gamemode" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="161" Margin="137,35,0,0"/>
+                                        <TextBox x:Name="hardcore" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="161" Margin="137,61,0,0"/>
+                                        <TextBox x:Name="gamemode" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="161" Margin="137,87,0,0"/>
+                                        <TextBox x:Name="allow_flight" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="171" Margin="427,9,0,0"/>
+                                        <TextBox x:Name="difficulty" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="171" Margin="427,35,0,0"/>
+                                        <TextBox x:Name="announce_player_achievements" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="171" Margin="427,61,0,0"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox x:Name="Other" Header="Sonstiges" Margin="10,385,0,0" VerticalAlignment="Top" Height="113" BorderBrush="Black" HorizontalAlignment="Left" Width="618">
+                                    <Grid Margin="0,0,-2,-10">
+                                        <Label x:Name="label42" Content="RCON aktivieren:" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label43" Content="RCON Passwort:" HorizontalAlignment="Left" Margin="4,31,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label44" Content="Maximaler RAM:" HorizontalAlignment="Left" Margin="305,5,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label45" Content="Query aktivieren:" HorizontalAlignment="Left" Margin="303,31,0,0" VerticalAlignment="Top"/>
+                                        <Label x:Name="label46" Content="Whitelist:" HorizontalAlignment="Left" Margin="40,57,0,0" VerticalAlignment="Top"/>
+                                        <TextBox x:Name="enable_rcon" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Margin="104,9,0,0"/>
+                                        <TextBox x:Name="memory_limit" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="191" Margin="407,9,0,0"/>
+                                        <TextBox x:Name="rcon_password" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Margin="104,35,0,0"/>
+                                        <TextBox x:Name="white_list" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="194" Margin="104,61,0,0"/>
+                                        <TextBox x:Name="enable_query" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" VerticalAlignment="Top" Width="191" Margin="407,35,0,0" IsEnabled="False"/>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="tabWhitelist" Header="Whitelist" Height="22" Margin="-81,0,75,0">
-                <Grid Background="White"/>
+            <TabItem x:Name="tabWhitelist" Header="Whitelist" Height="22" Margin="-81,0,75,0" IsSelected="True">
+                <Grid Background="White">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="79*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="label" Content="Mithilfe der Whitelistfunktion können nur bestimmte Spieler auf den Server zugelassen werden." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                    <ListView x:Name="Whitelist" Margin="10,41,10,38" BorderBrush="Black" Grid.ColumnSpan="2">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button x:Name="AddPlayerToWhitelist" Content="Spieler hinzufügen" Margin="155,0,0,10" Click="AddPlayerToWhitelist_Click" Height="23" VerticalAlignment="Bottom" Grid.Column="1" BorderBrush="Black" HorizontalAlignment="Left" Width="146"/>
+                    <Button x:Name="ActivateWhitelist" Content="Aktivieren" Margin="0,10,10,0" VerticalAlignment="Top" RenderTransformOrigin="0.28,-0.45" HorizontalAlignment="Right" Width="75" Click="ActivateWhitelist_Click" Grid.Column="1"/>
+                    <Button x:Name="DeactivateWhitelist" Content="Deaktiviern" HorizontalAlignment="Right" Margin="0,10,90,0" VerticalAlignment="Top" Width="75" Click="DeactivateWhitelist_Click" Grid.Column="1"/>
+                    <Button x:Name="AddPlayerToWhitelist_Copy" Content="Spieler entfernen" Margin="0,0,10,10" Click="Help_Click" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="164" Grid.Column="1" BorderBrush="Black"/>
+                    <TextBox x:Name="AddPlayerToWhitelistName" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Width="182" Grid.ColumnSpan="2" BorderBrush="Black" Height="23" VerticalAlignment="Bottom"/>
+                </Grid>
             </TabItem>
         </TabControl>
         <Grid Height="70" VerticalAlignment="Top" Grid.ColumnSpan="2" Background="White">
-            <Label x:Name="ServerName" Content="Unbekannter Server" FontSize="48" Margin="10,0,0,0" FontFamily="Microsoft YaHei UI Light" BorderBrush="Black" Foreground="Black" Background="White"/>
+            <Label x:Name="ServerName" Content="Unbekannter Server" FontSize="48" Margin="10,0,0,0" FontFamily="Microsoft YaHei UI Light" BorderBrush="Black" Foreground="Black" Background="{x:Null}"/>
             <Button x:Name="StartServer" Content="Starten" HorizontalAlignment="Right" Margin="0,6,6,0" VerticalAlignment="Top" Width="100" Click="StartServer_Click"/>
             <Button x:Name="StopServer" Content="Ausschalten" Margin="0,25,6,0" VerticalAlignment="Top" Click="StopServer_Click" HorizontalAlignment="Right" Width="100" IsEnabled="False"/>
             <Button x:Name="RestartServer" Content="Neustarten" HorizontalAlignment="Right" Margin="0,44,6,6" Width="100" Click="RestartServer_Click" IsEnabled="False"/>
+        </Grid>
+        <Grid Grid.ColumnSpan="2" Background="White" Grid.RowSpan="2" Height="45" VerticalAlignment="Bottom">
+            <Label x:Name="Status_" Content="Status:" HorizontalAlignment="Left" Margin="18,-2,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="label1_Copy" Content="Nachricht:" HorizontalAlignment="Left" Margin="0,21,0,0" VerticalAlignment="Top"/>
+            <Label x:Name="Status__Copy" Content="Spieler Online:" HorizontalAlignment="Center" Margin="0,-2,0,21"/>
+            <Label x:Name="Status__Copy1" Content="Maximale Spieler:" HorizontalAlignment="Center" Margin="324,21,340,0" VerticalAlignment="Top"/>
+            <Label x:Name="query_status" Content="Offline" HorizontalAlignment="Left" Margin="63,-2,0,0" VerticalAlignment="Top" Width="131"/>
+            <Label x:Name="query_motd" Content="" HorizontalAlignment="Left" Margin="63,21,0,0" VerticalAlignment="Top" Width="131"/>
+            <Label x:Name="query_player_online" Content="" HorizontalAlignment="Center" Margin="427,0,210,0" VerticalAlignment="Top" Width="131"/>
+            <Label x:Name="query_max_player" HorizontalAlignment="Center" Margin="428,21,210,0" VerticalAlignment="Top" Width="130">
+                <Label x:Name="label2" Content="Label"/>
+            </Label>
+            <Label x:Name="query_latency" Content="000" Margin="0,-2,18,21" HorizontalAlignment="Right" Width="29"/>
+            <Label x:Name="query_pm_version" Content="Label" Margin="0,21,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="133"/>
+            <Label x:Name="label1" Content="ms" Margin="0,-2,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.133,-0.5" HorizontalAlignment="Right" Width="25"/>
+            <Label x:Name="query_pm_version_Copy" Content="Latenzzeit:" Margin="0,-2,38,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="68"/>
         </Grid>
 
     </Grid>
