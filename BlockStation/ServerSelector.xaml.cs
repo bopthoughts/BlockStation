@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -69,6 +70,13 @@ namespace BlockStation
         private void Info_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("BlockStation\n" + App.AppVersion + "\n\nBuild: " + App.BuildVersion + "\n" + "Autor: " + App.Autor + "\n" + App.CopyHint, "Über                                                                ");
+        }
+
+        private void SearchUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            var downloader = new WebClient();
+            downloader.DownloadFile("http://example.com/file/song/a.mpeg", "a.mpeg");
+
         }
     }
 }

@@ -1,0 +1,16 @@
+﻿<Window x:Class="Updater.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Updater"
+        mc:Ignorable="d"
+        Title="Updater" Height="151" Width="467">
+    <Grid>
+        <Label x:Name="label" Content="Es ist eine neue Version von BlockStation verfügbar! Das Update wird empfohlen." Margin="10,10,10,0" VerticalAlignment="Top" Height="27"/>
+        <Button x:Name="button" Content="Neue Version installieren!" HorizontalAlignment="Center" Margin="0,77,0,0" VerticalAlignment="Top" Width="292"/>
+        <ProgressBar HorizontalAlignment="Left" Height="30" Margin="84,42,0,0" VerticalAlignment="Top" Width="292" Value="1"/>
+        <Label x:Name="label1" Content="Update wird heruntergeladen..." HorizontalAlignment="Left" Margin="84,42,0,0" VerticalAlignment="Top" Width="292" Height="30"/>
+
+    </Grid>
+</Window>
