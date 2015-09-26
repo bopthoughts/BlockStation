@@ -88,34 +88,58 @@ namespace BlockStation
         private void SearchUpdates_Click(object sender, RoutedEventArgs e)
         {
             var downloader = new WebClient();
-            downloader.DownloadFile("https://raw.githubusercontent.com/haecker-felix/BlockStation/master/BlockStation/blockstation.update", System.IO.Path.GetTempPath() + "blocklauncher.update");
-
-            StreamReader streamReader = new StreamReader(System.IO.Path.GetTempPath() + "blockstation.update");
-            string update = streamReader.ReadLine();
-            streamReader.Close();
-
-            if(Int32.Parse(update) > Int32.Parse(App.BuildVersion))
+            try
             {
-                updatetext.Content = "Es ist ein Update verfügbar!";
-                updatetext.Foreground = System.Windows.Media.Brushes.Green;
-                OpenUpdater.IsEnabled = true;
+                downloader.DownloadFile("https://raw.githubusercontent.com/haecker-felix/BlockStation/master/BlockStation/blockstation.update", System.IO.Path.GetTempPath() + "blocklauncher.update");
             }
-            else
+            catch
             {
-                updatetext.Content = "Kein Update vergügbar!";
-                updatetext.Foreground = System.Windows.Media.Brushes.Red;
-                OpenUpdater.IsEnabled = false;
+                MessageBox.Show("Die Updatedatei konnte nicht heruntergeladen werden.", "Fehler!");
             }
+            
+            try
+            {
+                StreamReader streamReader = new StreamReader(System.IO.Path.GetTempPath() + "blockstation.update");
+                string update = streamReader.ReadLine();
+                streamReader.Close();
+
+                if (Int32.Parse(update) > Int32.Parse(App.BuildVersion))
+                {
+                    updatetext.Content = "Es ist ein Update verfügbar!";
+                    updatetext.Foreground = System.Windows.Media.Brushes.Green;
+                    OpenUpdater.IsEnabled = true;
+                }
+                else
+                {
+                    updatetext.Content = "Kein Update vergügbar!";
+                    updatetext.Foreground = System.Windows.Media.Brushes.Red;
+                    OpenUpdater.IsEnabled = false;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Die Updatedatei konnte nicht eingelesen werden.", "Fehler!");
+            }
+            
 
         }
 
         private void OpenUpdater_Click(object sender, RoutedEventArgs e)
         {
-            ProcessStartInfo updater = new ProcessStartInfo(ProgramFilesx86() + "\\BlockStation\\Updater.exe");
+            try
+            {
+                ProcessStartInfo updater = new ProcessStartInfo(ProgramFilesx86() + "\\BlockStation\\Updater.exe");
+                updater.Verb = "runas";
+                System.Diagnostics.Process.Start(updater);
+                this.Close();
+            }
+            catch
+            {
+                MessageBox.Show("Updater konnte nicht geöffnet werden.", "Fehler!");
+            }
 
-            updater.Verb = "runas";
-            System.Diagnostics.Process.Start(updater);
-            this.Close();
-        }
+
+
+        }  
     }
 }
