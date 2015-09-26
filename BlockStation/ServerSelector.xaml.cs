@@ -90,7 +90,7 @@ namespace BlockStation
             var downloader = new WebClient();
             try
             {
-                downloader.DownloadFile("https://raw.githubusercontent.com/haecker-felix/BlockStation/master/BlockStation/blockstation.update", System.IO.Path.GetTempPath() + "blocklauncher.update");
+                downloader.DownloadFile("https://raw.githubusercontent.com/haecker-felix/BlockStation/master/BlockStation/blockstation.update", System.IO.Path.GetTempPath() + "blockstation.update");
             }
             catch
             {
@@ -120,7 +120,15 @@ namespace BlockStation
             {
                 MessageBox.Show("Die Updatedatei konnte nicht eingelesen werden.", "Fehler!");
             }
-            
+
+            try
+            {
+                File.Delete(System.IO.Path.GetTempPath() + "blockstation.update");
+            }
+            catch
+            {
+                MessageBox.Show("Die Temporäre Updatedatei konnte nicht gelöscht werden.", "Fehler!");
+            }
 
         }
 
