@@ -9,6 +9,8 @@ using System.Threading;
 using System.IO;
 using Kajabity.Tools.Java;
 using Microsoft.VisualBasic;
+using System.Windows;
+using System.ComponentModel;
 
 namespace BlockStation
 {
@@ -64,8 +66,14 @@ namespace BlockStation
         public string prop_gamemode = "";
         public string prop_level_type = "";
 
+        BackgroundWorker worker;
+        bool status = false;
+
+
+        // Query
+        Query.MCQuery query;
+
         // Whitelist Player
-    
         public List<Player> whitelist_player;
 
         public PocketMine_MP_Server(string d)
@@ -74,6 +82,112 @@ namespace BlockStation
 
             dir = d;
             read_server_props();
+
+
+            worker = new BackgroundWorker();
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+
+            query = new Query.MCQuery();
+        }
+
+        // Gibt die PocketMine Version zurück
+        public string pm_version()
+        {
+            var info = query.Info();
+            if (isServerOnline())
+            {
+                return info.Plugins;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        // Gibt die Latenzzeit zurück zurück
+        public int latency()
+        {
+            var info = query.Info();
+            if (isServerOnline())
+            {
+                return info.Latency;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        // gibt Serverstatus als Bool zurück
+        public bool isServerOnline()
+        {
+            worker.DoWork += new DoWorkEventHandler(isServerOnlineWORK);
+            if (worker.IsBusy)
+            {
+                return status;
+            }
+            else
+            {
+                worker.RunWorkerAsync();
+                return status;
+            }
+        }
+
+        private void isServerOnlineWORK(object sender, DoWorkEventArgs e)
+        {
+            var info = query.Info();
+            query.Connect("localhost");
+            if (query.Success())
+            {
+                status = true;
+            }
+            else
+            {
+                status = false;
+            }
+        }
+
+        // Gibt die maximale Spieleranzahl zurück
+        public int max_players()
+        {
+            var info = query.Info();
+            if (isServerOnline())
+            {
+                return info.MaxPlayers;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        // Gibt die Spieleranzahl zurück
+        public int player_online()
+        {
+            var info = query.Info();
+            if (isServerOnline())
+            {
+                return info.OnlinePlayers;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        // Gibt die "Message of the Day" zurück
+        public string motd()
+        {
+            var info = query.Info();
+            if (isServerOnline())
+            {
+                return info.Name;
+            }
+            else
+            {
+                return "";
+            }
         }
 
         // Gibt die Server Ausgabe als String zurück
@@ -254,6 +368,8 @@ namespace BlockStation
             string line;
             int counter = 0;
 
+            whitelist_player.Clear();
+
             while ((line = tmp.ReadLine()) != null)
             {
                 whitelist_player.Add(new Player { Name = line });
@@ -266,22 +382,37 @@ namespace BlockStation
         // Spieler zur Whitelist hinzufügen
         public void add_player_to_whitelist(Player player)
         {
-            whitelist_player.Add(player);
-            send_command("whitelist add" + player.Name);
+            if(player.Name != "")
+            {
+                whitelist_player.Add(player);
+            }
+            if (isServerOnline() && player.Name != "")
+            {
+                send_command("whitelist add " + player.Name);
+            }
+            write_whitelist();
+            read_whitelist();
         }
 
         // Spieler von der Whitelist entfernen
-        public void remove_player_from_whitelist (Player player)
+        public void remove_player_from_whitelist (int id, string player)
         {
-            whitelist_player.Remove(player);
-            send_command("whitelist remove" + player.Name);
+            if (player != "")
+            {
+                whitelist_player.RemoveAt(id);
+            }
+            if (isServerOnline() && player != "")
+            {
+                send_command("whitelist remove " + player);
+            }
+            write_whitelist();
+            read_whitelist();
         }
 
         // Whitelist schreiben
-        public void write_whitelist()
-        {
-            StreamReader tmp = new StreamReader(dir + "white-list.txt");
-            tmp.Close();
+        public void write_whitelist() {
+            File.WriteAllLines(dir + "white-list.txt", whitelist_player.ConvertAll(Convert.ToString));
+            read_whitelist();
         }
     }
 }

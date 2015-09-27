@@ -63,13 +63,20 @@ namespace BlockStation
             {
                 MessageBox.Show("Es konnte nicht geprüft werden, ob die Whitelist aktiviert ist.", "Fehler!");
             }
+
+            Whitelist.IsSynchronizedWithCurrentItem = true;
             Whitelist.ItemsSource = server.whitelist_player;
+
 
             // Servereinstellungen laden
             loadServerInfo();
             loadServerProperties();
             server.read_whitelist();
 
+            //if(prop_enable_query == "off")
+            //{
+            //    MessageBox.Show("Query muss aktiviert sein, damit BlockStation einwandfrei funktioniert.", "Fehler!");
+            //}
 
             // Timer für updates
             updateTimer = new System.Timers.Timer(100);
@@ -134,27 +141,20 @@ namespace BlockStation
                 {
                     ServerOutput.Text = server.getServerOutput();
                     ServerName.Content = server.prop_server_name;
-                    var info = query.Info();
-                    if (query.Success())
-                    {
 
+                    query_max_player.Content = server.max_players();
+                    query_motd.Content = server.motd();
+                    query_player_online.Content = server.player_online();
+                    query_pm_version.Content = server.pm_version();
+                    query_latency.Content = server.latency();
+
+                    if (server.isServerOnline())
+                    {
                         query_status.Content = "Online";
-                        query_status.Foreground = System.Windows.Media.Brushes.Green;
-                        query_motd.Content = info.Name;
-                        query_player_online.Content = info.OnlinePlayers;
-                        query_max_player.Content = info.MaxPlayers;
-                        query_latency.Content = info.Latency;
-                        query_pm_version.Content = info.Plugins;
                     }
                     else
                     {
                         query_status.Content = "Offline";
-                        query_status.Foreground = System.Windows.Media.Brushes.Red;
-                        query_motd.Content = "";
-                        query_player_online.Content = "";
-                        query_max_player.Content = "";
-                        query_latency.Content = "";
-                        query_pm_version.Content = "";
                     }
                 }
                 ));
@@ -308,6 +308,15 @@ namespace BlockStation
             Player tmp = new Player();
             tmp.Name = AddPlayerToWhitelistName.Text;
             server.add_player_to_whitelist(tmp);
+            Whitelist.Items.Refresh();
+            AddPlayerToWhitelistName.Text = "";
+        }
+
+        private void RemovePlayerFromWhitelist_Click(object sender, RoutedEventArgs e)
+        {
+            server.remove_player_from_whitelist(Whitelist.SelectedIndex, Whitelist.SelectedValue.ToString());
+
+            Whitelist.Items.Refresh();
         }
     }
 }
