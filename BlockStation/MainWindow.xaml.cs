@@ -51,11 +51,11 @@ namespace BlockStation
             server = s;
 
             //Whitelist einstellungen laden
-            if (server.prop_white_list == "1")
+            if (server.EnableWhitelist)
             {
                 ActivateWhitelist.IsEnabled = false;
             }
-            else if(server.prop_white_list == "0")
+            else if(server.EnableWhitelist == false)
             {
                 DeactivateWhitelist.IsEnabled = false;
             }
@@ -140,7 +140,7 @@ namespace BlockStation
                 Dispatcher.Invoke(new Action(() =>
                 {
                     ServerOutput.Text = server.getServerOutput();
-                    ServerName.Content = server.prop_server_name;
+                    ServerName.Content = server.Name;
 
                     query_max_player.Content = server.max_players();
                     query_motd.Content = server.motd();
@@ -170,30 +170,38 @@ namespace BlockStation
 
         private void loadServerProperties()
         {
-            level_type.Text = server.prop_level_type;
-            gamemode.Text = server.prop_gamemode;
-            server_name.Text = server.prop_server_name;
-            enable_query.Text = server.prop_enable_query;
-            white_list.Text = server.prop_white_list;
-            hardcore.Text = server.prop_hardcore;
-            auto_save.Text = server.prop_auto_save;
-            spawn_mobs.Text = server.prop_spawn_mobs;
-            level_seed.Text = server.prop_level_seed;
-            difficulty.Text = server.prop_difficulty;
-            spawn_animals.Text = server.prop_spawn_animals;
-            enable_rcon.Text = server.prop_enable_rcon;
-            rcon_password.Text = server.prop_rcon_password;
-            motd.Text = server.prop_motd;
-            generator_settings.Text = server.prop_generator_settings;
-            level_name.Text = server.prop_level_name;
-            spawn_protection.Text = server.prop_spawn_protection;
-            force_gamemode.Text = server.prop_force_gamemode;
-            memory_limit.Text = server.prop_memory_limit;
-            server_port.Text = server.prop_server_port;
-            pvp.Text = server.prop_pvp;
-            max_players.Text = server.prop_max_players;
-            announce_player_achievements.Text = server.prop_announce_player_achievements;
-            allow_flight.Text = server.prop_allow_flight;
+            try
+            {
+                level_type.Text = server.WorldType;
+                gamemode.Text = server.Gamemode.ToString();
+                server_name.Text = server.Name;
+                enable_query.IsChecked = server.EnableQuery;
+                whitelist.IsChecked = server.EnableWhitelist;
+                hardcore.IsChecked = server.EnableHardcore;
+                auto_save.IsChecked = server.EnableAutoSave;
+                spawn_mobs.IsChecked = server.SpawnMobs;
+                level_seed.Text = server.WorldSeed;
+                difficulty.Text = server.Difficulty.ToString();
+                spawn_animals.IsChecked = server.SpawnAnimals;
+                enable_rcon.IsChecked = server.EnableRCON;
+                rcon_password.Text = server.RCONPassword;
+                motd.Text = server.Motd;
+                generator_settings.Text = server.GeneratorSettings;
+                level_name.Text = server.WorldName;
+                spawn_protection.Text = server.SpawnProtectionRadius.ToString();
+                force_gamemode.IsChecked = server.ForceGamemode;
+                memory_limit.Text = server.MemoryLimit.ToString();
+                server_port.Text = server.Port.ToString();
+                pvp.IsChecked = server.EnablePVP;
+                max_players.Text = server.MaxPlayers.ToString();
+                announce_player_achievements.IsChecked = server.EnablePlayerAchievements;
+                allow_flight.IsChecked = server.AllowFlight;
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Die Datei \"server.properties\" konnte nicht eingelesen werden.\n\n" + e, "Fehler!");
+            }
+            
         }
 
         private void ServerOutput_TextChanged(object sender, TextChangedEventArgs e)
@@ -208,30 +216,30 @@ namespace BlockStation
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-            server.prop_server_name = server_name.Text;
-            server.prop_server_port = server_port.Text;
-            server.prop_motd = motd.Text;
-            server.prop_max_players = max_players.Text;
-            server.prop_allow_flight = allow_flight.Text;
-            server.prop_announce_player_achievements = announce_player_achievements.Text;
-            server.prop_pvp = pvp.Text;
-            server.prop_memory_limit = memory_limit.Text;
-            server.prop_force_gamemode = force_gamemode.Text;
-            server.prop_spawn_protection = spawn_protection.Text;
-            server.prop_level_name = level_name.Text;
-            server.prop_generator_settings = generator_settings.Text;
-            server.prop_rcon_password = rcon_password.Text;
-            prop_enable_rcon = enable_rcon.Text;
-            prop_spawn_animals = spawn_animals.Text;
-            prop_difficulty = difficulty.Text;
-            prop_level_seed = level_seed.Text;
-            prop_spawn_mobs = spawn_mobs.Text;
-            prop_auto_save = auto_save.Text;
-            prop_hardcore = hardcore.Text;
-            prop_white_list = white_list.Text;
-            prop_enable_query = enable_query.Text;
-            prop_gamemode = gamemode.Text;
-            prop_level_type = level_type.Text;
+            server.Name = server_name.Text;
+            server.Port = int.Parse(server_port.Text);
+            server.Motd = motd.Text;
+            server.MaxPlayers = int.Parse(max_players.Text);
+            server.AllowFlight = (bool)allow_flight.IsChecked;
+            server.EnablePlayerAchievements = (bool)announce_player_achievements.IsChecked;
+            server.EnablePVP = (bool)pvp.IsChecked;
+            server.MemoryLimit = memory_limit.Text;
+            server.ForceGamemode = (bool)force_gamemode.IsChecked;
+            server.SpawnProtectionRadius = int.Parse(spawn_protection.Text);
+            server.WorldName = level_name.Text;
+            server.GeneratorSettings = generator_settings.Text;
+            server.RCONPassword = rcon_password.Text;
+            server.EnableRCON = (bool)enable_rcon.IsChecked;
+            server.SpawnAnimals = (bool)spawn_animals.IsChecked;
+            server.Difficulty = int.Parse(difficulty.Text);
+            server.WorldSeed = level_seed.Text;
+            server.SpawnMobs = (bool)spawn_mobs.IsChecked;
+            server.EnableAutoSave = (bool)auto_save.IsChecked;
+            server.EnableHardcore = (bool)hardcore.IsChecked;
+            server.EnableWhitelist = (bool)whitelist.IsChecked;
+            server.EnableQuery = (bool)enable_query.IsChecked;
+            server.Gamemode = int.Parse(gamemode.Text);
+            server.WorldType = level_type.Text;
 
             server.write_server_props();
 
@@ -276,7 +284,7 @@ namespace BlockStation
 
         private void DeactivateWhitelist_Click(object sender, RoutedEventArgs e)
         {
-            server.prop_white_list = "0";
+            server.EnableWhitelist = false;
             server.send_command("whitelist off");
             loadServerProperties();
             ActivateWhitelist.IsEnabled = true;
@@ -285,7 +293,7 @@ namespace BlockStation
 
         private void ActivateWhitelist_Click(object sender, RoutedEventArgs e)
         {
-            server.prop_white_list = "1";
+            server.EnableWhitelist = true;
             server.send_command("whitelist on");
             loadServerProperties();
             ActivateWhitelist.IsEnabled = false;

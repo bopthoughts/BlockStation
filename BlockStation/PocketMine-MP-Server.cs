@@ -39,32 +39,390 @@ namespace BlockStation
 
         // Server Ausgabe
         public string ServerOutput;
-        
+
+        public string Name
+        {
+            get { return prop_server_name; }
+            set { prop_server_name = value; }
+        }
+
+        public int Port
+        {
+            get { return Int32.Parse(prop_server_port); }
+            set { prop_server_port = value.ToString(); }
+        }
+
+        public int MaxPlayers
+        {
+            get { return Int32.Parse(prop_max_players); }
+            set { prop_max_players = value.ToString(); }
+        }
+
+        public string Motd
+        {
+            get { return prop_motd; }
+            set { prop_motd = value; }
+        }
+
+        public bool EnableQuery
+        {
+            get {
+                if (prop_enable_query == "on")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set {
+                if (value == false)
+                {
+                    prop_enable_query = "off";
+                }
+                else
+                {
+                    prop_enable_query = "on";
+                }
+            }
+        }
+
+        public bool EnableRCON
+        {
+            get
+            {
+                if (prop_enable_rcon == "on")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                if (value == false)
+                {
+                    prop_enable_rcon = "off";
+                }
+                else
+                {
+                    prop_enable_rcon = "on";
+                }
+            }
+        }
+
+        public bool EnableWhitelist
+        {
+            get {
+                if(prop_white_list == "1")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set {
+                if(value == true)
+                {
+                    prop_white_list = "1";
+                }
+                else
+                {
+                    prop_white_list = "0";
+                }
+            }
+        }
+
+        public int SpawnProtectionRadius
+        {
+            get { return Int32.Parse(prop_spawn_protection); }
+            set { prop_spawn_protection = value.ToString(); }
+        }
+
+        public string WorldName
+        {
+            get { return prop_level_name; }
+            set { prop_level_name = value.ToString(); }
+        }
+
+        public string GeneratorSettings
+        {
+            get { return prop_generator_settings; }
+            set { prop_generator_settings = value.ToString(); }
+        }
+
+        public bool EnablePlayerAchievements
+        {
+            get {
+                if(prop_announce_player_achievements == "on")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set {
+                if(value == true)
+                {
+                    prop_announce_player_achievements = "on";
+                }
+                else
+                {
+                    prop_announce_player_achievements = "off";
+                }
+            }
+        }
+
+        public bool SpawnAnimals
+        {
+            get
+            {
+                if (prop_spawn_animals == "on")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                if (value == true)
+                {
+                    prop_spawn_animals = "on";
+                }
+                else
+                {
+                    prop_spawn_animals = "off";
+                }
+            }
+        }
+
+        public int Difficulty
+        {
+            get { return Int32.Parse(prop_difficulty); }
+            set { prop_difficulty = value.ToString(); }
+        }
+
+        public string WorldSeed
+        {
+            get { return prop_level_seed; }
+            set { prop_level_seed = value.ToString(); }
+        }
+
+        public bool EnablePVP
+        {
+            get
+            {
+                if (prop_pvp == "on")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                if (value == true)
+                {
+                    prop_pvp = "on";
+                }
+                else
+                {
+                    prop_pvp = "off";
+                }
+            }
+        }
+
+        public string MemoryLimit
+        {
+            get { return prop_memory_limit; }
+            set { prop_memory_limit = value; }
+        }
+
+        public string RCONPassword
+        {
+            get { return prop_rcon_password; }
+            set { prop_rcon_password = value.ToString(); }
+        }
+
+        public bool EnableAutoSave
+        {
+            get
+            {
+                if (prop_auto_save == "on")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                if (value == true)
+                {
+                    prop_auto_save = "on";
+                }
+                else
+                {
+                    prop_auto_save = "off";
+                }
+            }
+        }
+
+        public bool EnableHardcore
+        {
+            get
+            {
+                if (prop_hardcore == "on")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                if (value == true)
+                {
+                    prop_hardcore = "on";
+                }
+                else
+                {
+                    prop_hardcore = "off";
+                }
+            }
+        }
+
+        public bool ForceGamemode
+        {
+            get
+            {
+                if (prop_force_gamemode == "on")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                if (value == true)
+                {
+                    prop_force_gamemode = "on";
+                }
+                else
+                {
+                    prop_force_gamemode = "off";
+                }
+            }
+        }
+
+        public bool SpawnMobs
+        {
+            get
+            {
+                if (prop_spawn_mobs == "on")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                if (value == true)
+                {
+                    prop_spawn_mobs = "on";
+                }
+                else
+                {
+                    prop_spawn_mobs = "off";
+                }
+            }
+        }
+
+        public bool AllowFlight
+        {
+            get
+            {
+                if (prop_allow_flight == "on")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                if (value == true)
+                {
+                    prop_allow_flight = "on";
+                }
+                else
+                {
+                    prop_allow_flight = "off";
+                }
+            }
+        }
+
+        public int Gamemode
+        {
+            get { return Int32.Parse(prop_gamemode); }
+            set { prop_gamemode = value.ToString(); }
+        }
+
+        public string WorldType
+        {
+            get { return prop_level_type; }
+            set { prop_level_type = value.ToString(); }
+        }
+
         // Server Propteries
-        public string prop_server_name = "";
-        public string prop_server_port = "";
-        public string prop_max_players = "";
-        public string prop_motd = "";
-        public string prop_spawn_mobs = "";
-        public string prop_allow_flight = "";
-        public string prop_enable_query = "";
-        public string prop_enable_rcon = "";
-        public string prop_white_list = "";
-        public string prop_spawn_protection = "";
-        public string prop_level_name = "";
-        public string prop_generator_settings = "";
-        public string prop_announce_player_achievements = "";
-        public string prop_spawn_animals = "";
-        public string prop_difficulty = "";
-        public string prop_level_seed = "";
-        public string prop_pvp = "";
-        public string prop_memory_limit = "";
-        public string prop_rcon_password = "";
-        public string prop_auto_save = "";
-        public string prop_hardcore = "";
-        public string prop_force_gamemode = "";
-        public string prop_gamemode = "";
-        public string prop_level_type = "";
+        private string prop_server_name = "";
+        private string prop_server_port = "";
+        private string prop_max_players = "";
+        private string prop_motd = "";
+        private string prop_spawn_mobs = "";
+        private string prop_allow_flight = "";
+        private string prop_enable_query = "";
+        private string prop_enable_rcon = "";
+        private string prop_white_list = "";
+        private string prop_spawn_protection = "";
+        private string prop_level_name = "";
+        private string prop_generator_settings = "";
+        private string prop_announce_player_achievements = "";
+        private string prop_spawn_animals = "";
+        private string prop_difficulty = "";
+        private string prop_level_seed = "";
+        private string prop_pvp = "";
+        private string prop_memory_limit = "";
+        private string prop_rcon_password = "";
+        private string prop_auto_save = "";
+        private string prop_hardcore = "";
+        private string prop_force_gamemode = "";
+        private string prop_gamemode = "";
+        private string prop_level_type = "";
 
         BackgroundWorker worker;
         bool status = false;
@@ -291,7 +649,7 @@ namespace BlockStation
         // Sendet ein Befehl an den Server
         public void send_command (string command)
         {
-            if(PocketMineProcess != null)
+            if(isServerOnline())
                 PocketMineProcess.StandardInput.WriteLine(command);
         }
 
@@ -326,6 +684,7 @@ namespace BlockStation
             prop_level_type = server_settings.GetProperty("level-type");
             prop_motd = server_settings.GetProperty("motd");
             prop_max_players = server_settings.GetProperty("max-players");
+            prop_gamemode = server_settings.GetProperty("gamemode");
 
         }
 
