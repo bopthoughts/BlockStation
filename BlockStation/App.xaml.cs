@@ -1,4 +1,7 @@
-﻿namespace BlockStation
+﻿using System;
+using System.Windows;
+
+namespace BlockStation
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
     public partial class App : System.Windows.Application
@@ -6,7 +9,7 @@
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public void InitializeComponent()
         {
-            this.StartupUri = new System.Uri("ServerSelector.xaml", System.UriKind.Relative);
+            this.StartupUri = new System.Uri("gui\\ServerSelector.xaml", System.UriKind.Relative);
 
         }
     
@@ -23,9 +26,17 @@
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public static void Main()
         {
-            BlockStation.App app = new BlockStation.App();
-            app.InitializeComponent();
-            app.Run();
+            try
+            {
+                BlockStation.App app = new BlockStation.App();
+                app.InitializeComponent();
+                app.Run();
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show("Ein schwerwiegender Fehler ist aufgetreten.\n\nDetails:\n" + e);
+            }
+
         }
     }
 }

@@ -248,7 +248,7 @@ namespace Kajabity.Tools.Java
 
 				if( !matched )
 				{
-					throw new ParseException( "Unexpected character at " + 1 + ": <<<" + ch + ">>>" );
+					//throw new ParseException( "Unexpected character at " + 1 + ": <<<" + ch + ">>>" );
 				}
 			} while( state != STATE_finish );
 		}
@@ -353,7 +353,7 @@ namespace Kajabity.Tools.Java
 							}
 							else
 							{
-								throw new ParseException( "Invalid Unicode character." );
+								//throw new ParseException( "Invalid Unicode character." );
 							}
 						}
 						return (char) uch;

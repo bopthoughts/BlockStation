@@ -85,6 +85,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -141,15 +142,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="JavaProperties.cs" />
-    <Compile Include="JavaPropertyReader.cs" />
-    <Compile Include="JavaPropertyWriter.cs" />
-    <Compile Include="ParseException.cs" />
+    <Compile Include="core\Utils.cs" />
+    <Compile Include="javaproperties\JavaProperties.cs" />
+    <Compile Include="javaproperties\JavaPropertyReader.cs" />
+    <Compile Include="javaproperties\JavaPropertyWriter.cs" />
+    <Compile Include="nbt\ByteCountingStream.cs" />
+    <Compile Include="nbt\InvalidReaderStateException.cs" />
+    <Compile Include="nbt\JetBrains.Annotations.cs" />
+    <Compile Include="nbt\NbtBinaryReader.cs" />
+    <Compile Include="nbt\NbtBinaryWriter.cs" />
+    <Compile Include="nbt\NbtCompression.cs" />
+    <Compile Include="nbt\NbtFile.cs" />
+    <Compile Include="nbt\NbtFormatException.cs" />
+    <Compile Include="nbt\NbtParseState.cs" />
+    <Compile Include="nbt\NbtReader.cs" />
+    <Compile Include="nbt\NbtReaderNode.cs" />
+    <Compile Include="nbt\NbtTagType.cs" />
+    <Compile Include="nbt\NbtWriter.cs" />
+    <Compile Include="nbt\NbtWriterNode.cs" />
+    <Compile Include="nbt\TagSelector.cs" />
+    <Compile Include="nbt\tags\NbtByte.cs" />
+    <Compile Include="nbt\tags\NbtByteArray.cs" />
+    <Compile Include="nbt\tags\NbtCompound.cs" />
+    <Compile Include="nbt\tags\NbtDouble.cs" />
+    <Compile Include="nbt\tags\NbtFloat.cs" />
+    <Compile Include="nbt\tags\NbtInt.cs" />
+    <Compile Include="nbt\tags\NbtIntArray.cs" />
+    <Compile Include="nbt\tags\NbtList.cs" />
+    <Compile Include="nbt\tags\NbtLong.cs" />
+    <Compile Include="nbt\tags\NbtShort.cs" />
+    <Compile Include="nbt\tags\NbtString.cs" />
+    <Compile Include="nbt\tags\NbtTag.cs" />
+    <Compile Include="nbt\ZLibStream.cs" />
     <Compile Include="Query.cs" />
-    <Compile Include="ServerSelector.xaml.cs">
+    <Compile Include="gui\ServerSelector.xaml.cs">
       <DependentUpon>ServerSelector.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
+    <Page Include="gui\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -157,17 +186,17 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="gui\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ServerSelector.xaml">
+    <Page Include="gui\ServerSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PocketMine-MP-Server.cs" />
+    <Compile Include="core\PocketMine-MP-Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

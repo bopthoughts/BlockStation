@@ -5,12 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlockStation"
         mc:Ignorable="d"
-        Title="BlockStation "  Width="829" Height="777.525" WindowStartupLocation="CenterScreen" Icon="logo.ico" Closed="MainWindow1_Closed">
+        Title="BlockStation "  Width="829" Height="630.525" Closed="MainWindow1_Closed">
 
     <Grid Margin="0">
-        <Grid.Background>
-            <ImageBrush ImageSource="bg.jpg" Stretch="UniformToFill" TileMode="FlipY"/>
-        </Grid.Background>
         <TabControl x:Name="tabControl" Margin="10,75,10,49" Grid.ColumnSpan="2">
             <TabItem x:Name="tabServerConsole" Header="Server Konsole" Margin="-2,0" Height="22">
                 <Grid Background="White">
@@ -20,7 +17,41 @@
                     <Button x:Name="HelpCommand" Content="Hilfe" Margin="10,0,0,10" VerticalAlignment="Bottom" Height="28" Click="HelpCommand_Click" IsEnabled="False" HorizontalAlignment="Left" Width="76"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="tabServerProperties" Header="Einstellungen" Margin="66,0,-70,0" Height="22">
+            <TabItem x:Name="tabPlayer" Header="Spieler" Height="22" Margin="2,0,-8,0">
+                <Grid Background="White">
+                    <ListView x:Name="PlayerListview" Margin="10,10,10,97" IsSynchronizedWithCurrentItem="False" SelectionChanged="PlayerListview_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Label x:Name="Spielername" Content="Spielername:" HorizontalAlignment="Left" Margin="67,354,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <Label x:Name="Spielername_Copy" Content="Zuletzt online:" HorizontalAlignment="Left" Margin="59,380,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <Label x:Name="Spielername_Copy1" Content="Zum ersten mal online:" HorizontalAlignment="Left" Margin="10,410,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <Label x:Name="playername" Content="?" HorizontalAlignment="Left" Margin="155,354,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="lastonline" Content="?" HorizontalAlignment="Left" Margin="155,380,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="firsttimeonline" Content="?" HorizontalAlignment="Left" Margin="155,410,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.533,1.885"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tabWhitelist" Header="Whitelist" Height="22" Margin="8,0,-14,0">
+                <Grid Background="White">
+                    <Label x:Name="label" Content="Mithilfe der Whitelistfunktion können nur bestimmte Spieler auf den Server zugelassen werden." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="26" Width="514"/>
+                    <ListView x:Name="Whitelist" Margin="10,41,10,38" Grid.ColumnSpan="2">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button x:Name="AddPlayerToWhitelist" Content="Spieler hinzufügen" Margin="191,0,0,10" Click="AddPlayerToWhitelist_Click" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="146" IsDefault="True"/>
+                    <Button x:Name="ActivateWhitelist" Content="Aktivieren" Margin="0,10,10,0" VerticalAlignment="Top" RenderTransformOrigin="0.28,-0.45" HorizontalAlignment="Right" Width="75" Click="ActivateWhitelist_Click" Grid.Column="1" Height="20"/>
+                    <Button x:Name="DeactivateWhitelist" Content="Deaktiviern" HorizontalAlignment="Right" Margin="0,10,90,0" VerticalAlignment="Top" Width="75" Click="DeactivateWhitelist_Click" Grid.Column="1" Height="20"/>
+                    <Button x:Name="RemovePlayerFromWhitelist" Content="Spieler entfernen" Margin="0,0,10,10" Click="RemovePlayerFromWhitelist_Click" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="164" Grid.Column="1"/>
+                    <TextBox x:Name="AddPlayerToWhitelistName" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Width="182" Height="23" VerticalAlignment="Bottom" Background="{x:Null}"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tabServerProperties" Header="Einstellungen" Margin="14,0,-18,0" Height="22">
                 <Grid Background="White">
                     <Button x:Name="Apply" Content="Einstellungen übernehmen" Margin="0,0,10,10" Click="Apply_Click" HorizontalAlignment="Right" Width="224" Height="41" VerticalAlignment="Bottom"/>
                     <Button x:Name="Help" Content="Hilfe öffnen" Margin="10,0,0,10" Click="Help_Click" HorizontalAlignment="Left" Width="224" Height="41" VerticalAlignment="Bottom"/>
@@ -97,23 +128,6 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="tabWhitelist" Header="Whitelist" Height="22" Margin="-81,0,75,0">
-                <Grid Background="White">
-                    <Label x:Name="label" Content="Mithilfe der Whitelistfunktion können nur bestimmte Spieler auf den Server zugelassen werden." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="26" Width="514"/>
-                    <ListView x:Name="Whitelist" Margin="10,41,10,38" Grid.ColumnSpan="2">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <Button x:Name="AddPlayerToWhitelist" Content="Spieler hinzufügen" Margin="191,0,0,10" Click="AddPlayerToWhitelist_Click" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="146" IsDefault="True"/>
-                    <Button x:Name="ActivateWhitelist" Content="Aktivieren" Margin="0,10,10,0" VerticalAlignment="Top" RenderTransformOrigin="0.28,-0.45" HorizontalAlignment="Right" Width="75" Click="ActivateWhitelist_Click" Grid.Column="1" Height="20"/>
-                    <Button x:Name="DeactivateWhitelist" Content="Deaktiviern" HorizontalAlignment="Right" Margin="0,10,90,0" VerticalAlignment="Top" Width="75" Click="DeactivateWhitelist_Click" Grid.Column="1" Height="20"/>
-                    <Button x:Name="RemovePlayerFromWhitelist" Content="Spieler entfernen" Margin="0,0,10,10" Click="RemovePlayerFromWhitelist_Click" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="164" Grid.Column="1"/>
-                    <TextBox x:Name="AddPlayerToWhitelistName" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Width="182" Height="23" VerticalAlignment="Bottom" Background="{x:Null}"/>
-                </Grid>
-            </TabItem>
         </TabControl>
         <Grid Height="70" VerticalAlignment="Top" Grid.ColumnSpan="2" Background="White">
             <Label x:Name="ServerName" Content="Unbekannter Server" FontSize="48" Margin="10,0,0,0" FontFamily="Microsoft YaHei UI Light" BorderBrush="Black" Foreground="Black" Background="{x:Null}"/>
@@ -122,17 +136,17 @@
             <Button x:Name="RestartServer" Content="Neustarten" HorizontalAlignment="Right" Margin="0,44,6,6" Width="100" Click="RestartServer_Click" IsEnabled="False"/>
         </Grid>
         <StatusBar Grid.ColumnSpan="2" Grid.RowSpan="2" Height="30" VerticalAlignment="Bottom">
-            <Label x:Name="query_status" Content="Offline" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label x:Name="status_online" Content="Offline" HorizontalAlignment="Left" VerticalAlignment="Top" FontStyle="Italic"/>
             <Label x:Name="label2" Content="Spieler:" FontWeight="Bold" Margin="10,0,0,0"/>
-            <Label x:Name="query_player_online" Content="" VerticalAlignment="Top"/>
+            <Label x:Name="status_player_online" Content="" VerticalAlignment="Top"/>
             <Label x:Name="label1" Content="/"/>
-            <Label x:Name="query_max_player" VerticalAlignment="Top" Content=""/>
+            <Label x:Name="status_max_player" VerticalAlignment="Top" Content=""/>
             <Label x:Name="label3" Content="Version:" FontWeight="Bold" Margin="10,0,0,0"/>
-            <Label x:Name="query_pm_version" Content="" VerticalAlignment="Top" HorizontalAlignment="Center"/>
-            <Label x:Name="label3_Copy" Content="Latenzzeit:" FontWeight="Bold" Margin="10,0,0,0"/>
-            <Label x:Name="query_latency" Content="" HorizontalAlignment="Right"/>
+            <Label x:Name="status_pm_version" Content="" VerticalAlignment="Top" HorizontalAlignment="Center"/>
             <Label x:Name="label3_Copy1" Content="Nachricht:" FontWeight="Bold" Margin="10,0,0,0"/>
-            <Label x:Name="query_motd" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="131"/>
+            <Label x:Name="status_motd" Content="" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label x:Name="label3_Copy" Content="Latenzzeit:" FontWeight="Bold" Margin="10,0,0,0"/>
+            <Label x:Name="status_latency" Content="" HorizontalAlignment="Right"/>
         </StatusBar>
 
     </Grid>

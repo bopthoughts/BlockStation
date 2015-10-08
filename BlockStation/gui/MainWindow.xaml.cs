@@ -65,13 +65,14 @@ namespace BlockStation
             }
 
             Whitelist.IsSynchronizedWithCurrentItem = true;
-            Whitelist.ItemsSource = server.whitelist_player;
+            Whitelist.ItemsSource = server.Whitelist;
+            Whitelist.SelectionMode = SelectionMode.Single;
 
+            PlayerListview.SelectionMode = SelectionMode.Single;
 
             // Servereinstellungen laden
             loadServerInfo();
             loadServerProperties();
-            server.read_whitelist();
 
             //if(prop_enable_query == "off")
             //{
@@ -83,6 +84,8 @@ namespace BlockStation
             updateTimer.AutoReset = true;
             updateTimer.Elapsed += update;
             updateTimer.Enabled = false;
+
+            refreshPlayerList();
         }
 
         private void StartServer_Click(object sender, RoutedEventArgs e)
@@ -90,12 +93,9 @@ namespace BlockStation
             server.start_server();
             StopServer.IsEnabled = true;
             StartServer.IsEnabled = false;
-            EnterCommand.IsEnabled = true;
-            CommandBar.IsEnabled = true;
             RestartServer.IsEnabled = true;
-            HelpCommand.IsEnabled = true;
             updateTimer.Enabled = true;
-
+            HelpCommand.IsEnabled = false;
 
         }
 
@@ -142,20 +142,28 @@ namespace BlockStation
                     ServerOutput.Text = server.getServerOutput();
                     ServerName.Content = server.Name;
 
-                    query_max_player.Content = server.max_players();
-                    query_motd.Content = server.motd();
-                    query_player_online.Content = server.player_online();
-                    query_pm_version.Content = server.pm_version();
-                    query_latency.Content = server.latency();
+                    status_max_player.Content = server.MaxPlayers;
+                    status_motd.Content = server.Motd;
+                    status_player_online.Content = server.OnlinePlayers;
+                    status_pm_version.Content = server.Version;
+                    status_latency.Content = server.Latency;
 
-                    if (server.isServerOnline())
+                    if (server.Online)
                     {
-                        query_status.Content = "Online";
+                        status_online.Content = "Online";
+                        EnterCommand.IsEnabled = true;
+                        CommandBar.IsEnabled = true;
+                        HelpCommand.IsEnabled = true;
                     }
                     else
                     {
-                        query_status.Content = "Offline";
+                        status_online.Content = "Offline";
+                        EnterCommand.IsEnabled = false;
+                        CommandBar.IsEnabled = false;
+                        HelpCommand.IsEnabled = false;
                     }
+
+
                 }
                 ));
             }
@@ -274,11 +282,8 @@ namespace BlockStation
             server.stop_server();
             StopServer.IsEnabled = false;
             StartServer.IsEnabled = true;
-            EnterCommand.IsEnabled = false;
-            CommandBar.IsEnabled = false;
             updateTimer.Enabled = false;
             RestartServer.IsEnabled = false;
-            HelpCommand.IsEnabled = false;
             loadServerInfo();
         }
 
@@ -313,18 +318,51 @@ namespace BlockStation
 
         private void AddPlayerToWhitelist_Click(object sender, RoutedEventArgs e)
         {
-            Player tmp = new Player();
-            tmp.Name = AddPlayerToWhitelistName.Text;
-            server.add_player_to_whitelist(tmp);
-            Whitelist.Items.Refresh();
-            AddPlayerToWhitelistName.Text = "";
+            if(AddPlayerToWhitelistName.Text == "")
+            {
+                MessageBox.Show("Feld darf nicht leer sein.");
+            }
+            else
+            {
+                server.add_player_to_whitelist(AddPlayerToWhitelistName.Text);
+                Whitelist.Items.Refresh();
+                refreshPlayerList();
+                AddPlayerToWhitelistName.Text = "";
+            }
+
         }
 
         private void RemovePlayerFromWhitelist_Click(object sender, RoutedEventArgs e)
         {
-            server.remove_player_from_whitelist(Whitelist.SelectedIndex, Whitelist.SelectedValue.ToString());
-
+            server.remove_player_from_whitelist(Whitelist.SelectedValue.ToString());
             Whitelist.Items.Refresh();
+            refreshPlayerList();
+        }
+
+        private void PlayerListview_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                Player tmp;
+                server.PlayerList.TryGetValue(PlayerListview.SelectedValue.ToString(), out tmp);
+                playername.Content = tmp.Name;
+                lastonline.Content = tmp.LastOnline.ToString();
+                firsttimeonline.Content = tmp.LastOnline.ToString();
+            }
+            catch
+            {
+
+            }
+
+        }
+
+        private void refreshPlayerList()
+        {
+            PlayerListview.Items.Clear();
+            foreach (var pair in server.PlayerList)
+            {
+                PlayerListview.Items.Add(pair.Key);
+            }
         }
     }
 }
