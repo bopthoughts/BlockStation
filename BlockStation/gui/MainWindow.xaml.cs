@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Timers;
 using System.Collections.Generic;
 using System.IO;
+using System.ComponentModel;
 
 namespace BlockStation
 {
@@ -74,11 +75,6 @@ namespace BlockStation
             loadServerInfo();
             loadServerProperties();
 
-            //if(prop_enable_query == "off")
-            //{
-            //    MessageBox.Show("Query muss aktiviert sein, damit BlockStation einwandfrei funktioniert.", "Fehler!");
-            //}
-
             // Timer für updates
             updateTimer = new System.Timers.Timer(100);
             updateTimer.AutoReset = true;
@@ -86,41 +82,59 @@ namespace BlockStation
             updateTimer.Enabled = false;
 
             refreshPlayerList();
+            server.ServerOutputChanged += receiveServerOutput;
+            server.ServerGetOnline += ServerGetOnline;
+            server.ServerGetOffline += ServerGetOffline;
+            server.PlayerJoinedServer += PlayerJoinedServer;
+            server.PlayerLeaveServer += PlayerLeaveServer;
+        }
+
+        private void PlayerLeaveServer(object sender, EventArgs e)
+        {
+
+
+        }
+
+        private void PlayerJoinedServer(object sender, EventArgs e)
+        {
+
+        }
+
+        private void receiveServerOutput(object sender, EventArgs e)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                ServerOutput.Text = server.ServerOutput;
+            }
+            ));
         }
 
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
-            server.start_server();
+            server.Start();
             StopServer.IsEnabled = true;
             StartServer.IsEnabled = false;
             RestartServer.IsEnabled = true;
             updateTimer.Enabled = true;
             HelpCommand.IsEnabled = false;
-
         }
 
         private void RestartServer_Click(object sender, RoutedEventArgs e)
         {
-            server.restart_server();
-        }
-
-        public void RefreshOutput_Click(object sender, RoutedEventArgs e)
-        {
-            //Hier funktioniert es.
-            this.ServerOutput.Text = server.getServerOutput();
+            server.Restart();
         }
 
         private void EnterCommand_Click(object sender, RoutedEventArgs e)
         {
-            server.send_command(CommandBar.Text);
+            server.SendCommand(CommandBar.Text);
             CommandBar.Text = "";
         }
 
         private void MainWindow1_Closed(object sender, EventArgs e)
         {
-            if(server.IsServerRunning())
+            if(server.ServerProcess)
             {
-                server.stop_server();
+                server.Stop();
                 MessageBox.Show("Der noch laufende PocketMine-MP Server wurde heruntergefahren.", "Hinweis!");
             }
             
@@ -131,15 +145,37 @@ namespace BlockStation
             loadServerInfo();
         }
 
+
+        private void ServerGetOnline(object sender, EventArgs e)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                status_online.Content = "Online";
+                EnterCommand.IsEnabled = true;
+                CommandBar.IsEnabled = true;
+                HelpCommand.IsEnabled = true;
+            }
+            ));
+        }
+
+        private void ServerGetOffline(object sender, EventArgs e)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                status_online.Content = "Offline";
+                EnterCommand.IsEnabled = false;
+                CommandBar.IsEnabled = false;
+                HelpCommand.IsEnabled = false;
+            }
+            ));
+        }
+
         private void loadServerInfo()
         {
-            Query.MCQuery query = new Query.MCQuery();
-            query.Connect("localhost");
             try
             {
                 Dispatcher.Invoke(new Action(() =>
                 {
-                    ServerOutput.Text = server.getServerOutput();
                     ServerName.Content = server.Name;
 
                     status_max_player.Content = server.MaxPlayers;
@@ -147,23 +183,6 @@ namespace BlockStation
                     status_player_online.Content = server.OnlinePlayers;
                     status_pm_version.Content = server.Version;
                     status_latency.Content = server.Latency;
-
-                    if (server.Online)
-                    {
-                        status_online.Content = "Online";
-                        EnterCommand.IsEnabled = true;
-                        CommandBar.IsEnabled = true;
-                        HelpCommand.IsEnabled = true;
-                    }
-                    else
-                    {
-                        status_online.Content = "Offline";
-                        EnterCommand.IsEnabled = false;
-                        CommandBar.IsEnabled = false;
-                        HelpCommand.IsEnabled = false;
-                    }
-
-
                 }
                 ));
             }
@@ -249,9 +268,7 @@ namespace BlockStation
             server.Gamemode = int.Parse(gamemode.Text);
             server.WorldType = level_type.Text;
 
-            server.write_server_props();
-
-            if(server.IsServerRunning() == true)
+            if(server.ServerProcess == true)
             {
                 // Display message box
                 MessageBoxResult result = MessageBox.Show("Möchten sie den Server neustarten, damit die Einstellungen\nübernommen werden?", "Einstellungen wurden geschrieben!", MessageBoxButton.YesNo);
@@ -260,16 +277,13 @@ namespace BlockStation
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        server.write_server_props();
-                        server.stop_server();
-                        server.write_server_props();
-                        server.read_server_props();
-                        server.start_server();
-                        server.read_server_props();
+                        server.Stop();
+                        server.ReadServerSettings();
+                        server.Start();
+                        server.ReadServerSettings();
                         break;
                     case MessageBoxResult.No:
-                        server.write_server_props();
-                        server.read_server_props();
+                        server.ReadServerSettings();
                         break;
                 }
             }
@@ -279,10 +293,10 @@ namespace BlockStation
 
         private void StopServer_Click(object sender, RoutedEventArgs e)
         {
-            server.stop_server();
+            server.Stop();
             StopServer.IsEnabled = false;
             StartServer.IsEnabled = true;
-            updateTimer.Enabled = false;
+            //updateTimer.Enabled = false;
             RestartServer.IsEnabled = false;
             loadServerInfo();
         }
@@ -290,30 +304,25 @@ namespace BlockStation
         private void DeactivateWhitelist_Click(object sender, RoutedEventArgs e)
         {
             server.EnableWhitelist = false;
-            server.send_command("whitelist off");
+            server.SendCommand("whitelist off");
             loadServerProperties();
             ActivateWhitelist.IsEnabled = true;
             DeactivateWhitelist.IsEnabled = false;
+
         }
 
         private void ActivateWhitelist_Click(object sender, RoutedEventArgs e)
         {
             server.EnableWhitelist = true;
-            server.send_command("whitelist on");
+            server.SendCommand("whitelist on");
             loadServerProperties();
             ActivateWhitelist.IsEnabled = false;
             DeactivateWhitelist.IsEnabled = true;
         }
 
-        private void RefreshSettings_Click(object sender, RoutedEventArgs e)
-        {
-            loadServerInfo();
-            loadServerProperties();
-        }
-
         private void HelpCommand_Click(object sender, RoutedEventArgs e)
         {
-            server.send_command("help");
+            server.SendCommand("help");
         }
 
         private void AddPlayerToWhitelist_Click(object sender, RoutedEventArgs e)
@@ -324,7 +333,7 @@ namespace BlockStation
             }
             else
             {
-                server.add_player_to_whitelist(AddPlayerToWhitelistName.Text);
+                server.AddPlayerToWhitelist(AddPlayerToWhitelistName.Text);
                 Whitelist.Items.Refresh();
                 refreshPlayerList();
                 AddPlayerToWhitelistName.Text = "";
@@ -334,7 +343,7 @@ namespace BlockStation
 
         private void RemovePlayerFromWhitelist_Click(object sender, RoutedEventArgs e)
         {
-            server.remove_player_from_whitelist(Whitelist.SelectedValue.ToString());
+            server.RemovePlayerFromWhitelist(Whitelist.SelectedValue.ToString());
             Whitelist.Items.Refresh();
             refreshPlayerList();
         }
@@ -364,5 +373,7 @@ namespace BlockStation
                 PlayerListview.Items.Add(pair.Key);
             }
         }
+
+
     }
 }

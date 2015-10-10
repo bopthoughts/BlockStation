@@ -12,9 +12,11 @@ using Microsoft.VisualBasic;
 using System.Windows;
 using System.ComponentModel;
 using fNbt;
+using System.Text.RegularExpressions;
 
 namespace BlockStation
 {
+
     public class Player
     {
         public Player(string n)
@@ -35,30 +37,33 @@ namespace BlockStation
 
     }
 
-
     public class PocketMine_MP_Server
     {
         // Konstruktor
         public PocketMine_MP_Server(string d)
         {
+            // Initialisierungen
             Whitelist = new List<Player>();
             PlayerList = new Dictionary<string, Player>();
-
-
+            query = new Query.MCQuery();
             dir = d;
-            read_server_props();
 
-
+            // Durchgehender OnlineCheck
             worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
-            worker.WorkerSupportsCancellation = true;
+            worker.WorkerSupportsCancellation = false;
             worker.DoWork += new DoWorkEventHandler(CheckServerAvailability);
 
-            query = new Query.MCQuery();
+            ReadServerSettings();
             ReadPlayerData();
-
-
         }
+
+        // Events
+        public event EventHandler ServerOutputChanged;
+        public event EventHandler PlayerJoinedServer;
+        public event EventHandler PlayerLeaveServer;
+        public event EventHandler ServerGetOnline;
+        public event EventHandler ServerGetOffline;
 
         // Alle Spieler
         public IDictionary<string, Player> PlayerList;
@@ -69,10 +74,31 @@ namespace BlockStation
         // Prozess für PocketMine
         private Process PocketMineProcess;
 
-        // Server Ausgabe
-        private string ServerOutput;
+        // Backgroundworker für lastige Aufgaben
+        private BackgroundWorker worker;
+
+        // Query
+        Query.MCQuery query;
 
         // Public Server Properties
+        public bool ServerProcess
+        {
+            get
+            {
+                return serverprocess;
+            }
+            set
+            {
+                serverprocess = value;
+            }
+        }
+        public string ServerOutput
+        {
+            get
+            {
+                return serveroutput;
+            }
+        }
         public int OnlinePlayers
         {
             get
@@ -91,15 +117,19 @@ namespace BlockStation
         public int Latency
         {
             get
-            {
+            {   
                 var info = query.Info();
                 if (Online)
                 {
+                    Console.WriteLine("Latency: " + info.Latency);
                     return info.Latency;
+
                 }
                 else
                 {
+                    Console.WriteLine("Latency: 0 da Server offline");
                     return 0;
+
                 }
             }
         }
@@ -131,17 +161,33 @@ namespace BlockStation
                     return online;
                 }
             }
-            set { online = value; }
+            set {
+                if (online == true && value == false)
+                {
+                    if (ServerGetOffline != null)
+                    {
+                        ServerGetOffline.Invoke(this, EventArgs.Empty);
+                    }
+                }
+                if (online == false && value == true)
+                {
+                    if(ServerGetOnline != null)
+                    {
+                        ServerGetOnline.Invoke(this, EventArgs.Empty);
+                    }
+                }
+                online = value;
+            }
         }
         public string Name
         {
             get { return prop_server_name; }
-            set { prop_server_name = value; }
+            set { prop_server_name = value; WriteServerSettings(); }
         }
         public int Port
         {
             get { return Int32.Parse(prop_server_port); }
-            set { prop_server_port = value.ToString(); }
+            set { prop_server_port = value.ToString(); WriteServerSettings(); }
         }
         public int MaxPlayers
         {
@@ -151,7 +197,7 @@ namespace BlockStation
         public string Motd
         {
             get { return prop_motd; }
-            set { prop_motd = value; }
+            set { prop_motd = value; WriteServerSettings(); }
         }
         public bool EnableQuery
         {
@@ -174,6 +220,7 @@ namespace BlockStation
                 {
                     prop_enable_query = "on";
                 }
+                WriteServerSettings();
             }
         }
         public bool EnableRCON
@@ -199,6 +246,7 @@ namespace BlockStation
                 {
                     prop_enable_rcon = "on";
                 }
+                WriteServerSettings();
             }
         }
         public bool EnableWhitelist
@@ -222,22 +270,23 @@ namespace BlockStation
                 {
                     prop_white_list = "0";
                 }
+                WriteServerSettings();
             }
         }
         public int SpawnProtectionRadius
         {
             get { return Int32.Parse(prop_spawn_protection); }
-            set { prop_spawn_protection = value.ToString(); }
+            set { prop_spawn_protection = value.ToString(); WriteServerSettings(); }
         }
         public string WorldName
         {
             get { return prop_level_name; }
-            set { prop_level_name = value.ToString(); }
+            set { prop_level_name = value.ToString(); WriteServerSettings(); }
         }
         public string GeneratorSettings
         {
             get { return prop_generator_settings; }
-            set { prop_generator_settings = value.ToString(); }
+            set { prop_generator_settings = value.ToString(); WriteServerSettings(); }
         }
         public bool EnablePlayerAchievements
         {
@@ -260,6 +309,7 @@ namespace BlockStation
                 {
                     prop_announce_player_achievements = "off";
                 }
+                WriteServerSettings();
             }
         }
         public bool SpawnAnimals
@@ -285,17 +335,18 @@ namespace BlockStation
                 {
                     prop_spawn_animals = "off";
                 }
+                WriteServerSettings();
             }
         }
         public int Difficulty
         {
             get { return Int32.Parse(prop_difficulty); }
-            set { prop_difficulty = value.ToString(); }
+            set { prop_difficulty = value.ToString(); WriteServerSettings(); }
         }
         public string WorldSeed
         {
             get { return prop_level_seed; }
-            set { prop_level_seed = value.ToString(); }
+            set { prop_level_seed = value.ToString(); WriteServerSettings(); }
         }
         public bool EnablePVP
         {
@@ -320,17 +371,18 @@ namespace BlockStation
                 {
                     prop_pvp = "off";
                 }
+                WriteServerSettings();
             }
         }
         public string MemoryLimit
         {
             get { return prop_memory_limit; }
-            set { prop_memory_limit = value; }
+            set { prop_memory_limit = value; WriteServerSettings(); }
         }
         public string RCONPassword
         {
             get { return prop_rcon_password; }
-            set { prop_rcon_password = value.ToString(); }
+            set { prop_rcon_password = value.ToString(); WriteServerSettings(); }
         }
         public bool EnableAutoSave
         {
@@ -355,6 +407,7 @@ namespace BlockStation
                 {
                     prop_auto_save = "off";
                 }
+                WriteServerSettings();
             }
         }
         public bool EnableHardcore
@@ -380,6 +433,7 @@ namespace BlockStation
                 {
                     prop_hardcore = "off";
                 }
+                WriteServerSettings();
             }
         }
         public bool ForceGamemode
@@ -405,6 +459,7 @@ namespace BlockStation
                 {
                     prop_force_gamemode = "off";
                 }
+                WriteServerSettings();
             }
         }
         public bool SpawnMobs
@@ -430,6 +485,7 @@ namespace BlockStation
                 {
                     prop_spawn_mobs = "off";
                 }
+                WriteServerSettings();
             }
         }
         public bool AllowFlight
@@ -455,17 +511,18 @@ namespace BlockStation
                 {
                     prop_allow_flight = "off";
                 }
+                WriteServerSettings();
             }
         }
         public int Gamemode
         {
             get { return Int32.Parse(prop_gamemode); }
-            set { prop_gamemode = value.ToString(); }
+            set { prop_gamemode = value.ToString(); WriteServerSettings(); }
         }
         public string WorldType
         {
             get { return prop_level_type; }
-            set { prop_level_type = value.ToString(); }
+            set { prop_level_type = value.ToString(); WriteServerSettings(); }
         }
         public string Directory
         {
@@ -474,7 +531,9 @@ namespace BlockStation
         }
 
         //Server einstellungen
-        private bool online; // Wenn nicht entsteht ne entlosschleife!
+        private bool serverprocess;
+        private string serveroutput;
+        private bool online = false;
         private string dir;
         private string prop_server_name = "";
         private string prop_server_port = "";
@@ -501,43 +560,9 @@ namespace BlockStation
         private string prop_gamemode = "";
         private string prop_level_type = "";
 
-        // Backgroundworker für lastige Aufgaben
-        private BackgroundWorker worker;
-
-        // Query
-        Query.MCQuery query;
-
-        // Whitelist Player
-
-
-        //////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        // Prüft die Server Verfügbarkeit anhand Query
-        private void CheckServerAvailability(object sender, DoWorkEventArgs e)
-        {
-            var info = query.Info();
-            query.Connect("localhost", Port);
-            if (query.Success())
-            {
-                online = true;
-            }
-            else
-            {
-                online = false;
-            }
-        }
-
-        // Gibt die Server Ausgabe als String zurück
-        public string getServerOutput()
-        {
-            return ServerOutput;
-        }
-
         // Startet den Server
-        public void start_server ()
+        public void Start ()
         {
-            
             if (PocketMineProcess == null)
             {
                 PocketMineProcess = new Process();
@@ -549,7 +574,6 @@ namespace BlockStation
                 PocketMineProcess.StartInfo.RedirectStandardInput = true;
                 PocketMineProcess.StartInfo.RedirectStandardOutput = true;
                 PocketMineProcess.OutputDataReceived += OutputDataReceived;
-
 
                 try
                 {
@@ -565,73 +589,93 @@ namespace BlockStation
 
                 PocketMineProcess.StandardInput.WriteLine("bin\\php\\php.exe " + "PocketMine-MP.phar --disable-ansi %*");
                 PocketMineProcess.BeginOutputReadLine();
-                IsServerRunning();
-
             }
         }
 
-        // Speichert die Serverausgabe im ServerOutput String
-        private void OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            ServerOutput += "\n";
-            ServerOutput += e.Data;
-
-            if (ServerOutput.Length > 20000)
-                ServerOutput = ServerOutput.Substring(20000, 0); 
-        }
-
         // Lädt den Server neu
-        public void reload_server ()
+        public void Reload()
         {
             if (PocketMineProcess != null)
                 PocketMineProcess.StandardInput.WriteLine("reload");
         }
 
         // Startet den Server neu.
-        public void restart_server()
+        public void Restart()
         {
-            stop_server();
-            start_server();
+            Stop();
+            Start();
         }
 
         // Fährt den Server herunter bzw. stopt ihn
-        public void stop_server ()
+        public void Stop()
         {
             if (PocketMineProcess != null)
             {
                 PocketMineProcess.StandardInput.WriteLine("stop");
-                System.Threading.Thread.Sleep(2000);
-                PocketMineProcess.StandardInput.WriteLine("exit");
-                PocketMineProcess.OutputDataReceived += OutputDataReceived;
                 PocketMineProcess = null;
-                IsServerRunning();
+                CheckServerAvailability(this, null);
             }
-           
+
         }
 
-        // Gibt zurück ob der ServerPROZESS momentan aktiv ist
-        public bool IsServerRunning()
+        // Prüft die Server Verfügbarkeit
+        private void CheckServerAvailability(object sender, DoWorkEventArgs e)
         {
             if (PocketMineProcess == null)
             {
-                return false;
+                ServerProcess = false;
+                Online = false;
             }
             else
             {
-                return true;
+                var info = query.Info();
+                query.Connect("localhost", Port);
+                if (query.Success())
+                {
+                    Online = true;
+                }
+                else
+                {
+                    Online = false;
+                }
+                ServerProcess = true;
             }
-                
+
+        }
+
+        // Speichert die Serverausgabe im ServerOutput String
+        private void OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if(e.Data != null)
+            {
+                if (Regex.IsMatch(e.Data, "\\bjoined\\b", RegexOptions.IgnoreCase))
+                {
+                    PlayerJoinedServer.Invoke(this, EventArgs.Empty);
+                    Console.WriteLine("Ein Spieler ist beigetreten!");
+                }
+                if (Regex.IsMatch(e.Data, "\\blogged out\\b", RegexOptions.IgnoreCase))
+                {
+                    Console.WriteLine("Ein Spieler hat den Server verlassen!");
+                    PlayerLeaveServer.Invoke(this, EventArgs.Empty);
+                }
+            }
+            serveroutput += "\n";
+            serveroutput += e.Data;
+
+            if (serveroutput.Length > 20000)
+                serveroutput = serveroutput.Substring(20000, 0);
+            ServerOutputChanged.Invoke(this, EventArgs.Empty);
         }
 
         // Sendet ein Befehl an den Server
-        public void send_command (string command)
+        public void SendCommand (string command)
         {
             if(Online)
                 PocketMineProcess.StandardInput.WriteLine(command);
         }
 
         // Lese Servereinstellungen
-        public void read_server_props()
+        public void ReadServerSettings()
         {
             FileStream fileStream = new FileStream(dir+"server.properties", FileMode.Open);
             JavaProperties server_settings = new JavaProperties();
@@ -666,7 +710,7 @@ namespace BlockStation
         }
 
         // Schreibe Servereinstellungen
-        public void write_server_props()
+        private void WriteServerSettings()
         {
             string[] lines = { "server-name=" + prop_server_name,
                 "server-port=" + prop_server_port,
@@ -697,32 +741,27 @@ namespace BlockStation
         }
 
         // Spieler zur Whitelist hinzufügen
-        public void add_player_to_whitelist(string playername)
+        public void AddPlayerToWhitelist(string playername)
         {
             if(playername != "")
             {
                 Player tmp = new Player(playername);
-                if (PlayerList.ContainsKey(playername))
+                if (!(PlayerList.ContainsKey(playername)))
                 {
-                    Console.WriteLine("Folgender Spieler ist bereits im Verzeichnis.");
-                }
-                else
-                {
-                    Console.WriteLine("Folgender Spieler wurde zum Verzeichnis hinzugefügt.");
                     PlayerList.Add(tmp.Name, tmp);
                 }
                 Whitelist.Add(tmp);
             }
             if (Online)
             {
-                send_command("whitelist add " + playername);
+                SendCommand("whitelist add " + playername);
             }
-            write_whitelist();
+            File.WriteAllLines(dir + "white-list.txt", Whitelist.ConvertAll(Convert.ToString));
             ReadPlayerData();
         }
 
         // Spieler von der Whitelist entfernen
-        public void remove_player_from_whitelist (string playername)
+        public void RemovePlayerFromWhitelist (string playername)
         {
             if (playername != "")
             {
@@ -736,14 +775,8 @@ namespace BlockStation
             }
             if (Online)
             {
-                send_command("whitelist remove " + playername);
+                SendCommand("whitelist remove " + playername);
             }
-            write_whitelist();
-            ReadPlayerData();
-        }
-
-        // Whitelist schreiben
-        public void write_whitelist() {
             File.WriteAllLines(dir + "white-list.txt", Whitelist.ConvertAll(Convert.ToString));
             ReadPlayerData();
         }
@@ -760,12 +793,10 @@ namespace BlockStation
             int counter = 0;
 
             // Lesen der Spielerdaten
-            Console.WriteLine(">>> Player:");
             foreach (string path in PlayerDataPath)
             {
                 myFile.LoadFromFile(path);
                 var Tag = myFile.RootTag;
-                Console.WriteLine(Tag.Get<NbtString>("NameTag").Value);
 
                 Player tmp = new Player(Tag.Get<NbtString>("NameTag").Value);
 
@@ -785,7 +816,6 @@ namespace BlockStation
             // Whitelist lesen
             StreamReader whitelistfile = new StreamReader(dir + "white-list.txt");
             string line;
-            Console.WriteLine(">>> Whitelist:");
 
             while ((line = whitelistfile.ReadLine()) != null)
             {
@@ -794,17 +824,10 @@ namespace BlockStation
                     Player tmp = new Player(line);
                     Whitelist.Add(tmp);
 
-                    if (PlayerList.ContainsKey(line))
+                    if (!(PlayerList.ContainsKey(line)))
                     {
-                        Console.WriteLine("Folgender Spieler ist bereits im Verzeichnis.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Folgender Spieler wurde zum Verzeichnis hinzugefügt.");
                         PlayerList.Add(tmp.Name, tmp);
                     }
-
-                    Console.WriteLine(line);
                     counter++;
                 } 
             }
