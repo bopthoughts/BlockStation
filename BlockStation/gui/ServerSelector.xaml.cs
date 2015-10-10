@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using BlockStation.gui;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -71,83 +72,11 @@ namespace BlockStation
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("BlockStation\n" + App.AppVersion + "\n\nBuild: " + App.BuildVersion + "\n" + "Autor: " + App.Autor + "\n" + App.CopyHint, "Über                                                                ");
+            Info info = new Info();
+            info.InitializeComponent();
+            info.version.Content = App.AppVersion + " " + App.AppVersionText;
+            info.build.Content = App.BuildVersion;
+            info.Show();
         }
-
-        static string ProgramFilesx86()
-        {
-            if (8 == IntPtr.Size
-                || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
-            {
-                return Environment.GetEnvironmentVariable("ProgramFiles(x86)");
-            }
-
-            return Environment.GetEnvironmentVariable("ProgramFiles");
-        }
-
-        private void SearchUpdates_Click(object sender, RoutedEventArgs e)
-        {
-            var downloader = new WebClient();
-            try
-            {
-                downloader.DownloadFile("https://raw.githubusercontent.com/haecker-felix/BlockStation/master/BlockStation/blockstation.update", System.IO.Path.GetTempPath() + "blockstation.update");
-            }
-            catch
-            {
-                MessageBox.Show("Die Updatedatei konnte nicht heruntergeladen werden.", "Fehler!");
-            }
-            
-            try
-            {
-                StreamReader streamReader = new StreamReader(System.IO.Path.GetTempPath() + "blockstation.update");
-                string update = streamReader.ReadLine();
-                streamReader.Close();
-
-                if (Int32.Parse(update) > Int32.Parse(App.BuildVersion))
-                {
-                    updatetext.Content = "Es ist ein Update verfügbar!";
-                    updatetext.Foreground = System.Windows.Media.Brushes.Green;
-                    OpenUpdater.IsEnabled = true;
-                }
-                else
-                {
-                    updatetext.Content = "Kein Update vergügbar!";
-                    updatetext.Foreground = System.Windows.Media.Brushes.Red;
-                    OpenUpdater.IsEnabled = false;
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Die Updatedatei konnte nicht eingelesen werden.", "Fehler!");
-            }
-
-            try
-            {
-                File.Delete(System.IO.Path.GetTempPath() + "blockstation.update");
-            }
-            catch
-            {
-                MessageBox.Show("Die Temporäre Updatedatei konnte nicht gelöscht werden.", "Fehler!");
-            }
-
-        }
-
-        private void OpenUpdater_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ProcessStartInfo updater = new ProcessStartInfo(ProgramFilesx86() + "\\BlockStation\\Updater.exe");
-                updater.Verb = "runas";
-                System.Diagnostics.Process.Start(updater);
-                this.Close();
-            }
-            catch
-            {
-                MessageBox.Show("Updater konnte nicht geöffnet werden.", "Fehler!");
-            }
-
-
-
-        }  
     }
 }

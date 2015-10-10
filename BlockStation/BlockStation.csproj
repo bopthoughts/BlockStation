@@ -178,10 +178,17 @@
     <Compile Include="core\nbt\tags\NbtString.cs" />
     <Compile Include="core\nbt\tags\NbtTag.cs" />
     <Compile Include="core\nbt\ZLibStream.cs" />
+    <Compile Include="gui\Info.xaml.cs">
+      <DependentUpon>Info.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Query.cs" />
     <Compile Include="gui\ServerSelector.xaml.cs">
       <DependentUpon>ServerSelector.xaml</DependentUpon>
     </Compile>
+    <Page Include="gui\Info.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="gui\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -230,7 +237,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="img\logo.jpg" />
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>
@@ -242,6 +251,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\bg_info.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

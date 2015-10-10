@@ -16,10 +16,7 @@ namespace BlockStation
         //-----------------------------------------------------------------------------------------------
         public static string AppVersion = "0.6";
         public static string AppVersionText = "Alpha";
-        public static string BuildDate = "08.10.2015";
         public static string BuildVersion = "20151008";
-        public static string CopyHint = "Sie sind nicht zur Weitergabe dieses Programmes berechtigt.";
-        public static string Autor = "Felix Häcker";
         //-----------------------------------------------------------------------------------------------
 
         [System.STAThreadAttribute()]
