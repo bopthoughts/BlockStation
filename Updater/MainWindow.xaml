@@ -5,9 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Updater"
         mc:Ignorable="d"
-        Title="Aktualisierung" Height="116" Width="446" ResizeMode="NoResize" Icon="logo.jpg">
+        Title="Update" Height="91" Width="449" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
-        <Label x:Name="label" Content="Update wird installiert. Dies kann ein moment dauern." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <ProgressBar x:Name="progress" HorizontalAlignment="Left" Height="30" Margin="10,36,0,0" VerticalAlignment="Top" Width="408"/>
+        <ProgressBar x:Name="progress" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" VerticalAlignment="Top" Width="408"/>
     </Grid>
 </Window>

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -18,14 +20,54 @@ using System.Windows.Shapes;
 
 namespace Updater
 {
-    /// <summary>
-    /// Interaktionslogik für MainWindow.xaml
-    /// </summary>
+
+    public static class IconHelper
+    {
+        [DllImport("user32.dll")]
+        static extern int GetWindowLong(IntPtr hwnd, int index);
+
+        [DllImport("user32.dll")]
+        static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
+        [DllImport("user32.dll")]
+        static extern bool SetWindowPos(IntPtr hwnd, IntPtr hwndInsertAfter, int x,
+    int y, int width, int height, uint flags);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr SendMessage(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr
+    lParam);
+
+        const int GWL_EXSTYLE = -20;
+        const int WS_EX_DLGMODALFRAME = 0x0001;
+        const int SWP_NOSIZE = 0x0001;
+        const int SWP_NOMOVE = 0x0002;
+        const int SWP_NOZORDER = 0x0004;
+        const int SWP_FRAMECHANGED = 0x0020;
+        const uint WM_SETICON = 0x0080;
+
+        public static void RemoveIcon(Window window)
+        {
+            // Get this window's handle
+            IntPtr hwnd = new WindowInteropHelper(window).Handle;
+            // Change the extended window style to not show a window icon
+            int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_DLGMODALFRAME);
+            // Update the window's non-client area to reflect the changes
+            SetWindowPos(hwnd, IntPtr.Zero, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE |
+    SWP_NOZORDER | SWP_FRAMECHANGED);
+        }
+    }
+
     public partial class MainWindow : Window
     {
         string downloadlink = "";
         BackgroundWorker worker;
         bool success = false;
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            IconHelper.RemoveIcon(this);
+        }
 
         static string ProgramFilesx86()
         {
@@ -60,15 +102,13 @@ namespace Updater
 
         private void UpdateInstalled(object sender, RunWorkerCompletedEventArgs e)
         {
-
-
             if(success)
                 MessageBox.Show("BlockStation wurde auf die neueste Version aktualisiert.", "Erfolg!");
+            Environment.Exit(0);
         }
 
         private void InstallUpdate(object sender, DoWorkEventArgs e)
         {
-
                 try
                 {
 
@@ -101,9 +141,9 @@ namespace Updater
                     update_file.Close();
                     worker.ReportProgress(30);
                 }
-                catch
+                catch(Exception err)
                 {
-                    MessageBox.Show("Update konnte nicht installiert werden.\nBitte prüfen Sie ihre Internetverbindung..", "Fehler!");
+                    MessageBox.Show(err.ToString(), "Error");
                     this.Close();
                 }
                 worker.ReportProgress(50);
@@ -128,14 +168,13 @@ namespace Updater
                     success = true;
                     Environment.Exit(0);
                 }
-                catch(Exception err)
+                catch (Exception err)
                 {
-                    MessageBox.Show("Das Update konnte nicht installiert werden.\n\nDetails:\n" + err.ToString(), "Fehler!");
-                    success = false;
-                Environment.Exit(0);
-            }
+                    MessageBox.Show(err.ToString(), "Error");
+                    this.Close();
+                }
 
-            
+
         }
     }
 }
