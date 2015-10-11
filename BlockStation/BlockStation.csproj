@@ -71,8 +71,7 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>blockstation_logo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>key.pfx</AssemblyOriginatorKeyFile>
@@ -239,9 +238,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="img\logo.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.5.2 %28x86 und x64%29</ProductName>
@@ -255,6 +251,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="img\bg_info.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\blockstation_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\blockstation_logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="blockstation_logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

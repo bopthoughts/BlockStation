@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlockStation"
         mc:Ignorable="d"
-        Title="ServerSelector" Height="166.036" Width="641" ResizeMode="NoResize">
+        Title="Übersicht" Height="166.036" Width="641" ResizeMode="NoResize" Icon="/BlockStation;component/blockstation_logo.ico">
     <Grid>
         <Label x:Name="label" Content="Bitte wählen sie einen PocketMine-MP Server aus." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="456"/>
         <TextBox x:Name="ServerDir" Height="23" Margin="10,36,21,0" TextWrapping="Wrap" VerticalAlignment="Top" IsEnabled="False"/>

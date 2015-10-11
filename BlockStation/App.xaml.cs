@@ -16,7 +16,7 @@ namespace BlockStation
         //-----------------------------------------------------------------------------------------------
         public static string AppVersion = "0.6";
         public static string AppVersionText = "Alpha";
-        public static string BuildVersion = "20151008";
+        public static string BuildVersion = "20151011";
         //-----------------------------------------------------------------------------------------------
 
         [System.STAThreadAttribute()]

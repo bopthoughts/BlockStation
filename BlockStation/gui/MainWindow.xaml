@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlockStation"
         mc:Ignorable="d"
-        Title="BlockStation "  Width="829" Height="630.525" Closed="MainWindow1_Closed">
+        Title="BlockStation "  Width="829" Height="630.525" Closed="MainWindow1_Closed" Icon="/BlockStation;component/blockstation_logo.ico">
 
     <Grid Margin="0">
         <TabControl x:Name="tabControl" Margin="10,75,10,30">
