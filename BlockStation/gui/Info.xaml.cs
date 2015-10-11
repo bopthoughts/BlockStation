@@ -23,7 +23,8 @@ namespace BlockStation.gui
     /// </summary>
     public partial class Info : Window
     {
-        private bool updateAvailable;
+        string update_text = "Diverse Verbesserungen.";
+        bool updateAvailable;
 
         public Info()
         {
@@ -59,7 +60,7 @@ namespace BlockStation.gui
             {
                 SearchForUpdates.Content = "Nach Updates suchen";
                 SearchForUpdates.IsEnabled = true;
-                MessageBoxResult result = MessageBox.Show("Es ist ein Update verfügbar. \nMöchte sie das Update installieren?", "Aktualisierung", MessageBoxButton.YesNo);
+                MessageBoxResult result = MessageBox.Show("Es ist ein Update verfügbar.\n\nAnmerkung:\n" + update_text + "\n\nMöchten sie das Update installieren?", "Aktualisierung", MessageBoxButton.YesNo);
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
@@ -115,20 +116,35 @@ namespace BlockStation.gui
                     {
                         StreamReader streamReader = new StreamReader(System.IO.Path.GetTempPath() + "blockstation.update");
                         string update = streamReader.ReadLine();
+
+                        int counter = 0;
+                        string current_line;
+                        while ((current_line = streamReader.ReadLine()) != null)
+                        {
+                            switch (counter)
+                            {
+                                case 1:
+                                    update_text = current_line;
+                                    Console.WriteLine(update_text + " " + update_text); break;
+                            }
+                            counter++;
+                        }
                         streamReader.Close();
+
 
                         if (Int32.Parse(update) > Int32.Parse(App.BuildVersion))
                         {
                             updateAvailable = true;
+
                         }
                         else
                         {
                             updateAvailable = false;
                         }
                     }
-                    catch
+                    catch (Exception fail)
                     {
-                        MessageBox.Show("Die Updatedatei konnte nicht eingelesen werden.", "Fehler!");
+                        MessageBox.Show("Die Updatedatei konnte nicht eingelesen werden.\n\nDetails:\n" + fail);
                     }
 
                     // blockstation.update wieder löschen.

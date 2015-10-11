@@ -145,7 +145,6 @@ namespace BlockStation
             loadServerInfo();
         }
 
-
         private void ServerGetOnline(object sender, EventArgs e)
         {
             Dispatcher.Invoke(new Action(() =>

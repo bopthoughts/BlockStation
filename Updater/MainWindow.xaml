@@ -5,20 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Updater"
         mc:Ignorable="d"
-        Title="Updater" Height="215" Width="434" ResizeMode="NoResize">
+        Title="Aktualisierung" Height="116" Width="446" ResizeMode="NoResize" Icon="logo.jpg">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="97*"/>
-            <RowDefinition Height="83*"/>
-        </Grid.RowDefinitions>
-        <Label x:Name="label" Content="Ein Update ist verfügbar!" Margin="10,10,10,0" VerticalAlignment="Top" Height="27"/>
-        <Button x:Name="install_update" Content="Neue Version installieren!" Margin="12,10,0,0" VerticalAlignment="Top" Grid.Row="1" Height="29" HorizontalAlignment="Left" Width="393" Click="install_update_Click"/>
-        <Label x:Name="Verfügbare_Build_" Content="Verfügbare Build:" HorizontalAlignment="Left" Margin="12,36,0,0" VerticalAlignment="Top" FontWeight="Bold" Height="26" Width="109"/>
-        <Label x:Name="label2" Content="Hinweis:" HorizontalAlignment="Left" Margin="11,62,0,0" FontWeight="Bold" Height="24" VerticalAlignment="Top" Width="58"/>
-        <Label x:Name="new_build" Content="00000000" Margin="121,36,10,0" VerticalAlignment="Top" RenderTransformOrigin="1.242,0.731" Height="26"/>
-        <Label x:Name="update_hint" Content="-" Margin="69,62,10,0" VerticalAlignment="Top" Height="26"/>
-        <Label x:Name="label1" Content="Status:" HorizontalAlignment="Left" Margin="12,44,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" Height="26" Width="48"/>
-        <Label x:Name="status" Content="-" HorizontalAlignment="Left" Margin="60,44,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="345"/>
-
+        <Label x:Name="label" Content="Update wird installiert. Dies kann ein moment dauern." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <ProgressBar x:Name="progress" HorizontalAlignment="Left" Height="30" Margin="10,36,0,0" VerticalAlignment="Top" Width="408"/>
     </Grid>
 </Window>
