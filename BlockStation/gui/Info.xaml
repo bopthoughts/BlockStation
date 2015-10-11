@@ -15,10 +15,12 @@
         <Button x:Name="ReportError" Content="Fehler melden" HorizontalAlignment="Left" Margin="245,339,0,0" VerticalAlignment="Top" Width="93" Click="ReportError_Click"/>
         <Label x:Name="label1" Content="Version:" HorizontalAlignment="Left" Margin="10,127,0,0" VerticalAlignment="Top" FontWeight="Bold" RenderTransformOrigin="0.2,0.462"/>
         <Label x:Name="label2" Content="Build:" HorizontalAlignment="Left" Margin="198,127,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-        <Label x:Name="label3" Content="Autor:" HorizontalAlignment="Left" Margin="10,153,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-        <Label x:Name="label4" Content="Häcker Felix" HorizontalAlignment="Left" Margin="56,153,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.211,-0.5"/>
+        <Label x:Name="label3" Content="Programmierung:" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="label4" Content="Häcker Felix" HorizontalAlignment="Left" Margin="120,150,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.211,-0.5"/>
         <Label x:Name="version" Content="?" HorizontalAlignment="Left" Margin="65,127,0,0" VerticalAlignment="Top"/>
         <Label x:Name="build" Content="?" HorizontalAlignment="Left" Margin="240,127,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy" Content="Grafik:" HorizontalAlignment="Left" Margin="199,150,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="label4_Copy" Content="Markus Rotfuß" HorizontalAlignment="Left" Margin="245,150,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.211,-0.5"/>
 
     </Grid>
 </Window>
