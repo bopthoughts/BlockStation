@@ -81,12 +81,15 @@ namespace BlockStation
             updateTimer.Elapsed += update;
             updateTimer.Enabled = false;
 
+
+
             refreshPlayerList();
             server.ServerOutputChanged += receiveServerOutput;
             server.ServerGetOnline += ServerGetOnline;
             server.ServerGetOffline += ServerGetOffline;
             server.PlayerJoinedServer += PlayerJoinedServer;
             server.PlayerLeaveServer += PlayerLeaveServer;
+            server.NewChatMessage += NewChatMessage;
         }
 
         private void PlayerLeaveServer(object sender, EventArgs e)
@@ -150,9 +153,13 @@ namespace BlockStation
             Dispatcher.Invoke(new Action(() =>
             {
                 status_online.Content = "Online";
+
                 EnterCommand.IsEnabled = true;
                 CommandBar.IsEnabled = true;
                 HelpCommand.IsEnabled = true;
+
+                SendMessage.IsEnabled = true;
+                MessageBar.IsEnabled = true;
             }
             ));
         }
@@ -165,6 +172,18 @@ namespace BlockStation
                 EnterCommand.IsEnabled = false;
                 CommandBar.IsEnabled = false;
                 HelpCommand.IsEnabled = false;
+
+                SendMessage.IsEnabled = false;
+                MessageBar.IsEnabled = false;
+            }
+            ));
+        }
+
+        private void NewChatMessage(object sender, EventArgs e)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                MessageOutput.Text += server.message[1] + ":" + server.message[2] + "\n";
             }
             ));
         }
@@ -276,18 +295,19 @@ namespace BlockStation
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
+                        loadServerProperties();
                         server.Stop();
-                        server.ReadServerSettings();
                         server.Start();
-                        server.ReadServerSettings();
+                        loadServerProperties();
                         break;
                     case MessageBoxResult.No:
-                        server.ReadServerSettings();
+                        loadServerProperties();
                         break;
                 }
             }
-
             loadServerProperties();
+
+
         }
 
         private void StopServer_Click(object sender, RoutedEventArgs e)
@@ -373,6 +393,15 @@ namespace BlockStation
             }
         }
 
+        private void SendCommand_Click(object sender, RoutedEventArgs e)
+        {
+            server.SendCommand("say " + MessageBar.Text);
+            MessageBar.Text = "";
+        }
 
+        private void MessageBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            MessageOutput.ScrollToEnd();
+        }
     }
 }

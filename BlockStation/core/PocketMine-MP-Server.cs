@@ -64,6 +64,7 @@ namespace BlockStation
         public event EventHandler PlayerLeaveServer;
         public event EventHandler ServerGetOnline;
         public event EventHandler ServerGetOffline;
+        public event EventHandler NewChatMessage;
 
         // Alle Spieler
         public IDictionary<string, Player> PlayerList;
@@ -76,6 +77,9 @@ namespace BlockStation
 
         // Backgroundworker für lastige Aufgaben
         private BackgroundWorker worker;
+
+        // Letzte geschickte Nachricht (0 = /, 1 = Sender, 2 = Text)
+        public string[] message = { "0", "1", "2", "3"};
 
         // Query
         Query.MCQuery query;
@@ -121,13 +125,11 @@ namespace BlockStation
                 var info = query.Info();
                 if (Online)
                 {
-                    Console.WriteLine("Latency: " + info.Latency);
                     return info.Latency;
 
                 }
                 else
                 {
-                    Console.WriteLine("Latency: 0 da Server offline");
                     return 0;
 
                 }
@@ -648,18 +650,41 @@ namespace BlockStation
         {
             if(e.Data != null)
             {
-                if (Regex.IsMatch(e.Data, "\\bjoined\\b", RegexOptions.IgnoreCase))
+                // Spieler ist beigetreten
+                if (e.Data.Contains("joined"))
                 {
                     PlayerJoinedServer.Invoke(this, EventArgs.Empty);
-                    Console.WriteLine("Ein Spieler ist beigetreten!");
+                    ReadPlayerData();
                 }
-                if (Regex.IsMatch(e.Data, "\\blogged out\\b", RegexOptions.IgnoreCase))
+                // Spieler hat den Server verlassen
+                if (e.Data.Contains("logged out"))
                 {
-                    Console.WriteLine("Ein Spieler hat den Server verlassen!");
                     PlayerLeaveServer.Invoke(this, EventArgs.Empty);
+                    ReadPlayerData();
+                }
+                // Nachricht vom Admin
+                if (e.Data.Contains(" [Server] "))
+                {
+                    string[] stringSeparators = new string[] { " [Server] " };
+                    string[] temp = e.Data.ToString().Split(stringSeparators, StringSplitOptions.None);
+                    string text = temp[1];
+
+                    message[1] = "ADMIN";
+                    message[2] = " " + text;
+
+                    NewChatMessage.Invoke(this, EventArgs.Empty);
+                }
+                // Nachricht von einem normalen Spieler
+                if (e.Data.Contains("<") && e.Data.Contains(">"))
+                {
+                    message = e.Data.ToString().Split('<','>');
+                    NewChatMessage.Invoke(this, EventArgs.Empty);
                 }
             }
-            serveroutput += "\n";
+
+            
+
+        serveroutput += "\n";
             serveroutput += e.Data;
 
             if (serveroutput.Length > 20000)
@@ -738,6 +763,7 @@ namespace BlockStation
                 "auto-save=" + prop_auto_save
             };
             System.IO.File.WriteAllLines(dir + "server.properties", lines);
+            ReadServerSettings();
         }
 
         // Spieler zur Whitelist hinzufügen

@@ -11,13 +11,17 @@
         <TabControl x:Name="tabControl" Margin="10,75,10,30">
             <TabItem x:Name="tabServerConsole" Header="Server Konsole" Margin="-2,0" Height="22">
                 <Grid Background="White">
-                    <TextBox x:Name="ServerOutput" Margin="10,10,10,43" TextWrapping="Wrap" Background="Black" Foreground="White" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible" ScrollViewer.CanContentScroll="True" TextChanged="ServerOutput_TextChanged" FontFamily="Courier New" IsReadOnly="True" BorderBrush="Black"/>
+                    <TextBox x:Name="ServerOutput" Margin="10,10,10,43" TextWrapping="Wrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" TextChanged="ServerOutput_TextChanged" FontFamily="Courier New" IsReadOnly="True" Foreground="White">
+                        <TextBox.Background>
+                            <SolidColorBrush Color="Black"/>
+                        </TextBox.Background>
+                    </TextBox>
                     <TextBox x:Name="CommandBar" Margin="85,0,10,10" TextWrapping="Wrap" ToolTip="Befehl eingeben..." IsEnabled="False" VerticalAlignment="Bottom" Height="28" FontFamily="Courier New" FontSize="24"/>
                     <Button x:Name="EnterCommand" Content="Enter" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="28" Click="EnterCommand_Click" IsEnabled="False" HorizontalAlignment="Right" Width="76" IsDefault="True"/>
                     <Button x:Name="HelpCommand" Content="Hilfe" Margin="10,0,0,10" VerticalAlignment="Bottom" Height="28" Click="HelpCommand_Click" IsEnabled="False" HorizontalAlignment="Left" Width="76"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="tabPlayer" Header="Spieler" Height="22" Margin="2,0,-8,0">
+            <TabItem x:Name="tabAllPlayer" Header="Alle Spieler" Height="22" Margin="2,0,-8,0">
                 <Grid Background="White">
                     <ListView x:Name="PlayerListview" Margin="10,10,10,86" IsSynchronizedWithCurrentItem="False" SelectionChanged="PlayerListview_SelectionChanged">
                         <ListView.View>
@@ -51,7 +55,14 @@
                     <TextBox x:Name="AddPlayerToWhitelistName" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Width="182" Height="23" VerticalAlignment="Bottom" Background="{x:Null}"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="tabServerProperties" Header="Einstellungen" Margin="14,0,-18,0" Height="22">
+            <TabItem x:Name="tabChat" Header="Chat" Margin="14,0,-18,0" Height="22">
+                <Grid Background="White">
+                    <TextBox x:Name="MessageBar" Margin="10,0,10,10" TextWrapping="Wrap" ToolTip="Befehl eingeben..." IsEnabled="False" VerticalAlignment="Bottom" Height="28" FontFamily="Courier New" FontSize="24"/>
+                    <Button x:Name="SendMessage" Content="Senden" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="28" Click="SendCommand_Click" IsEnabled="False" HorizontalAlignment="Right" Width="76" IsDefault="True"/>
+                    <TextBox x:Name="MessageOutput" Margin="10,10,10,43" TextWrapping="Wrap" Background="Black" Foreground="White" FontSize="21.333" TextChanged="MessageBox_TextChanged" IsReadOnly="True" VerticalScrollBarVisibility="Auto"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tabServerProperties" Header="Einstellungen" Margin="18,0,-25,0" Height="22">
                 <Grid Background="White">
                     <Button x:Name="Apply" Content="Einstellungen übernehmen" Margin="0,0,10,10" Click="Apply_Click" HorizontalAlignment="Right" Width="224" Height="41" VerticalAlignment="Bottom"/>
                     <Button x:Name="Help" Content="Hilfe öffnen" Margin="10,0,0,10" Click="Help_Click" HorizontalAlignment="Left" Width="224" Height="41" VerticalAlignment="Bottom"/>

@@ -34,5 +34,16 @@ namespace BlockStation
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
         }
+
+        public static string ConvertStringArrayToString(string[] array)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach(string value in array)
+            {
+                builder.Append(value);
+                builder.Append(" ");
+            }
+            return builder.ToString();
+        }
     }
 }
