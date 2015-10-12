@@ -737,7 +737,9 @@ namespace BlockStation
         // Schreibe Servereinstellungen
         private void WriteServerSettings()
         {
-            string[] lines = { "server-name=" + prop_server_name,
+            try
+            {
+                string[] lines = { "server-name=" + prop_server_name,
                 "server-port=" + prop_server_port,
                 "memory-limit=" + prop_memory_limit,
                 "gamemode=" + prop_gamemode,
@@ -762,8 +764,14 @@ namespace BlockStation
                 "rcon.password=" + prop_rcon_password,
                 "auto-save=" + prop_auto_save
             };
-            System.IO.File.WriteAllLines(dir + "server.properties", lines);
-            ReadServerSettings();
+                System.IO.File.WriteAllLines(dir + "server.properties", lines);
+                ReadServerSettings();
+            }
+            catch(Exception err)
+            {
+                MessageBox.Show("Error", err.Data.ToString());
+            }
+
         }
 
         // Spieler zur Whitelist hinzufügen
