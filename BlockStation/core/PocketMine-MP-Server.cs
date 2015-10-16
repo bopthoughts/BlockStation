@@ -58,6 +58,12 @@ namespace BlockStation
             ReadPlayerData();
         }
 
+        // Konstanten (fn = FileName)
+        const string fn_whitelist = "white-list.txt";
+        const string fn_serverproperties = "server.properties";
+        const string fn_oplist = "ops.txt";
+        const string fn_pocketmine = "pocketmine.yml";
+
         // Events
         public event EventHandler ServerOutputChanged;
         public event EventHandler PlayerJoinedServer;
@@ -701,7 +707,7 @@ namespace BlockStation
         {
             try
             {
-                FileStream fileStream = new FileStream(dir + "server.properties", FileMode.Open);
+                FileStream fileStream = new FileStream(dir + fn_serverproperties, FileMode.Open);
                 JavaProperties server_settings = new JavaProperties();
                 server_settings.Load(fileStream);
                 fileStream.Close();
@@ -737,7 +743,7 @@ namespace BlockStation
             }
             catch (FileNotFoundException)
             {
-                MessageBox.Show("Server Einstellungen konnten nicht gelesen werden.\n\nDie Datei \"server.properties\" ist nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Server Einstellungen konnten nicht gelesen werden.\n\nDie Datei \"" + fn_serverproperties + "\" ist nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(1);
             }
             catch (FileFormatException)
@@ -750,9 +756,6 @@ namespace BlockStation
                 MessageBox.Show("Server Einstellungen konnten nicht gelesen werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(1);
             }
-
-            
-
         }
 
         // Schreibe Servereinstellungen
@@ -787,7 +790,7 @@ namespace BlockStation
                     "auto-save=" + prop_auto_save
                 };
 
-                System.IO.File.WriteAllLines(dir + "server.properties", lines);
+                System.IO.File.WriteAllLines(dir + fn_serverproperties, lines);
                 ReadServerSettings();
             }
             catch (NullReferenceException)
@@ -797,7 +800,7 @@ namespace BlockStation
             }
             catch (FileNotFoundException)
             {
-                MessageBox.Show("Server Einstellungen konnten nicht gespeichert werden.\n\nDie Datei \"server.properties\" ist nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Server Einstellungen konnten nicht gespeichert werden.\n\nDie Datei \""+fn_serverproperties+"\" ist nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (FileFormatException)
             {
@@ -829,7 +832,7 @@ namespace BlockStation
 
             try
             {
-                File.WriteAllLines(dir + "white-list.txt", Whitelist.ConvertAll(Convert.ToString));
+                File.WriteAllLines(dir + fn_whitelist, Whitelist.ConvertAll(Convert.ToString));
             }
             catch (NullReferenceException)
             {
@@ -860,44 +863,42 @@ namespace BlockStation
         {
             if (playername != "")
             {
-                Player tmp = new Player(playername);
                 Player rückgabe;
                 if (!(PlayerList.TryGetValue(playername, out rückgabe)))
                 {
                     MessageBox.Show("Es wurde ein unbekannter Spieler von der Whitelist entfernt.\nDas darf nicht passieren!");
                 }
                 Whitelist.Remove(rückgabe);
+                try
+                {
+                    File.WriteAllLines(dir + fn_whitelist, Whitelist.ConvertAll(Convert.ToString));
+                }
+                catch (NullReferenceException)
+                {
+                    MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Environment.Exit(1);
+                }
+                catch (FileNotFoundException)
+                {
+                    MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatei nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Environment.Exit(1);
+                }
+                catch (FileFormatException)
+                {
+                    MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nFalsches Dateiformat.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Environment.Exit(1);
+                }
+                catch (FileLoadException)
+                {
+                    MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Environment.Exit(1);
+                }
+                ReadPlayerData();
             }
             if (Online)
             {
                 SendCommand("whitelist remove " + playername);
             }
-
-            try
-            {
-                File.WriteAllLines(dir + "white-list.txt", Whitelist.ConvertAll(Convert.ToString));
-            }
-            catch (NullReferenceException)
-            {
-                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-                Environment.Exit(1);
-            }
-            catch (FileNotFoundException)
-            {
-                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatei nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-                Environment.Exit(1);
-            }
-            catch (FileFormatException)
-            {
-                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nFalsches Dateiformat.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-                Environment.Exit(1);
-            }
-            catch (FileLoadException)
-            {
-                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-                Environment.Exit(1);
-            }
-            ReadPlayerData();
         }
 
         // Liest alle Spieler ein
@@ -958,7 +959,7 @@ namespace BlockStation
 
 
             // Whitelist lesen
-            StreamReader whitelistfile = new StreamReader(dir + "white-list.txt");
+            StreamReader whitelistfile = new StreamReader(dir + fn_whitelist);
             string line;
 
             // Lesen der Whitelist
@@ -970,14 +971,16 @@ namespace BlockStation
                     {
                         if (line != "")
                         {
-                            Player tmp = new Player(line);
-                            Whitelist.Add(tmp);
+                            Player tmp;
 
-                            if (!(PlayerList.ContainsKey(line)))
+                            // Wenn spieler auf der liste, aber nicht im index
+                            if(!(PlayerList.TryGetValue(line, out tmp)))
                             {
+                                tmp = new Player(line);
                                 PlayerList.Add(tmp.Name, tmp);
                             }
-                            counter++;
+                            Whitelist.Add(tmp);
+
                         }
                     }
                 }

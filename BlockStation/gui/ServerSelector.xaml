@@ -5,16 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlockStation"
         mc:Ignorable="d"
-        Title="Übersicht" Height="166.036" Width="641" ResizeMode="NoResize" Icon="/BlockStation;component/blockstation_logo.ico">
+        Title="Übersicht" Height="129.358" Width="558.91" ResizeMode="NoResize" Icon="/BlockStation;component/blockstation_logo.ico">
     <Grid>
-        <Label x:Name="label" Content="Bitte wählen sie einen PocketMine-MP Server aus." HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="456"/>
-        <TextBox x:Name="ServerDir" Height="23" Margin="10,36,21,0" TextWrapping="Wrap" VerticalAlignment="Top" IsEnabled="False"/>
-        <Button x:Name="button" Content="Durchsuchen" VerticalAlignment="Top" Margin="10,64,0,0" Height="23" Click="button_Click" HorizontalAlignment="Left" Width="90"/>
-        <Label x:Name="label1" Content="Oder erstellen sie einen neuen, indem sie sich den Installer von der Homepage herunterladen" HorizontalAlignment="Left" Margin="10,92,0,0" VerticalAlignment="Top" Width="601"/>
-        <Button x:Name="button1" Content="PocketMine Homepage öffnen" Margin="422,64,21,0" VerticalAlignment="Top" Height="23" Click="button1_Click"/>
-        <Button x:Name="OpenServer" Content="Öffnen" Margin="105,64,0,0" VerticalAlignment="Top" Height="23" Click="button2_Click" IsEnabled="False" HorizontalAlignment="Left" Width="110"/>
-        <Button x:Name="Info" Content="Info" Margin="330,64,0,0" VerticalAlignment="Top" Height="23" Click="Info_Click" HorizontalAlignment="Left" Width="87"/>
-        <Label x:Name="updatetext" Content="" Margin="10,123,0,0" FontWeight="Bold" Foreground="Red" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="306"/>
+        <Label x:Name="label" Content="Bitte wählen sie einen PocketMine-MP Server aus. " Margin="6,2,14,0" VerticalAlignment="Top" Height="23"/>
+        <TextBox x:Name="ServerDir" Height="23" Margin="99,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsEnabled="False" HorizontalAlignment="Left" Width="374" BorderBrush="Black"/>
+        <Button x:Name="button" Content="Durchsuchen" VerticalAlignment="Top" Margin="10,30,0,0" Height="23" Click="button_Click" HorizontalAlignment="Left" Width="90"/>
+        <Button x:Name="button1" Content="Neuen Server erstellen" Margin="10,58,0,0" Click="button1_Click" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="189"/>
+        <Button x:Name="OpenServer" Content="Öffnen" Margin="467,30,0,0" VerticalAlignment="Top" Height="23" Click="button2_Click" IsEnabled="False" HorizontalAlignment="Left" Width="67"/>
+        <Button x:Name="Info" Content="Info" Margin="447,58,0,0" Click="Info_Click" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="87" RenderTransformOrigin="0.443,-0.135"/>
+        <Button x:Name="button2" Content="Einstellungen" Margin="330,58,0,0" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="112"/>
 
     </Grid>
 </Window>

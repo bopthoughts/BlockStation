@@ -204,9 +204,9 @@ namespace BlockStation
                 }
                 ));
             }
-            catch
+            catch(Exception)
             {
-                Console.WriteLine("Aborted.");
+                //
             }
 
 
@@ -215,8 +215,7 @@ namespace BlockStation
 
         private void loadServerProperties()
         {
-            try
-            {
+
                 level_type.Text = server.WorldType;
                 gamemode.Text = server.Gamemode.ToString();
                 server_name.Text = server.Name;
@@ -241,12 +240,8 @@ namespace BlockStation
                 max_players.Text = server.MaxPlayers.ToString();
                 announce_player_achievements.IsChecked = server.EnablePlayerAchievements;
                 allow_flight.IsChecked = server.AllowFlight;
-            }
-            catch(Exception e)
-            {
-                MessageBox.Show("Die Datei \"server.properties\" konnte nicht eingelesen werden.\n\n" + e, "Fehler!");
-            }
-            
+
+
         }
 
         private void ServerOutput_TextChanged(object sender, TextChangedEventArgs e)
@@ -261,52 +256,60 @@ namespace BlockStation
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-            server.Name = server_name.Text;
-            server.Port = int.Parse(server_port.Text);
-            server.Motd = motd.Text;
-            server.MaxPlayers = int.Parse(max_players.Text);
-            server.AllowFlight = (bool)allow_flight.IsChecked;
-            server.EnablePlayerAchievements = (bool)announce_player_achievements.IsChecked;
-            server.EnablePVP = (bool)pvp.IsChecked;
-            server.MemoryLimit = memory_limit.Text;
-            server.ForceGamemode = (bool)force_gamemode.IsChecked;
-            server.SpawnProtectionRadius = int.Parse(spawn_protection.Text);
-            server.WorldName = level_name.Text;
-            server.GeneratorSettings = generator_settings.Text;
-            server.RCONPassword = rcon_password.Text;
-            server.EnableRCON = (bool)enable_rcon.IsChecked;
-            server.SpawnAnimals = (bool)spawn_animals.IsChecked;
-            server.Difficulty = int.Parse(difficulty.Text);
-            server.WorldSeed = level_seed.Text;
-            server.SpawnMobs = (bool)spawn_mobs.IsChecked;
-            server.EnableAutoSave = (bool)auto_save.IsChecked;
-            server.EnableHardcore = (bool)hardcore.IsChecked;
-            server.EnableWhitelist = (bool)whitelist.IsChecked;
-            server.EnableQuery = (bool)enable_query.IsChecked;
-            server.Gamemode = int.Parse(gamemode.Text);
-            server.WorldType = level_type.Text;
-
-            if(server.ServerProcess == true)
+            try
             {
-                // Display message box
-                MessageBoxResult result = MessageBox.Show("Möchten sie den Server neustarten, damit die Einstellungen\nübernommen werden?", "Einstellungen wurden geschrieben!", MessageBoxButton.YesNo);
+                server.Name = server_name.Text;
+                server.Port = int.Parse(server_port.Text);
+                server.Motd = motd.Text;
+                server.MaxPlayers = int.Parse(max_players.Text);
+                server.AllowFlight = (bool)allow_flight.IsChecked;
+                server.EnablePlayerAchievements = (bool)announce_player_achievements.IsChecked;
+                server.EnablePVP = (bool)pvp.IsChecked;
+                server.MemoryLimit = memory_limit.Text;
+                server.ForceGamemode = (bool)force_gamemode.IsChecked;
+                server.SpawnProtectionRadius = int.Parse(spawn_protection.Text);
+                server.WorldName = level_name.Text;
+                server.GeneratorSettings = generator_settings.Text;
+                server.RCONPassword = rcon_password.Text;
+                server.EnableRCON = (bool)enable_rcon.IsChecked;
+                server.SpawnAnimals = (bool)spawn_animals.IsChecked;
+                server.Difficulty = int.Parse(difficulty.Text);
+                server.WorldSeed = level_seed.Text;
+                server.SpawnMobs = (bool)spawn_mobs.IsChecked;
+                server.EnableAutoSave = (bool)auto_save.IsChecked;
+                server.EnableHardcore = (bool)hardcore.IsChecked;
+                server.EnableWhitelist = (bool)whitelist.IsChecked;
+                server.EnableQuery = (bool)enable_query.IsChecked;
+                server.Gamemode = int.Parse(gamemode.Text);
+                server.WorldType = level_type.Text;
 
-                // Process message box results
-                switch (result)
+
+                if (server.ServerProcess == true)
                 {
-                    case MessageBoxResult.Yes:
-                        loadServerProperties();
-                        server.Stop();
-                        server.Start();
-                        loadServerProperties();
-                        break;
-                    case MessageBoxResult.No:
-                        loadServerProperties();
-                        break;
-                }
-            }
-            loadServerProperties();
+                    // Display message box
+                    MessageBoxResult result = MessageBox.Show("Möchten sie den Server neustarten, damit die Einstellungen\nübernommen werden?", "Einstellungen wurden geschrieben!", MessageBoxButton.YesNo);
 
+                    // Process message box results
+                    switch (result)
+                    {
+                        case MessageBoxResult.Yes:
+                            loadServerProperties();
+                            server.Stop();
+                            server.Start();
+                            loadServerProperties();
+                            break;
+                        case MessageBoxResult.No:
+                            loadServerProperties();
+                            break;
+                    }
+                }
+                loadServerProperties();
+            }
+            catch (System.FormatException)
+            {
+                MessageBox.Show("Es konnten nicht alle Einstellungen geschrieben werden.\n\nMindestens ein Feld ist ungültig.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                loadServerProperties();
+            }
 
         }
 
@@ -362,9 +365,12 @@ namespace BlockStation
 
         private void RemovePlayerFromWhitelist_Click(object sender, RoutedEventArgs e)
         {
-            server.RemovePlayerFromWhitelist(Whitelist.SelectedValue.ToString());
-            Whitelist.Items.Refresh();
-            refreshPlayerList();
+            if(Whitelist.SelectedValue != null)
+            {
+                server.RemovePlayerFromWhitelist(Whitelist.SelectedValue.ToString());
+                Whitelist.Items.Refresh();
+                refreshPlayerList();
+            }
         }
 
         private void PlayerListview_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -377,11 +383,10 @@ namespace BlockStation
                 lastonline.Content = tmp.LastOnline.ToString();
                 firsttimeonline.Content = tmp.LastOnline.ToString();
             }
-            catch
-            {
-
-            }
-
+            catch(System.InvalidOperationException)
+            {}
+            catch (System.NullReferenceException)
+            {}
         }
 
         private void refreshPlayerList()

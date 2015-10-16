@@ -180,6 +180,9 @@
     <Compile Include="gui\Info.xaml.cs">
       <DependentUpon>Info.xaml</DependentUpon>
     </Compile>
+    <Compile Include="gui\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Query.cs" />
     <Compile Include="gui\ServerSelector.xaml.cs">
       <DependentUpon>ServerSelector.xaml</DependentUpon>
@@ -201,6 +204,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="gui\ServerSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="gui\Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
