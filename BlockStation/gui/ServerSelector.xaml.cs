@@ -53,10 +53,17 @@ namespace BlockStation
                     Pfad = Pfad.Remove(Pfad.Length - 1, 1);
                     i++;
                 }
+                if (Utils.checkServerFolder(Pfad))
+                {
+                    ServerDir.Text = Pfad;
+                    ServerPfad = Pfad;
+                    OpenServer.IsEnabled = true;
+                }
+                else
+                {
+                    MessageBox.Show("PocketMine Server kann nicht geöffnet werden, da eine benötigte\nDatei fehlt.\n\nFehlende Datei: \"" + Utils.getMissingFile(Pfad)+ "\"", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
 
-                ServerDir.Text = Pfad;
-                ServerPfad = Pfad;
-                OpenServer.IsEnabled = true;
             }
 
         }

@@ -581,12 +581,9 @@ namespace BlockStation
                 {
                     PocketMineProcess.Start();
                 }
-                catch (Exception err)
+                catch(Exception)
                 {
-                    //print("This is not a valid PockeMine directory.");
-                    Console.Write("Fehler");
-                    Console.Write(err);
-                    return;
+                    MessageBox.Show("Der PocketMine Prozess kann nicht gestartet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
                 PocketMineProcess.StandardInput.WriteLine("bin\\php\\php.exe " + "PocketMine-MP.phar --disable-ansi %*");
@@ -702,35 +699,59 @@ namespace BlockStation
         // Lese Servereinstellungen
         public void ReadServerSettings()
         {
-            FileStream fileStream = new FileStream(dir+"server.properties", FileMode.Open);
-            JavaProperties server_settings = new JavaProperties();
-            server_settings.Load(fileStream);
-            fileStream.Close();
+            try
+            {
+                FileStream fileStream = new FileStream(dir + "server.properties", FileMode.Open);
+                JavaProperties server_settings = new JavaProperties();
+                server_settings.Load(fileStream);
+                fileStream.Close();
+                prop_server_name = server_settings.GetProperty("server-name");
+                prop_server_port = server_settings.GetProperty("server-port");
+                prop_allow_flight = server_settings.GetProperty("allow-flight");
+                prop_announce_player_achievements = server_settings.GetProperty("announce-player-achievements");
+                prop_pvp = server_settings.GetProperty("pvp");
+                prop_memory_limit = server_settings.GetProperty("memory-limit");
+                prop_force_gamemode = server_settings.GetProperty("force-gamemode");
+                prop_spawn_protection = server_settings.GetProperty("spawn-protection");
+                prop_level_name = server_settings.GetProperty("level-name");
+                prop_generator_settings = server_settings.GetProperty("generator-settings");
+                prop_rcon_password = server_settings.GetProperty("rcon.password");
+                prop_enable_rcon = server_settings.GetProperty("enable-rcon");
+                prop_spawn_animals = server_settings.GetProperty("spawn-animals");
+                prop_difficulty = server_settings.GetProperty("difficulty");
+                prop_level_seed = server_settings.GetProperty("level-seed");
+                prop_spawn_mobs = server_settings.GetProperty("spawn-mobs");
+                prop_auto_save = server_settings.GetProperty("auto-save");
+                prop_hardcore = server_settings.GetProperty("hardcore");
+                prop_white_list = server_settings.GetProperty("white-list");
+                prop_enable_query = server_settings.GetProperty("enable-query");
+                prop_level_type = server_settings.GetProperty("level-type");
+                prop_motd = server_settings.GetProperty("motd");
+                prop_max_players = server_settings.GetProperty("max-players");
+                prop_gamemode = server_settings.GetProperty("gamemode");
+            }
+            catch (NullReferenceException)
+            {
+                MessageBox.Show("Server Einstellungen konnten nicht gelesen werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show("Server Einstellungen konnten nicht gelesen werden.\n\nDie Datei \"server.properties\" ist nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileFormatException)
+            {
+                MessageBox.Show("Server Einstellungen konnten nicht gelesen werden.\n\nDas Format der Datei ist nicht korrekt.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileLoadException)
+            {
+                MessageBox.Show("Server Einstellungen konnten nicht gelesen werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
 
-            prop_server_name = server_settings.GetProperty("server-name");
-            prop_server_port = server_settings.GetProperty("server-port");
-            prop_allow_flight = server_settings.GetProperty("allow-flight");
-            prop_announce_player_achievements = server_settings.GetProperty("announce-player-achievements");
-            prop_pvp = server_settings.GetProperty("pvp");
-            prop_memory_limit = server_settings.GetProperty("memory-limit");
-            prop_force_gamemode = server_settings.GetProperty("force-gamemode");
-            prop_spawn_protection = server_settings.GetProperty("spawn-protection");
-            prop_level_name = server_settings.GetProperty("level-name");
-            prop_generator_settings = server_settings.GetProperty("generator-settings");
-            prop_rcon_password = server_settings.GetProperty("rcon.password");
-            prop_enable_rcon = server_settings.GetProperty("enable-rcon");
-            prop_spawn_animals = server_settings.GetProperty("spawn-animals");
-            prop_difficulty = server_settings.GetProperty("difficulty");
-            prop_level_seed = server_settings.GetProperty("level-seed");
-            prop_spawn_mobs = server_settings.GetProperty("spawn-mobs");
-            prop_auto_save = server_settings.GetProperty("auto-save");
-            prop_hardcore = server_settings.GetProperty("hardcore");
-            prop_white_list = server_settings.GetProperty("white-list");
-            prop_enable_query = server_settings.GetProperty("enable-query");
-            prop_level_type = server_settings.GetProperty("level-type");
-            prop_motd = server_settings.GetProperty("motd");
-            prop_max_players = server_settings.GetProperty("max-players");
-            prop_gamemode = server_settings.GetProperty("gamemode");
+            
 
         }
 
@@ -739,37 +760,52 @@ namespace BlockStation
         {
             try
             {
-                string[] lines = { "server-name=" + prop_server_name,
-                "server-port=" + prop_server_port,
-                "memory-limit=" + prop_memory_limit,
-                "gamemode=" + prop_gamemode,
-                "max-players=" + prop_max_players,
-                "spawn-protection=" + prop_spawn_protection,
-                "white-list=" + prop_white_list,
-                "enable-query=" + prop_enable_query,
-                "enable-rcon=" + prop_enable_rcon,
-                "motd=" + prop_motd,
-                "announce-player-achievements=" + prop_announce_player_achievements,
-                "allow-flight=" + prop_allow_flight,
-                "spawn-animals=" + prop_spawn_animals,
-                "spawn-mobs=" + prop_spawn_mobs,
-                "force-gamemode=" + prop_force_gamemode,
-                "hardcore=" + prop_hardcore,
-                "pvp=" + prop_pvp,
-                "difficulty=" + prop_difficulty,
-                "generator-settings" + prop_generator_settings,
-                "level-name=" + prop_level_name,
-                "level-seed=" + prop_level_seed,
-                "level-type=" + prop_level_type,
-                "rcon.password=" + prop_rcon_password,
-                "auto-save=" + prop_auto_save
-            };
+                string[] lines = {
+                    "server-name=" + prop_server_name,
+                    "server-port=" + prop_server_port,
+                    "memory-limit=" + prop_memory_limit,
+                    "gamemode=" + prop_gamemode,
+                    "max-players=" + prop_max_players,
+                    "spawn-protection=" + prop_spawn_protection,
+                    "white-list=" + prop_white_list,
+                    "enable-query=" + prop_enable_query,
+                    "enable-rcon=" + prop_enable_rcon,
+                    "motd=" + prop_motd,
+                    "announce-player-achievements=" + prop_announce_player_achievements,
+                    "allow-flight=" + prop_allow_flight,
+                    "spawn-animals=" + prop_spawn_animals,
+                    "spawn-mobs=" + prop_spawn_mobs,
+                    "force-gamemode=" + prop_force_gamemode,
+                    "hardcore=" + prop_hardcore,
+                    "pvp=" + prop_pvp,
+                    "difficulty=" + prop_difficulty,
+                    "generator-settings" + prop_generator_settings,
+                    "level-name=" + prop_level_name,
+                    "level-seed=" + prop_level_seed,
+                    "level-type=" + prop_level_type,
+                    "rcon.password=" + prop_rcon_password,
+                    "auto-save=" + prop_auto_save
+                };
+
                 System.IO.File.WriteAllLines(dir + "server.properties", lines);
                 ReadServerSettings();
             }
-            catch(Exception err)
+            catch (NullReferenceException)
             {
-                MessageBox.Show("Error", err.Data.ToString());
+                MessageBox.Show("Server Einstellungen konnten nicht gespeichert werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show("Server Einstellungen konnten nicht gespeichert werden.\n\nDie Datei \"server.properties\" ist nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (FileFormatException)
+            {
+                MessageBox.Show("Server Einstellungen konnten nicht gespeichert werden.\n\nDas Format der Datei ist nicht korrekt.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (FileLoadException)
+            {
+                MessageBox.Show("Server Einstellungen konnten nicht gespeichert werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
         }
@@ -790,7 +826,32 @@ namespace BlockStation
             {
                 SendCommand("whitelist add " + playername);
             }
-            File.WriteAllLines(dir + "white-list.txt", Whitelist.ConvertAll(Convert.ToString));
+
+            try
+            {
+                File.WriteAllLines(dir + "white-list.txt", Whitelist.ConvertAll(Convert.ToString));
+            }
+            catch (NullReferenceException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatei nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileFormatException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nFalsches Dateiformat.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileLoadException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            
             ReadPlayerData();
         }
 
@@ -811,7 +872,31 @@ namespace BlockStation
             {
                 SendCommand("whitelist remove " + playername);
             }
-            File.WriteAllLines(dir + "white-list.txt", Whitelist.ConvertAll(Convert.ToString));
+
+            try
+            {
+                File.WriteAllLines(dir + "white-list.txt", Whitelist.ConvertAll(Convert.ToString));
+            }
+            catch (NullReferenceException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatei nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileFormatException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nFalsches Dateiformat.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileLoadException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
             ReadPlayerData();
         }
 
@@ -819,53 +904,107 @@ namespace BlockStation
         public void ReadPlayerData()
         {
             string[] PlayerDataPath = System.IO.Directory.GetFiles(dir + "\\players\\", "*.dat");
-            var myFile = new NbtFile();
 
+            // Listen wieder zurücksetzen
             Whitelist.Clear();
             PlayerList.Clear();
 
             int counter = 0;
 
             // Lesen der Spielerdaten
-            foreach (string path in PlayerDataPath)
+            try
             {
-                myFile.LoadFromFile(path);
-                var Tag = myFile.RootTag;
+                foreach (string path in PlayerDataPath)
+                {
+                    var myFile = new NbtFile();
+                    myFile.LoadFromFile(path);
+                    var Tag = myFile.RootTag;
 
-                Player tmp = new Player(Tag.Get<NbtString>("NameTag").Value);
+                    Player tmp = new Player(Tag.Get<NbtString>("NameTag").Value);
 
-                long a1 = Tag.Get<NbtLong>("lastPlayed").Value;
-                double a2 = Convert.ToDouble(a1);
-                tmp.LastOnline = Utils.JavaTimeStampToDateTime(a2);
+                    long a1 = Tag.Get<NbtLong>("lastPlayed").Value;
+                    double a2 = Convert.ToDouble(a1);
+                    tmp.LastOnline = Utils.JavaTimeStampToDateTime(a2);
 
-                long b1 = Tag.Get<NbtLong>("firstPlayed").Value;
-                double b2 = Convert.ToDouble(b1);
-                tmp.FirstTimeOnline = Utils.JavaTimeStampToDateTime(b2);
+                    long b1 = Tag.Get<NbtLong>("firstPlayed").Value;
+                    double b2 = Convert.ToDouble(b1);
+                    tmp.FirstTimeOnline = Utils.JavaTimeStampToDateTime(b2);
 
 
-                PlayerList.Add(Tag.Get<NbtString>("NameTag").Value, tmp);
-                counter++;
+                    PlayerList.Add(Tag.Get<NbtString>("NameTag").Value, tmp);
+                    counter++;
+                }
             }
+            catch(NullReferenceException)
+            {
+                MessageBox.Show("Die Spielerdaten konnten nicht gelesen werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show("Die Spielerdaten konnten nicht gelesen werden.\n\nDatei nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileFormatException)
+            {
+                MessageBox.Show("Die Spielerdaten konnten nicht gelesen werden.\n\nFalsches Dateiformat.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileLoadException)
+            {
+                MessageBox.Show("Die Spielerdaten konnten nicht gelesen werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+
 
             // Whitelist lesen
             StreamReader whitelistfile = new StreamReader(dir + "white-list.txt");
             string line;
 
-            while ((line = whitelistfile.ReadLine()) != null)
+            // Lesen der Whitelist
+            try
             {
-                if(line != "")
+                foreach (string path in PlayerDataPath)
                 {
-                    Player tmp = new Player(line);
-                    Whitelist.Add(tmp);
-
-                    if (!(PlayerList.ContainsKey(line)))
+                    while ((line = whitelistfile.ReadLine()) != null)
                     {
-                        PlayerList.Add(tmp.Name, tmp);
+                        if (line != "")
+                        {
+                            Player tmp = new Player(line);
+                            Whitelist.Add(tmp);
+
+                            if (!(PlayerList.ContainsKey(line)))
+                            {
+                                PlayerList.Add(tmp.Name, tmp);
+                            }
+                            counter++;
+                        }
                     }
-                    counter++;
-                } 
+                }
+                whitelistfile.Close();
             }
-            whitelistfile.Close();
+            catch (NullReferenceException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht gelesen werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileNotFoundException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht gelesen werden.\n\nDatei nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileFormatException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht gelesen werden.\n\nFalsches Dateiformat.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+            catch (FileLoadException)
+            {
+                MessageBox.Show("Die Whitelistdaten konnten nicht gelesen werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+
+
 
 
         }

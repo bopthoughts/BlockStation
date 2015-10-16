@@ -23,7 +23,7 @@
             </TabItem>
             <TabItem x:Name="tabAllPlayer" Header="Alle Spieler" Height="22" Margin="2,0,-8,0">
                 <Grid Background="White">
-                    <ListView x:Name="PlayerListview" Margin="10,10,10,86" IsSynchronizedWithCurrentItem="False" SelectionChanged="PlayerListview_SelectionChanged">
+                    <ListView x:Name="PlayerListview" Margin="10,41,10,86" IsSynchronizedWithCurrentItem="False" SelectionChanged="PlayerListview_SelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn/>
@@ -36,6 +36,7 @@
                     <Label x:Name="playername" Content="?" HorizontalAlignment="Left" Margin="148,0,0,60" VerticalAlignment="Bottom"/>
                     <Label x:Name="lastonline" Content="?" HorizontalAlignment="Left" Margin="148,0,0,34" VerticalAlignment="Bottom"/>
                     <Label x:Name="firsttimeonline" Content="?" HorizontalAlignment="Left" Margin="148,0,0,4" VerticalAlignment="Bottom" RenderTransformOrigin="0.533,1.885"/>
+                    <Label x:Name="label4" Content="Hier werden alle erkannte Spieler angezeigt" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabWhitelist" Header="Whitelist" Height="22" Margin="8,0,-14,0">

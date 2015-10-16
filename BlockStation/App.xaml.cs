@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BlockStation.gui;
+using System;
 using System.Windows;
 
 namespace BlockStation
@@ -31,7 +32,7 @@ namespace BlockStation
             }
             catch(Exception e)
             {
-                MessageBox.Show("Ein schwerwiegender Fehler ist aufgetreten.\n\nDetails:\n" + e);
+                MessageBox.Show("Es ist ein unbekannter Fehler augetreten.\nBitte melden sie diesen Fehler:\n\n" + e, "Fehler", MessageBoxButton.OK ,MessageBoxImage.Error);
             }
 
         }

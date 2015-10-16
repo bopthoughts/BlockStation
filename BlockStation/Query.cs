@@ -42,18 +42,22 @@ namespace BlockStation.Query
         {
             SID = new Random().Next() & 0xCF;
             Packet data = this.GrabData(Packets.Challenge(this.SID));
-            if (data.Read<byte>() == (byte)0x09 && data.Read<int>() == this.SID)
+
+            if(data != null)
             {
-                int.TryParse(data.Read<String>(), out this.challenge);
-                byte[] iabi = BitConverter.GetBytes(this.challenge);
-                Array.Reverse(iabi);
-                this.challenge = BitConverter.ToInt32(iabi, 0);
+                if (data.Read<byte>() == (byte)0x09 && data.Read<int>() == this.SID)
+                {
+                    int.TryParse(data.Read<String>(), out this.challenge);
+                    byte[] iabi = BitConverter.GetBytes(this.challenge);
+                    Array.Reverse(iabi);
+                    this.challenge = BitConverter.ToInt32(iabi, 0);
 
-                ping = Environment.TickCount;
+                    ping = Environment.TickCount;
 
-                this.GetInfo();
+                    this.GetInfo();
+                }
+                else GetChallenge();
             }
-            else GetChallenge();
         }
 
         internal void GetInfo()
@@ -152,7 +156,15 @@ namespace BlockStation.Query
             try
             {
                 byte[] buffer = new byte[len];
-                int recv = this.sock.Receive(buffer, 0, len, SocketFlags.None);
+                int recv = 0;
+
+
+                SocketError errorCode;
+                recv = this.sock.Receive(buffer, 0, len, SocketFlags.None, out errorCode);
+                if (errorCode != SocketError.Success)
+                {
+                    recv = 0;
+                }
 
                 if (recv < 5 || buffer[0] != check)
                     return null;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,48 @@ namespace BlockStation
 {
     class Utils
     {
+        public static string getMissingFile(string dir)
+        {
+            if (!File.Exists(dir + "white-list.txt"))
+            {
+                return "white-list.txt";
+            }
+            if (!File.Exists(dir + "ops.txt"))
+            {
+                return "ops.txt";
+            }
+            if (!File.Exists(dir + "server.properties"))
+            {
+                return "server.properties";
+            }
+            if (!File.Exists(dir + "pocketmine.yml"))
+            {
+                return "pocketmine.yml";
+            }
+            return "";
+        }
+
+        public static bool checkServerFolder(string dir)
+        {
+            if(!File.Exists(dir + "white-list.txt"))
+            {
+                return false;
+            }
+            if (!File.Exists(dir + "ops.txt"))
+            {
+                return false;
+            }
+            if (!File.Exists(dir + "server.properties"))
+            {
+                return false;
+            }
+            if (!File.Exists(dir + "pocketmine.yml"))
+            {
+                return false;
+            }
+            return true;
+        }
+
         public static string ProgramFilesx86()
         {
             if (8 == IntPtr.Size
