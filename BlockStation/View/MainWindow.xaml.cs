@@ -47,6 +47,7 @@ namespace BlockStation
         {
             // GUI Stuff
             InitializeComponent();
+            Utils.SetLanguage(this);
 
             //Setzt den Server
             server = s;
@@ -76,7 +77,7 @@ namespace BlockStation
             loadServerProperties();
 
             // Timer für updates
-            updateTimer = new System.Timers.Timer(100);
+            updateTimer = new System.Timers.Timer(Properties.Settings.Default.UpdateTimer);
             updateTimer.AutoReset = true;
             updateTimer.Elapsed += update;
             updateTimer.Enabled = false;

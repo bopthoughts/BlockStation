@@ -3,12 +3,39 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BlockStation
 {
     class Utils
     {
+        public static void SetLanguage(Window w)
+        {
+            ResourceDictionary dict = new ResourceDictionary();
+            switch (Properties.Settings.Default.Language)
+            {
+                case "de":
+                    dict.Source = new Uri("..\\Resource\\Language\\lang_de.xaml", UriKind.Relative);
+                    break;
+                default:
+                    dict.Source = new Uri("..\\Resource\\Language\\lang_en.xaml", UriKind.Relative);
+                    break;
+                case "fr":
+                    //dict.Source = new Uri("..\\Resource\\Language\\lang_fr.xaml.xaml", UriKind.Relative);
+                    break;
+                case "es":
+                    //dict.Source = new Uri("..\\Resource\\Language\\lang_es.xaml.xaml", UriKind.Relative);
+                    break;
+                case "ru":
+                    dict.Source = new Uri("..\\Resource\\Language\\lang_ru.xaml.xaml", UriKind.Relative);
+                    break;
+            }
+
+            w.Resources.MergedDictionaries.Add(dict);
+        }
+
         public static string getMissingFile(string dir)
         {
             if (!File.Exists(dir + "white-list.txt"))

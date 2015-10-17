@@ -1,0 +1,85 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <system:String x:Key="open">Open</system:String>
+    <system:String x:Key="close">Close</system:String>
+    <system:String x:Key="exit">Exit</system:String>
+    <system:String x:Key="select">Select</system:String>
+    <system:String x:Key="settings">Settings</system:String>
+    <system:String x:Key="save">Save</system:String>
+    <system:String x:Key="abort">Abort</system:String>
+    <system:String x:Key="language">Language:</system:String>
+    <system:String x:Key="create_new">Create new</system:String>
+    <system:String x:Key="delete">Delete</system:String>
+    <system:String x:Key="new">New</system:String>
+    <system:String x:Key="about">About</system:String>
+    <system:String x:Key="overview">Overview</system:String>
+
+    <system:String x:Key="console">Console</system:String>
+    <system:String x:Key="chat">Chat</system:String>
+    <system:String x:Key="whitelist">Whitelist</system:String>
+    <system:String x:Key="all_players">All players</system:String>
+    <system:String x:Key="last_time_online">Last time online:</system:String>
+    <system:String x:Key="first_time_online">First time online:</system:String>
+    <system:String x:Key="player_name">Playername:</system:String>
+    <system:String x:Key="send">Send</system:String>
+    <system:String x:Key="enter">Enter</system:String>
+    <system:String x:Key="help">Help</system:String>
+    <system:String x:Key="activate">Activate</system:String>
+    <system:String x:Key="deactivate">Deactivate</system:String>
+    <system:String x:Key="add">Add</system:String>
+    <system:String x:Key="remove">Remove</system:String>
+    <system:String x:Key="start">Start</system:String>
+    <system:String x:Key="stop">Shutdown</system:String>
+    <system:String x:Key="restart">Restart</system:String>
+    <system:String x:Key="reload">Reload</system:String>
+    <system:String x:Key="game">Game</system:String>
+    <system:String x:Key="other">Other</system:String>
+    <system:String x:Key="world">World</system:String>
+    <system:String x:Key="general">General</system:String>
+    <system:String x:Key="name">Name:</system:String>
+    <system:String x:Key="motd">Motd:</system:String>
+    <system:String x:Key="spawn_monster">Spawn monster:</system:String>
+    <system:String x:Key="spawn_animals">Spawn animals:</system:String>
+    <system:String x:Key="auto_save">Auto-Save:</system:String>
+    <system:String x:Key="level_type">Leveltype:</system:String>
+    <system:String x:Key="pvp">PVP:</system:String>
+    <system:String x:Key="force_gamemode">Force gamemode:</system:String>
+    <system:String x:Key="hardcore">Hardcore:</system:String>
+    <system:String x:Key="achievements">Achievements:</system:String>
+    <system:String x:Key="rcon">RCON:</system:String>
+    <system:String x:Key="query">Query:</system:String>
+    <system:String x:Key="port">Port:</system:String>
+    <system:String x:Key="max_player">Max. players:</system:String>
+    <system:String x:Key="generator_settings">Generator settings:</system:String>
+    <system:String x:Key="seed">Levelseed:</system:String>
+    <system:String x:Key="spawn_protection">Spawn protection:</system:String>
+    <system:String x:Key="level_name">Levelname:</system:String>
+    <system:String x:Key="fly">Fly:</system:String>
+    <system:String x:Key="difficulty">Difficulty:</system:String>
+    <system:String x:Key="gamemode">Gamemode:</system:String>
+    <system:String x:Key="max_ram">Max. RAM:</system:String>
+    <system:String x:Key="rcon_password">RCON Password:</system:String>
+
+    <system:String x:Key="online">Online</system:String>
+    <system:String x:Key="offline">Offline</system:String>
+    <system:String x:Key="latency">Latency:</system:String>
+    <system:String x:Key="version">Version:</system:String>
+    <system:String x:Key="players">Player:</system:String>
+
+    <system:String x:Key="build">Build:</system:String>
+    <system:String x:Key="code">Code:</system:String>
+    <system:String x:Key="graphics">Graphics:</system:String>
+    <system:String x:Key="report_error">Report an Error</system:String>
+    <system:String x:Key="open_website">Open Website</system:String>
+    <system:String x:Key="check_for_updates">Check for Updates</system:String>
+
+    
+    
+    <system:String x:Key="txt_overview">Please select a PocketMine-MP Server.</system:String>
+    <system:String x:Key="txt_settings_update">Update time:</system:String>
+    <system:String x:Key="txt_settings_save_last_server">Save last server directory:</system:String>
+
+    <system:String x:Key="txt_dialog_language_info">The language is changed completely at the next start.</system:String>
+
+</ResourceDictionary>

@@ -71,7 +71,8 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>blockstation_logo.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>key.pfx</AssemblyOriginatorKeyFile>
@@ -141,79 +142,91 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="core\Utils.cs" />
-    <Compile Include="core\properties\javaproperties\JavaProperties.cs" />
-    <Compile Include="core\properties\javaproperties\JavaPropertyReader.cs" />
-    <Compile Include="core\properties\javaproperties\JavaPropertyWriter.cs" />
-    <Compile Include="core\nbt\ByteCountingStream.cs" />
-    <Compile Include="core\nbt\InvalidReaderStateException.cs" />
-    <Compile Include="core\nbt\JetBrains.Annotations.cs" />
-    <Compile Include="core\nbt\NbtBinaryReader.cs" />
-    <Compile Include="core\nbt\NbtBinaryWriter.cs" />
-    <Compile Include="core\nbt\NbtCompression.cs" />
-    <Compile Include="core\nbt\NbtFile.cs" />
-    <Compile Include="core\nbt\NbtFormatException.cs" />
-    <Compile Include="core\nbt\NbtParseState.cs" />
-    <Compile Include="core\nbt\NbtReader.cs" />
-    <Compile Include="core\nbt\NbtReaderNode.cs" />
-    <Compile Include="core\nbt\NbtTagType.cs" />
-    <Compile Include="core\nbt\NbtWriter.cs" />
-    <Compile Include="core\nbt\NbtWriterNode.cs" />
-    <Compile Include="core\nbt\TagSelector.cs" />
-    <Compile Include="core\nbt\tags\NbtByte.cs" />
-    <Compile Include="core\nbt\tags\NbtByteArray.cs" />
-    <Compile Include="core\nbt\tags\NbtCompound.cs" />
-    <Compile Include="core\nbt\tags\NbtDouble.cs" />
-    <Compile Include="core\nbt\tags\NbtFloat.cs" />
-    <Compile Include="core\nbt\tags\NbtInt.cs" />
-    <Compile Include="core\nbt\tags\NbtIntArray.cs" />
-    <Compile Include="core\nbt\tags\NbtList.cs" />
-    <Compile Include="core\nbt\tags\NbtLong.cs" />
-    <Compile Include="core\nbt\tags\NbtShort.cs" />
-    <Compile Include="core\nbt\tags\NbtString.cs" />
-    <Compile Include="core\nbt\tags\NbtTag.cs" />
-    <Compile Include="core\nbt\ZLibStream.cs" />
-    <Compile Include="gui\Info.xaml.cs">
+    <Compile Include="Core\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Utils.cs" />
+    <Compile Include="Core\properties\javaproperties\JavaProperties.cs" />
+    <Compile Include="Core\properties\javaproperties\JavaPropertyReader.cs" />
+    <Compile Include="Core\properties\javaproperties\JavaPropertyWriter.cs" />
+    <Compile Include="Core\nbt\ByteCountingStream.cs" />
+    <Compile Include="Core\nbt\InvalidReaderStateException.cs" />
+    <Compile Include="Core\nbt\JetBrains.Annotations.cs" />
+    <Compile Include="Core\nbt\NbtBinaryReader.cs" />
+    <Compile Include="Core\nbt\NbtBinaryWriter.cs" />
+    <Compile Include="Core\nbt\NbtCompression.cs" />
+    <Compile Include="Core\nbt\NbtFile.cs" />
+    <Compile Include="Core\nbt\NbtFormatException.cs" />
+    <Compile Include="Core\nbt\NbtParseState.cs" />
+    <Compile Include="Core\nbt\NbtReader.cs" />
+    <Compile Include="Core\nbt\NbtReaderNode.cs" />
+    <Compile Include="Core\nbt\NbtTagType.cs" />
+    <Compile Include="Core\nbt\NbtWriter.cs" />
+    <Compile Include="Core\nbt\NbtWriterNode.cs" />
+    <Compile Include="Core\nbt\TagSelector.cs" />
+    <Compile Include="Core\nbt\tags\NbtByte.cs" />
+    <Compile Include="Core\nbt\tags\NbtByteArray.cs" />
+    <Compile Include="Core\nbt\tags\NbtCompound.cs" />
+    <Compile Include="Core\nbt\tags\NbtDouble.cs" />
+    <Compile Include="Core\nbt\tags\NbtFloat.cs" />
+    <Compile Include="Core\nbt\tags\NbtInt.cs" />
+    <Compile Include="Core\nbt\tags\NbtIntArray.cs" />
+    <Compile Include="Core\nbt\tags\NbtList.cs" />
+    <Compile Include="Core\nbt\tags\NbtLong.cs" />
+    <Compile Include="Core\nbt\tags\NbtShort.cs" />
+    <Compile Include="Core\nbt\tags\NbtString.cs" />
+    <Compile Include="Core\nbt\tags\NbtTag.cs" />
+    <Compile Include="Core\nbt\ZLibStream.cs" />
+    <Compile Include="View\Info.xaml.cs">
       <DependentUpon>Info.xaml</DependentUpon>
     </Compile>
-    <Compile Include="gui\Settings.xaml.cs">
+    <Compile Include="View\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Query.cs" />
-    <Compile Include="gui\ServerSelector.xaml.cs">
+    <Compile Include="Properties\App.Designer.cs">
+      <DependentUpon>App.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Core\Query.cs" />
+    <Compile Include="View\ServerSelector.xaml.cs">
       <DependentUpon>ServerSelector.xaml</DependentUpon>
     </Compile>
-    <Page Include="gui\Info.xaml">
+    <Page Include="Core\App.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="gui\MainWindow.xaml">
+    <Page Include="Resource\Language\lang_de.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gui\MainWindow.xaml.cs">
+    <Page Include="Resource\Language\lang_en.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Info.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="gui\ServerSelector.xaml">
+    <Page Include="View\ServerSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="gui\Settings.xaml">
+    <Page Include="View\Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="core\PocketMine-MP-Server.cs" />
+    <Compile Include="Core\PocketMine-MP-Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -231,9 +244,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="blockstation.update" />
     <None Include="key.pfx" />
     <None Include="Properties\app.manifest" />
+    <None Include="Properties\App.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>App.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -242,7 +260,7 @@
     <None Include="start.cmd" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="Core\App.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -257,17 +275,15 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="img\bg_info.jpg" />
+    <Resource Include="Resource\Image\bg_info.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="img\blockstation_logo.png" />
+    <Resource Include="Resource\Image\blockstation_logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="img\blockstation_logo.ico" />
+    <Resource Include="Resource\Image\blockstation_logo.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="blockstation_logo.ico" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

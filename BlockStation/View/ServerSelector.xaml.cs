@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,6 +32,14 @@ namespace BlockStation
         public ServerSelector()
         {
             InitializeComponent();
+            Utils.SetLanguage(this);
+
+            if (Properties.Settings.Default.SaveLastServer == true && Properties.Settings.Default.LastServerDir != "")
+            {
+                ServerPfad = Properties.Settings.Default.LastServerDir;
+                textbox_server_dir.Text = Properties.Settings.Default.LastServerDir;
+                button_open.IsEnabled = true;
+            }
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
@@ -55,9 +64,9 @@ namespace BlockStation
                 }
                 if (Utils.checkServerFolder(Pfad))
                 {
-                    ServerDir.Text = Pfad;
+                    textbox_server_dir.Text = Pfad;
                     ServerPfad = Pfad;
-                    OpenServer.IsEnabled = true;
+                    button_open.IsEnabled = true;
                 }
                 else
                 {
@@ -71,6 +80,8 @@ namespace BlockStation
         private void button2_Click(object sender, RoutedEventArgs e)
         {
             PocketMine_MP_Server server = new PocketMine_MP_Server(ServerPfad);
+            Properties.Settings.Default.LastServerDir = ServerPfad;
+            Properties.Settings.Default.Save();
             MainWindow mw = new MainWindow(server);
             mw.InitializeComponent();
             this.Close();
@@ -81,9 +92,17 @@ namespace BlockStation
         {
             Info info = new Info();
             info.InitializeComponent();
-            info.version.Content = App.AppVersion + " " + App.AppVersionText;
-            info.build.Content = App.BuildVersion;
-            info.Show();
+            info.version.Content = Properties.App.Default.Version + " " + Properties.App.Default.VersionText;
+            info.build.Content = Properties.App.Default.Build;
+            info.ShowDialog();
+        }
+
+        private void button2_Click_1(object sender, RoutedEventArgs e)
+        {
+            Settings s = new Settings();
+            s.InitializeComponent();
+            s.ShowDialog();
+            Utils.SetLanguage(this);
         }
     }
 }

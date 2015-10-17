@@ -29,6 +29,7 @@ namespace BlockStation.gui
         public Info()
         {
             InitializeComponent();
+            Utils.SetLanguage(this);
         }
 
         private void OpenWebsite_Click(object sender, RoutedEventArgs e)
@@ -49,7 +50,7 @@ namespace BlockStation.gui
             worker.WorkerSupportsCancellation = false;
             worker.DoWork += new DoWorkEventHandler(CheckForUpdates);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(UpdateAction);
-            SearchForUpdates.Content = "Wird geprüft...";
+            SearchForUpdates.Content = "...";
             SearchForUpdates.IsEnabled = false;
             worker.RunWorkerAsync();
         }
@@ -58,9 +59,7 @@ namespace BlockStation.gui
         {
             if (updateAvailable)
             {
-                SearchForUpdates.Content = "Nach Updates suchen";
-                SearchForUpdates.IsEnabled = true;
-                MessageBoxResult result = MessageBox.Show("Es ist ein Update verfügbar.\n\nAnmerkung:\n" + update_text + "\n\nMöchten sie das Update installieren?", "Aktualisierung", MessageBoxButton.YesNo);
+                MessageBoxResult result = MessageBox.Show("Install update?.\n\nInfo:\n" + update_text, "Update", MessageBoxButton.YesNo, MessageBoxImage.Information);
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
@@ -74,7 +73,7 @@ namespace BlockStation.gui
                         }
                         catch
                         {
-                            MessageBox.Show("Updater konnte nicht geöffnet werden.", "Fehler!");
+                            MessageBox.Show("Updater could not be opened.", "Update", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         break;
                     case MessageBoxResult.No:
@@ -83,9 +82,7 @@ namespace BlockStation.gui
             }
             else
             {
-                SearchForUpdates.Content = "Nach Updates suchen";
-                SearchForUpdates.IsEnabled = true;
-                MessageBox.Show("Keine Aktualisierung verfügbar.", "Aktualisierung");
+                MessageBox.Show("No update available.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
         }
@@ -132,7 +129,7 @@ namespace BlockStation.gui
                         streamReader.Close();
 
 
-                        if (Int32.Parse(update) > Int32.Parse(App.BuildVersion))
+                        if (Int32.Parse(update) > Int32.Parse(Properties.App.Default.Build))
                         {
                             updateAvailable = true;
 
