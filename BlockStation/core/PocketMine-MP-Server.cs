@@ -760,7 +760,7 @@ namespace BlockStation
         }
 
         // Schreibe Servereinstellungen
-        private void WriteServerSettings()
+        public void WriteServerSettings()
         {
             try
             {

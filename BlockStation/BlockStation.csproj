@@ -204,6 +204,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resource\Language\lang_pt.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Info.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

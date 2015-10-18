@@ -213,7 +213,8 @@ namespace BlockStation
 
         private void loadServerProperties()
         {
-
+            try
+            {
                 level_type.Text = server.WorldType;
                 gamemode.Text = server.Gamemode.ToString();
                 server_name.Text = server.Name;
@@ -239,6 +240,14 @@ namespace BlockStation
                 announce_player_achievements.IsChecked = server.EnablePlayerAchievements;
                 allow_flight.IsChecked = server.AllowFlight;
 
+            }
+            catch(Exception)
+            {
+                server.WriteServerSettings();
+                server.ReadServerSettings();
+                loadServerProperties();
+                Console.WriteLine("Incomplete server.properties file");
+            }
 
         }
 

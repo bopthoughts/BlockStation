@@ -60,7 +60,7 @@ namespace BlockStation
                     dict.Source = new Uri("..\\Resource\\Language\\lang_de.xaml", UriKind.Relative);
                     break;
                 case "pt":
-                    dict.Source = new Uri("..\\Resource\\Language\\lang_pt.xaml.xaml", UriKind.Relative);
+                    dict.Source = new Uri("..\\Resource\\Language\\lang_pt.xaml", UriKind.Relative);
                     break;
                 default:
                     dict.Source = new Uri("..\\Resource\\Language\\lang_en.xaml", UriKind.Relative);

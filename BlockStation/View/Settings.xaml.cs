@@ -29,7 +29,7 @@ namespace BlockStation.gui
             {
                 case "de": rbDeutsch.IsChecked = true; break;
                 case "en": rbEnglisch.IsChecked = true; break;
-                case "fr": rbPortugisisch.IsChecked = true; break;
+                case "pt": rbPortugisisch.IsChecked = true; break;
             }
             switch (Properties.Settings.Default.SaveLastServer)
             {
