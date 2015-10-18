@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Language" Type="System.String" Scope="User">
-      <Value Profile="(Default)">de</Value>
+      <Value Profile="(Default)">en</Value>
     </Setting>
     <Setting Name="SaveLastServer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

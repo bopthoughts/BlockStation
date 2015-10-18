@@ -14,6 +14,7 @@ xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="new">Neu</system:String>
     <system:String x:Key="about">Info</system:String>
     <system:String x:Key="overview">Übersicht</system:String>
+    <system:String x:Key="error">Fehler</system:String>
 
     <system:String x:Key="console">Konsole</system:String>
     <system:String x:Key="chat">Chat</system:String>
@@ -69,7 +70,7 @@ xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <system:String x:Key="build">Build:</system:String>
     <system:String x:Key="code">Code:</system:String>
-    <system:String x:Key="grafic">Grafik:</system:String>
+    <system:String x:Key="graphics">Grafik:</system:String>
     <system:String x:Key="report_error">Fehler melden</system:String>
     <system:String x:Key="open_website">Website öffnen</system:String>
     <system:String x:Key="check_for_updates">Nach Updates suchen</system:String>

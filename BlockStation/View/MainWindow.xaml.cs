@@ -61,10 +61,7 @@ namespace BlockStation
             {
                 DeactivateWhitelist.IsEnabled = false;
             }
-            else
-            {
-                MessageBox.Show("Es konnte nicht geprüft werden, ob die Whitelist aktiviert ist.", "Fehler!");
-            }
+
 
             Whitelist.IsSynchronizedWithCurrentItem = true;
             Whitelist.ItemsSource = server.Whitelist;
@@ -139,7 +136,7 @@ namespace BlockStation
             if(server.ServerProcess)
             {
                 server.Stop();
-                MessageBox.Show("Der noch laufende PocketMine-MP Server wurde heruntergefahren.", "Hinweis!");
+                Utils.ShowServerHint();
             }
             
         }
@@ -287,28 +284,15 @@ namespace BlockStation
 
                 if (server.ServerProcess == true)
                 {
-                    // Display message box
-                    MessageBoxResult result = MessageBox.Show("Möchten sie den Server neustarten, damit die Einstellungen\nübernommen werden?", "Einstellungen wurden geschrieben!", MessageBoxButton.YesNo);
-
-                    // Process message box results
-                    switch (result)
-                    {
-                        case MessageBoxResult.Yes:
                             loadServerProperties();
                             server.Stop();
                             server.Start();
                             loadServerProperties();
-                            break;
-                        case MessageBoxResult.No:
-                            loadServerProperties();
-                            break;
-                    }
                 }
-                loadServerProperties();
             }
             catch (System.FormatException)
             {
-                MessageBox.Show("Es konnten nicht alle Einstellungen geschrieben werden.\n\nMindestens ein Feld ist ungültig.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowInvalidFieldWarning();
                 loadServerProperties();
             }
 
@@ -352,7 +336,7 @@ namespace BlockStation
         {
             if(AddPlayerToWhitelistName.Text == "")
             {
-                MessageBox.Show("Feld darf nicht leer sein.");
+                Utils.ShowEmptyFieldWarning();
             }
             else
             {

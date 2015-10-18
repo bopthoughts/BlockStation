@@ -14,6 +14,7 @@ xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="new">New</system:String>
     <system:String x:Key="about">About</system:String>
     <system:String x:Key="overview">Overview</system:String>
+    <system:String x:Key="error">Error</system:String>
 
     <system:String x:Key="console">Console</system:String>
     <system:String x:Key="chat">Chat</system:String>
@@ -74,12 +75,17 @@ xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="open_website">Open Website</system:String>
     <system:String x:Key="check_for_updates">Check for Updates</system:String>
 
-    
-    
     <system:String x:Key="txt_overview">Please select a PocketMine-MP Server.</system:String>
     <system:String x:Key="txt_settings_update">Update time:</system:String>
     <system:String x:Key="txt_settings_save_last_server">Save last server directory:</system:String>
 
     <system:String x:Key="txt_dialog_language_info">The language is changed completely at the next start.</system:String>
+    <system:String x:Key="txt_dialog_error_reading_file">File could not be read.</system:String>
+    <system:String x:Key="txt_dialog_error_file_not_found">File not found.</system:String>
+    <system:String x:Key="txt_dialog_error_incorrect_format">The format of the file is incorrect.</system:String>
+    <system:String x:Key="txt_dialog_error_open">File could not be opened.</system:String>
+    <system:String x:Key="txt_dialog_error_empty">The field can not be empty.</system:String>
+    <system:String x:Key="txt_dialog_update_available">There is an update available! Install?</system:String>
+    <system:String x:Key="txt_dialog_no_update_available">There is no update available.</system:String>
 
 </ResourceDictionary>

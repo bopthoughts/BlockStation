@@ -63,6 +63,7 @@ namespace BlockStation
         const string fn_serverproperties = "server.properties";
         const string fn_oplist = "ops.txt";
         const string fn_pocketmine = "pocketmine.yml";
+        const string fn_playerdat = "players/*.dat";
 
         // Events
         public event EventHandler ServerOutputChanged;
@@ -589,7 +590,7 @@ namespace BlockStation
                 }
                 catch(Exception)
                 {
-                    MessageBox.Show("Der PocketMine Prozess kann nicht gestartet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Utils.ShowStartProcessError("PocketMine");
                 }
 
                 PocketMineProcess.StandardInput.WriteLine("bin\\php\\php.exe " + "PocketMine-MP.phar --disable-ansi %*");
@@ -738,22 +739,22 @@ namespace BlockStation
             }
             catch (NullReferenceException)
             {
-                MessageBox.Show("Server Einstellungen konnten nicht gelesen werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowReadingError(fn_serverproperties);
                 Environment.Exit(1);
             }
             catch (FileNotFoundException)
             {
-                MessageBox.Show("Server Einstellungen konnten nicht gelesen werden.\n\nDie Datei \"" + fn_serverproperties + "\" ist nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowFileMissingError(fn_serverproperties);
                 Environment.Exit(1);
             }
             catch (FileFormatException)
             {
-                MessageBox.Show("Server Einstellungen konnten nicht gelesen werden.\n\nDas Format der Datei ist nicht korrekt.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowFormatError(fn_serverproperties);
                 Environment.Exit(1);
             }
             catch (FileLoadException)
             {
-                MessageBox.Show("Server Einstellungen konnten nicht gelesen werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowLoadError(fn_serverproperties);
                 Environment.Exit(1);
             }
         }
@@ -790,27 +791,29 @@ namespace BlockStation
                     "auto-save=" + prop_auto_save
                 };
 
-                System.IO.File.WriteAllLines(dir + fn_serverproperties, lines);
+                System.IO.File.WriteAllLines(dir + fn_serverproperties, lines, System.Text.Encoding.Default);
                 ReadServerSettings();
             }
             catch (NullReferenceException)
             {
-                MessageBox.Show("Server Einstellungen konnten nicht gespeichert werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowReadingError(fn_serverproperties);
                 Environment.Exit(1);
             }
             catch (FileNotFoundException)
             {
-                MessageBox.Show("Server Einstellungen konnten nicht gespeichert werden.\n\nDie Datei \""+fn_serverproperties+"\" ist nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowFileMissingError(fn_serverproperties);
+                Environment.Exit(1);
             }
             catch (FileFormatException)
             {
-                MessageBox.Show("Server Einstellungen konnten nicht gespeichert werden.\n\nDas Format der Datei ist nicht korrekt.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowFormatError(fn_serverproperties);
+                Environment.Exit(1);
             }
             catch (FileLoadException)
             {
-                MessageBox.Show("Server Einstellungen konnten nicht gespeichert werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowLoadError(fn_serverproperties);
+                Environment.Exit(1);
             }
-
         }
 
         // Spieler zur Whitelist hinzufügen
@@ -836,25 +839,25 @@ namespace BlockStation
             }
             catch (NullReferenceException)
             {
-                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowReadingError(fn_whitelist);
                 Environment.Exit(1);
             }
             catch (FileNotFoundException)
             {
-                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatei nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowFileMissingError(fn_whitelist);
                 Environment.Exit(1);
             }
             catch (FileFormatException)
             {
-                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nFalsches Dateiformat.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowFormatError(fn_whitelist);
                 Environment.Exit(1);
             }
             catch (FileLoadException)
             {
-                MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowLoadError(fn_whitelist);
                 Environment.Exit(1);
             }
-            
+
             ReadPlayerData();
         }
 
@@ -866,7 +869,7 @@ namespace BlockStation
                 Player rückgabe;
                 if (!(PlayerList.TryGetValue(playername, out rückgabe)))
                 {
-                    MessageBox.Show("Es wurde ein unbekannter Spieler von der Whitelist entfernt.\nDas darf nicht passieren!");
+                    //MessageBox.Show("Es wurde ein unbekannter Spieler von der Whitelist entfernt.\nDas darf nicht passieren!");
                 }
                 Whitelist.Remove(rückgabe);
                 try
@@ -875,22 +878,22 @@ namespace BlockStation
                 }
                 catch (NullReferenceException)
                 {
-                    MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Utils.ShowReadingError(fn_whitelist);
                     Environment.Exit(1);
                 }
                 catch (FileNotFoundException)
                 {
-                    MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDatei nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Utils.ShowFileMissingError(fn_whitelist);
                     Environment.Exit(1);
                 }
                 catch (FileFormatException)
                 {
-                    MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nFalsches Dateiformat.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Utils.ShowFormatError(fn_whitelist);
                     Environment.Exit(1);
                 }
                 catch (FileLoadException)
                 {
-                    MessageBox.Show("Die Whitelistdaten konnten nicht geschrieben werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Utils.ShowLoadError(fn_whitelist);
                     Environment.Exit(1);
                 }
                 ReadPlayerData();
@@ -936,24 +939,24 @@ namespace BlockStation
                     counter++;
                 }
             }
-            catch(NullReferenceException)
+            catch (NullReferenceException)
             {
-                MessageBox.Show("Die Spielerdaten konnten nicht gelesen werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowReadingError(fn_playerdat);
                 Environment.Exit(1);
             }
             catch (FileNotFoundException)
             {
-                MessageBox.Show("Die Spielerdaten konnten nicht gelesen werden.\n\nDatei nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowFileMissingError(fn_playerdat);
                 Environment.Exit(1);
             }
             catch (FileFormatException)
             {
-                MessageBox.Show("Die Spielerdaten konnten nicht gelesen werden.\n\nFalsches Dateiformat.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowFormatError(fn_playerdat);
                 Environment.Exit(1);
             }
             catch (FileLoadException)
             {
-                MessageBox.Show("Die Spielerdaten konnten nicht gelesen werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowLoadError(fn_playerdat);
                 Environment.Exit(1);
             }
 
@@ -988,28 +991,24 @@ namespace BlockStation
             }
             catch (NullReferenceException)
             {
-                MessageBox.Show("Die Whitelistdaten konnten nicht gelesen werden.\n\nDatensatz ist fehlerhaft.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowReadingError(fn_whitelist);
                 Environment.Exit(1);
             }
             catch (FileNotFoundException)
             {
-                MessageBox.Show("Die Whitelistdaten konnten nicht gelesen werden.\n\nDatei nicht vorhanden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowFileMissingError(fn_whitelist);
                 Environment.Exit(1);
             }
             catch (FileFormatException)
             {
-                MessageBox.Show("Die Whitelistdaten konnten nicht gelesen werden.\n\nFalsches Dateiformat.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowFormatError(fn_whitelist);
                 Environment.Exit(1);
             }
             catch (FileLoadException)
             {
-                MessageBox.Show("Die Whitelistdaten konnten nicht gelesen werden.\n\nDie Datei konnte nicht geöffnet werden.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.ShowLoadError(fn_whitelist);
                 Environment.Exit(1);
             }
-
-
-
-
         }
     }
 

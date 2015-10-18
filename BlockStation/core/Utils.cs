@@ -11,6 +11,46 @@ namespace BlockStation
 {
     class Utils
     {
+        public static void ShowEmptyFieldWarning()
+        {
+            MessageBox.Show("Please input something in the given field.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        public static void ShowInvalidFieldWarning()
+        {
+            MessageBox.Show("At least one field is invalid.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        public static void ShowServerHint()
+        {
+            MessageBox.Show("The server has been shut down.", "BlockStation", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        public static void ShowStartProcessError(string process)
+        {
+            MessageBox.Show("Process could not be started.\n\nProcess: \"" + process + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public static void ShowFileMissingError(string file)
+        {
+            MessageBox.Show("File not found.\n\nFile: \"" + file + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public static void ShowReadingError(string file)
+        {
+            MessageBox.Show("File could not be read.\n\nFile: \"" + file + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public static void ShowFormatError(string file)
+        {
+            MessageBox.Show("The format of the file is incorrect.\n\nFile: \"" + file + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public static void ShowLoadError(string file)
+        {
+            MessageBox.Show("File could not be opened.\n\nFile: \"" + file + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
         public static void SetLanguage(Window w)
         {
             ResourceDictionary dict = new ResourceDictionary();
@@ -19,17 +59,11 @@ namespace BlockStation
                 case "de":
                     dict.Source = new Uri("..\\Resource\\Language\\lang_de.xaml", UriKind.Relative);
                     break;
+                case "pt":
+                    dict.Source = new Uri("..\\Resource\\Language\\lang_pt.xaml.xaml", UriKind.Relative);
+                    break;
                 default:
                     dict.Source = new Uri("..\\Resource\\Language\\lang_en.xaml", UriKind.Relative);
-                    break;
-                case "fr":
-                    //dict.Source = new Uri("..\\Resource\\Language\\lang_fr.xaml.xaml", UriKind.Relative);
-                    break;
-                case "es":
-                    //dict.Source = new Uri("..\\Resource\\Language\\lang_es.xaml.xaml", UriKind.Relative);
-                    break;
-                case "ru":
-                    dict.Source = new Uri("..\\Resource\\Language\\lang_ru.xaml.xaml", UriKind.Relative);
                     break;
             }
 

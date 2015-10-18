@@ -29,8 +29,7 @@ namespace BlockStation.gui
             {
                 case "de": rbDeutsch.IsChecked = true; break;
                 case "en": rbEnglisch.IsChecked = true; break;
-                case "es": rbSpanisch.IsChecked = true; break;
-                case "fr": rbFranzoesisch.IsChecked = true; break;
+                case "fr": rbPortugisisch.IsChecked = true; break;
             }
             switch (Properties.Settings.Default.SaveLastServer)
             {
@@ -51,14 +50,11 @@ namespace BlockStation.gui
             {
                 Properties.Settings.Default.Language = "en";
             }
-            if (rbFranzoesisch.IsChecked == true)
+            if (rbPortugisisch.IsChecked == true)
             {
-                Properties.Settings.Default.Language = "fr";
+                Properties.Settings.Default.Language = "pt";
             }
-            if (rbSpanisch.IsChecked == true)
-            {
-                Properties.Settings.Default.Language = "es";
-            }
+
 
             if ((bool)savelastdir.IsChecked)
             {
