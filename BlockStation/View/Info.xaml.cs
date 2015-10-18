@@ -59,7 +59,7 @@ namespace BlockStation.gui
         {
             if (updateAvailable)
             {
-                MessageBoxResult result = MessageBox.Show("Install update?.\n\nInfo:\n" + update_text, "Update", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                MessageBoxResult result = MessageBox.Show("Install update?\n\nInfo:\n" + update_text, "Update", MessageBoxButton.YesNo, MessageBoxImage.Information);
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
