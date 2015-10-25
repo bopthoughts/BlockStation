@@ -11,10 +11,10 @@ namespace BlockStation
 
     public partial class MainWindow : Window
     {
+        bool ExitApp = false;
 
         PocketMine_MP_Server server;
         System.Timers.Timer updateTimer;
-
 
         // Server Propteries
         public string prop_server_name = "";
@@ -64,7 +64,7 @@ namespace BlockStation
 
 
             Whitelist.IsSynchronizedWithCurrentItem = true;
-            Whitelist.ItemsSource = server.Whitelist;
+            Whitelist.ItemsSource = server.Whitelist.getListData();
             Whitelist.SelectionMode = SelectionMode.Single;
 
             PlayerListview.SelectionMode = SelectionMode.Single;
@@ -79,8 +79,6 @@ namespace BlockStation
             updateTimer.Elapsed += update;
             updateTimer.Enabled = false;
 
-
-
             refreshPlayerList();
             server.ServerOutputChanged += receiveServerOutput;
             server.ServerGetOnline += ServerGetOnline;
@@ -88,6 +86,36 @@ namespace BlockStation
             server.PlayerJoinedServer += PlayerJoinedServer;
             server.PlayerLeaveServer += PlayerLeaveServer;
             server.NewChatMessage += NewChatMessage;
+            server.ServerCrash += ServerCrash;
+            server.ProcessStopped += ServerProcessStopped;
+        }
+
+        private void ServerProcessStopped(object sender, EventArgs e)
+        {
+
+            Dispatcher.Invoke(new Action(() =>
+            {
+                //schaltet den durchgehenden online check aus.
+                updateTimer.Enabled = false;
+
+                StopServer.IsEnabled = false;
+                StartServer.IsEnabled = true;
+                RestartServer.IsEnabled = false;
+                loadServerInfo();
+
+                if(ExitApp == true)
+                {
+                    Environment.Exit(0);
+                }
+            }
+            ));
+
+
+        }
+
+        private void ServerCrash(object sender, EventArgs e)
+        {
+            MessageBox.Show("Server crash");
         }
 
         private void PlayerLeaveServer(object sender, EventArgs e)
@@ -113,10 +141,12 @@ namespace BlockStation
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
             server.Start();
+            // Startet den online check
+            updateTimer.Enabled = true;
+
             StopServer.IsEnabled = true;
             StartServer.IsEnabled = false;
             RestartServer.IsEnabled = true;
-            updateTimer.Enabled = true;
             HelpCommand.IsEnabled = false;
         }
 
@@ -131,12 +161,13 @@ namespace BlockStation
             CommandBar.Text = "";
         }
 
-        private void MainWindow1_Closed(object sender, EventArgs e)
+        private void MainWindow1_Closed(object sender, CancelEventArgs e)
         {
             if(server.ServerProcess)
             {
                 server.Stop();
-                Utils.ShowServerHint();
+                ExitApp = true;
+                e.Cancel = true;
             }
             
         }
@@ -192,7 +223,7 @@ namespace BlockStation
             {
                 Dispatcher.Invoke(new Action(() =>
                 {
-                    ServerName.Content = server.Name;
+                    this.Title = server.Name;
 
                     status_max_player.Content = server.MaxPlayers;
                     status_motd.Content = server.Motd;
@@ -206,9 +237,6 @@ namespace BlockStation
             {
                 //
             }
-
-
-            
         }
 
         private void loadServerProperties()
@@ -310,11 +338,13 @@ namespace BlockStation
         private void StopServer_Click(object sender, RoutedEventArgs e)
         {
             server.Stop();
-            StopServer.IsEnabled = false;
-            StartServer.IsEnabled = true;
-            //updateTimer.Enabled = false;
             RestartServer.IsEnabled = false;
-            loadServerInfo();
+            StopServer.IsEnabled = false;
+        }
+
+        private void ServerStopped()
+        {
+
         }
 
         private void DeactivateWhitelist_Click(object sender, RoutedEventArgs e)
@@ -369,24 +399,27 @@ namespace BlockStation
 
         private void PlayerListview_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Zeigt die Spielerinformationen an
             try
             {
                 Player tmp;
-                server.PlayerList.TryGetValue(PlayerListview.SelectedValue.ToString(), out tmp);
-                playername.Content = tmp.Name;
-                lastonline.Content = tmp.LastOnline.ToString();
-                firsttimeonline.Content = tmp.LastOnline.ToString();
+                if(PlayerListview.SelectedValue != null)
+                {
+                    server.PlayerIndex.TryGetValue(PlayerListview.SelectedValue.ToString(), out tmp);
+                    playername.Content = tmp.Name;
+                    lastonline.Content = tmp.LastOnline.ToString();
+                    firsttimeonline.Content = tmp.LastOnline.ToString();
+                }
+
             }
             catch(System.InvalidOperationException)
-            {}
-            catch (System.NullReferenceException)
             {}
         }
 
         private void refreshPlayerList()
         {
             PlayerListview.Items.Clear();
-            foreach (var pair in server.PlayerList)
+            foreach (var pair in server.PlayerIndex)
             {
                 PlayerListview.Items.Add(pair.Key);
             }

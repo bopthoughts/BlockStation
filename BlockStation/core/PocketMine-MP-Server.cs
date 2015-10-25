@@ -16,6 +16,141 @@ using System.Text.RegularExpressions;
 
 namespace BlockStation
 {
+    public class PlayerList
+    {
+        private List<Player> List;
+        string path;
+        IDictionary<string, Player> PlayerIndex;
+
+        // Konstruktor
+        public PlayerList(string dir, ref IDictionary<string, Player> i)
+        {
+            PlayerIndex = i;
+            path = dir;
+            List = new List<Player>();
+            ReadList();
+        }
+
+        public void ReadList()
+        {
+            StreamReader file = new StreamReader(path);
+            string line;
+
+            try
+            {
+                while ((line = file.ReadLine()) != null)
+                {
+                    if (line != "")
+                    {
+                        Player tmp;
+                        PlayerIndex.TryGetValue(line, out tmp);
+
+                        // Wenn spieler auf der liste, aber nicht im index
+                        if (tmp == null)
+                        {
+                            tmp = new Player(line);
+                            PlayerIndex.Add(tmp.Name, tmp);
+                        }
+                        List.Add(tmp);
+                    }
+                }
+                file.Close();
+            }
+            catch (NullReferenceException)
+            {
+                Utils.ShowReadingError(path);
+                Environment.Exit(1);
+            }
+            catch (FileNotFoundException)
+            {
+                Utils.ShowFileMissingError(path);
+                Environment.Exit(1);
+            }
+            catch (FileFormatException)
+            {
+                Utils.ShowFormatError(path);
+                Environment.Exit(1);
+            }
+            catch (FileLoadException)
+            {
+                Utils.ShowLoadError(path);
+                Environment.Exit(1);
+            }
+        }
+
+        public void addToList(Player player)
+        {
+            if (!(PlayerIndex.ContainsKey(player.Name)))
+            {
+                PlayerIndex.Add(player.Name, player);
+            }
+            List.Add(player);
+
+            try
+            {
+                File.WriteAllLines(path, List.ConvertAll(Convert.ToString));
+            }
+            catch (NullReferenceException)
+            {
+                Utils.ShowReadingError(path);
+                Environment.Exit(1);
+            }
+            catch (FileNotFoundException)
+            {
+                Utils.ShowFileMissingError(path);
+                Environment.Exit(1);
+            }
+            catch (FileFormatException)
+            {
+                Utils.ShowFormatError(path);
+                Environment.Exit(1);
+            }
+            catch (FileLoadException)
+            {
+                Utils.ShowLoadError(path);
+                Environment.Exit(1);
+            }
+        }
+
+        public void removeFromList(Player player)
+        {
+            if (!(PlayerIndex.ContainsKey(player.Name)))
+            {
+                PlayerIndex.Add(player.Name, player);
+            }
+            List.Remove(player);
+
+            try
+            {
+                File.WriteAllLines(path, List.ConvertAll(Convert.ToString));
+            }
+            catch (NullReferenceException)
+            {
+                Utils.ShowReadingError(path);
+                Environment.Exit(1);
+            }
+            catch (FileNotFoundException)
+            {
+                Utils.ShowFileMissingError(path);
+                Environment.Exit(1);
+            }
+            catch (FileFormatException)
+            {
+                Utils.ShowFormatError(path);
+                Environment.Exit(1);
+            }
+            catch (FileLoadException)
+            {
+                Utils.ShowLoadError(path);
+                Environment.Exit(1);
+            }
+        }
+
+        public List<Player> getListData()
+        {
+            return List;
+        }
+    }
 
     public class Player
     {
@@ -43,15 +178,13 @@ namespace BlockStation
         public PocketMine_MP_Server(string d)
         {
             // Initialisierungen
-            Whitelist = new List<Player>();
-            PlayerList = new Dictionary<string, Player>();
+            PlayerIndex = new Dictionary<string, Player>();
             query = new Query.MCQuery();
             dir = d;
+            Whitelist = new PlayerList(dir + fn_whitelist, ref PlayerIndex);
 
-            // Durchgehender OnlineCheck
+            // OnlineCheck Hintergrund Thread.
             worker = new BackgroundWorker();
-            worker.WorkerReportsProgress = true;
-            worker.WorkerSupportsCancellation = false;
             worker.DoWork += new DoWorkEventHandler(CheckServerAvailability);
 
             ReadServerSettings();
@@ -66,6 +199,8 @@ namespace BlockStation
         const string fn_playerdat = "players/*.dat";
 
         // Events
+        public event EventHandler ProcessStopped;
+        public event EventHandler ServerCrash;
         public event EventHandler ServerOutputChanged;
         public event EventHandler PlayerJoinedServer;
         public event EventHandler PlayerLeaveServer;
@@ -74,10 +209,11 @@ namespace BlockStation
         public event EventHandler NewChatMessage;
 
         // Alle Spieler
-        public IDictionary<string, Player> PlayerList;
+        public IDictionary<string, Player> PlayerIndex;
 
-        // Whitelist
-        public List<Player> Whitelist;
+        // Spieler Listen
+        public PlayerList Whitelist;
+        public PlayerList OPList;
 
         // Prozess für PocketMine
         private Process PocketMineProcess;
@@ -569,6 +705,13 @@ namespace BlockStation
         private string prop_gamemode = "";
         private string prop_level_type = "";
 
+        public Player getPlayer(string name)
+        {
+            Player player;
+            PlayerIndex.TryGetValue(name, out player);
+            return player;
+        }
+
         // Startet den Server
         public void Start ()
         {
@@ -615,18 +758,29 @@ namespace BlockStation
         // Fährt den Server herunter bzw. stopt ihn
         public void Stop()
         {
+            BackgroundWorker shutdown = new BackgroundWorker();
+            shutdown.DoWork += backgroundworker_stop;
+            shutdown.RunWorkerAsync();
+        }
+
+        // Backgroundworker für Stop, da das stoppen länger dauert.
+        private void backgroundworker_stop(object sender, DoWorkEventArgs e)
+        {
             if (PocketMineProcess != null)
             {
                 PocketMineProcess.StandardInput.WriteLine("stop");
+                System.Threading.Thread.Sleep(3000);
                 PocketMineProcess = null;
                 CheckServerAvailability(this, null);
+                ProcessStopped.Invoke(this, null);
             }
-
         }
 
         // Prüft die Server Verfügbarkeit
         private void CheckServerAvailability(object sender, DoWorkEventArgs e)
         {
+            Console.WriteLine("Check...");
+            // Wenn der Prozess nicht läuft, läuft auch kein server!
             if (PocketMineProcess == null)
             {
                 ServerProcess = false;
@@ -636,17 +790,19 @@ namespace BlockStation
             {
                 var info = query.Info();
                 query.Connect("localhost", Port);
+                // Wenn die Query verbindung hergestellt werden kann, läuft der Server!
                 if (query.Success())
                 {
                     Online = true;
+                    ServerProcess = true;
                 }
                 else
                 {
                     Online = false;
+                    ServerProcess = false;
                 }
-                ServerProcess = true;
             }
-
+            Console.WriteLine("Finish!");
         }
 
         // Speichert die Serverausgabe im ServerOutput String
@@ -819,85 +975,26 @@ namespace BlockStation
         // Spieler zur Whitelist hinzufügen
         public void AddPlayerToWhitelist(string playername)
         {
-            if(playername != "")
+            Player player;
+            PlayerIndex.TryGetValue(playername, out player);
+
+            if(player == null)
             {
-                Player tmp = new Player(playername);
-                if (!(PlayerList.ContainsKey(playername)))
-                {
-                    PlayerList.Add(tmp.Name, tmp);
-                }
-                Whitelist.Add(tmp);
+                player = new Player(playername);
             }
+            Whitelist.addToList(player);
             if (Online)
             {
                 SendCommand("whitelist add " + playername);
             }
-
-            try
-            {
-                File.WriteAllLines(dir + fn_whitelist, Whitelist.ConvertAll(Convert.ToString));
-            }
-            catch (NullReferenceException)
-            {
-                Utils.ShowReadingError(fn_whitelist);
-                Environment.Exit(1);
-            }
-            catch (FileNotFoundException)
-            {
-                Utils.ShowFileMissingError(fn_whitelist);
-                Environment.Exit(1);
-            }
-            catch (FileFormatException)
-            {
-                Utils.ShowFormatError(fn_whitelist);
-                Environment.Exit(1);
-            }
-            catch (FileLoadException)
-            {
-                Utils.ShowLoadError(fn_whitelist);
-                Environment.Exit(1);
-            }
-
-            ReadPlayerData();
         }
 
         // Spieler von der Whitelist entfernen
         public void RemovePlayerFromWhitelist (string playername)
         {
-            if (playername != "")
-            {
-                Player rückgabe;
-                if (!(PlayerList.TryGetValue(playername, out rückgabe)))
-                {
-                    //MessageBox.Show("Es wurde ein unbekannter Spieler von der Whitelist entfernt.\nDas darf nicht passieren!");
-                }
-                Whitelist.Remove(rückgabe);
-                try
-                {
-                    File.WriteAllLines(dir + fn_whitelist, Whitelist.ConvertAll(Convert.ToString));
-                }
-                catch (NullReferenceException)
-                {
-                    Utils.ShowReadingError(fn_whitelist);
-                    Environment.Exit(1);
-                }
-                catch (FileNotFoundException)
-                {
-                    Utils.ShowFileMissingError(fn_whitelist);
-                    Environment.Exit(1);
-                }
-                catch (FileFormatException)
-                {
-                    Utils.ShowFormatError(fn_whitelist);
-                    Environment.Exit(1);
-                }
-                catch (FileLoadException)
-                {
-                    Utils.ShowLoadError(fn_whitelist);
-                    Environment.Exit(1);
-                }
-                ReadPlayerData();
-            }
+            Player player;
+            PlayerIndex.TryGetValue(playername, out player);
+            Whitelist.removeFromList(player);
             if (Online)
             {
                 SendCommand("whitelist remove " + playername);
@@ -910,8 +1007,7 @@ namespace BlockStation
             string[] PlayerDataPath = System.IO.Directory.GetFiles(dir + "\\players\\", "*.dat");
 
             // Listen wieder zurücksetzen
-            Whitelist.Clear();
-            PlayerList.Clear();
+            PlayerIndex.Clear();
 
             int counter = 0;
 
@@ -935,7 +1031,7 @@ namespace BlockStation
                     tmp.FirstTimeOnline = Utils.JavaTimeStampToDateTime(b2);
 
 
-                    PlayerList.Add(Tag.Get<NbtString>("NameTag").Value, tmp);
+                    PlayerIndex.Add(Tag.Get<NbtString>("NameTag").Value, tmp);
                     counter++;
                 }
             }
@@ -959,56 +1055,7 @@ namespace BlockStation
                 Utils.ShowLoadError(fn_playerdat);
                 Environment.Exit(1);
             }
-
-
-            // Whitelist lesen
-            StreamReader whitelistfile = new StreamReader(dir + fn_whitelist);
-            string line;
-
-            // Lesen der Whitelist
-            try
-            {
-                foreach (string path in PlayerDataPath)
-                {
-                    while ((line = whitelistfile.ReadLine()) != null)
-                    {
-                        if (line != "")
-                        {
-                            Player tmp;
-
-                            // Wenn spieler auf der liste, aber nicht im index
-                            if(!(PlayerList.TryGetValue(line, out tmp)))
-                            {
-                                tmp = new Player(line);
-                                PlayerList.Add(tmp.Name, tmp);
-                            }
-                            Whitelist.Add(tmp);
-
-                        }
-                    }
-                }
-                whitelistfile.Close();
-            }
-            catch (NullReferenceException)
-            {
-                Utils.ShowReadingError(fn_whitelist);
-                Environment.Exit(1);
-            }
-            catch (FileNotFoundException)
-            {
-                Utils.ShowFileMissingError(fn_whitelist);
-                Environment.Exit(1);
-            }
-            catch (FileFormatException)
-            {
-                Utils.ShowFormatError(fn_whitelist);
-                Environment.Exit(1);
-            }
-            catch (FileLoadException)
-            {
-                Utils.ShowLoadError(fn_whitelist);
-                Environment.Exit(1);
-            }
+            Whitelist.ReadList();
         }
     }
 

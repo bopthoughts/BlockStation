@@ -287,7 +287,19 @@
   <ItemGroup>
     <Resource Include="Resource\Image\blockstation_logo.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resource\Image\brick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Image\dirt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Image\Icons\console.png" />
+    <Resource Include="Resource\Image\Icons\settings1.png" />
+    <Resource Include="Resource\Image\Icons\players.png" />
+    <Resource Include="Resource\Image\Icons\settings2.png" />
+    <Resource Include="Resource\Image\Icons\chat.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
