@@ -33,6 +33,7 @@ namespace BlockStation
 
         public void ReadList()
         {
+            List.Clear();
             StreamReader file = new StreamReader(path);
             string line;
 
@@ -114,10 +115,6 @@ namespace BlockStation
 
         public void removeFromList(Player player)
         {
-            if (!(PlayerIndex.ContainsKey(player.Name)))
-            {
-                PlayerIndex.Add(player.Name, player);
-            }
             List.Remove(player);
 
             try
@@ -182,6 +179,7 @@ namespace BlockStation
             query = new Query.MCQuery();
             dir = d;
             Whitelist = new PlayerList(dir + fn_whitelist, ref PlayerIndex);
+            OPList = new PlayerList(dir + fn_oplist, ref PlayerIndex);
 
             // OnlineCheck Hintergrund Thread.
             worker = new BackgroundWorker();
@@ -199,6 +197,7 @@ namespace BlockStation
         const string fn_playerdat = "players/*.dat";
 
         // Events
+        public event EventHandler ServerStarted;
         public event EventHandler ProcessStopped;
         public event EventHandler ServerCrash;
         public event EventHandler ServerOutputChanged;
@@ -319,6 +318,7 @@ namespace BlockStation
                     if(ServerGetOnline != null)
                     {
                         ServerGetOnline.Invoke(this, EventArgs.Empty);
+                        ServerStarted.Invoke(this, null);
                     }
                 }
                 online = value;
@@ -748,13 +748,6 @@ namespace BlockStation
                 PocketMineProcess.StandardInput.WriteLine("reload");
         }
 
-        // Startet den Server neu.
-        public void Restart()
-        {
-            Stop();
-            Start();
-        }
-
         // Fährt den Server herunter bzw. stopt ihn
         public void Stop()
         {
@@ -770,16 +763,22 @@ namespace BlockStation
             {
                 PocketMineProcess.StandardInput.WriteLine("stop");
                 System.Threading.Thread.Sleep(3000);
+                PocketMineProcess.Kill();
+                PocketMineProcess.Close();
                 PocketMineProcess = null;
                 CheckServerAvailability(this, null);
-                ProcessStopped.Invoke(this, null);
+                if (PocketMineProcess == null)
+                {
+                    ProcessStopped.Invoke(this, null);
+                }
             }
+            
         }
+
 
         // Prüft die Server Verfügbarkeit
         private void CheckServerAvailability(object sender, DoWorkEventArgs e)
         {
-            Console.WriteLine("Check...");
             // Wenn der Prozess nicht läuft, läuft auch kein server!
             if (PocketMineProcess == null)
             {
@@ -802,7 +801,6 @@ namespace BlockStation
                     ServerProcess = false;
                 }
             }
-            Console.WriteLine("Finish!");
         }
 
         // Speichert die Serverausgabe im ServerOutput String
@@ -995,11 +993,44 @@ namespace BlockStation
             Player player;
             PlayerIndex.TryGetValue(playername, out player);
             Whitelist.removeFromList(player);
+
             if (Online)
             {
                 SendCommand("whitelist remove " + playername);
             }
         }
+
+        // Spieler zur Whitelist hinzufügen
+        public void AddPlayerToOPList(string playername)
+        {
+            Player player;
+            PlayerIndex.TryGetValue(playername, out player);
+
+            if (player == null)
+            {
+                player = new Player(playername);
+            }
+
+            OPList.addToList(player);
+            if (Online)
+            {
+                SendCommand("whitelist add " + playername);
+            }
+        }
+
+        // Spieler von der Whitelist entfernen
+        public void RemovePlayerFromOPList(string playername)
+        {
+            Player player;
+            PlayerIndex.TryGetValue(playername, out player);
+
+            OPList.removeFromList(player);
+            if (Online)
+            {
+                SendCommand("whitelist remove " + playername);
+            }
+        }
+
 
         // Liest alle Spieler ein
         public void ReadPlayerData()
@@ -1056,6 +1087,7 @@ namespace BlockStation
                 Environment.Exit(1);
             }
             Whitelist.ReadList();
+            OPList.ReadList();
         }
     }
 

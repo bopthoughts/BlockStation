@@ -16,6 +16,7 @@ xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="overview">Visão Geral</system:String>
     <system:String x:Key="error">Erro</system:String>
 
+    <system:String x:Key="op">Operator</system:String>
     <system:String x:Key="console">Console</system:String>
     <system:String x:Key="chat">Chat</system:String>
     <system:String x:Key="whitelist">Whitelist</system:String>

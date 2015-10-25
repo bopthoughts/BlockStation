@@ -25,7 +25,7 @@ namespace BlockStation.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.8.1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.9.0")]
         public string Version {
             get {
                 return ((string)(this["Version"]));
@@ -43,7 +43,7 @@ namespace BlockStation.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("201510180")]
+        [global::System.Configuration.DefaultSettingValueAttribute("201510250")]
         public string Build {
             get {
                 return ((string)(this["Build"]));

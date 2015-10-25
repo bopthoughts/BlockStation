@@ -65,6 +65,7 @@ namespace BlockStation
 
             Whitelist.IsSynchronizedWithCurrentItem = true;
             Whitelist.ItemsSource = server.Whitelist.getListData();
+            OPList.ItemsSource = server.OPList.getListData();
             Whitelist.SelectionMode = SelectionMode.Single;
 
             PlayerListview.SelectionMode = SelectionMode.Single;
@@ -88,6 +89,20 @@ namespace BlockStation
             server.NewChatMessage += NewChatMessage;
             server.ServerCrash += ServerCrash;
             server.ProcessStopped += ServerProcessStopped;
+            server.ServerStarted += ServerStarted;
+        }
+
+        private void ServerStarted(object sender, EventArgs e)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                StopServer.IsEnabled = true;
+                StartServer.IsEnabled = false;
+                updateTimer.Enabled = true;
+            }
+            ));
+            Console.WriteLine("Server ist gestartet");
+
         }
 
         private void ServerProcessStopped(object sender, EventArgs e)
@@ -97,20 +112,18 @@ namespace BlockStation
             {
                 //schaltet den durchgehenden online check aus.
                 updateTimer.Enabled = false;
-
                 StopServer.IsEnabled = false;
                 StartServer.IsEnabled = true;
-                RestartServer.IsEnabled = false;
                 loadServerInfo();
 
-                if(ExitApp == true)
+
+                if (ExitApp == true)
                 {
                     Environment.Exit(0);
                 }
             }
             ));
-
-
+            Console.WriteLine("Serverprozess wurde gestoppt.");
         }
 
         private void ServerCrash(object sender, EventArgs e)
@@ -144,15 +157,10 @@ namespace BlockStation
             // Startet den online check
             updateTimer.Enabled = true;
 
-            StopServer.IsEnabled = true;
+            StopServer.IsEnabled = false;
             StartServer.IsEnabled = false;
-            RestartServer.IsEnabled = true;
-            HelpCommand.IsEnabled = false;
-        }
 
-        private void RestartServer_Click(object sender, RoutedEventArgs e)
-        {
-            server.Restart();
+            HelpCommand.IsEnabled = false;
         }
 
         private void EnterCommand_Click(object sender, RoutedEventArgs e)
@@ -223,7 +231,7 @@ namespace BlockStation
             {
                 Dispatcher.Invoke(new Action(() =>
                 {
-                    this.Title = server.Name;
+                    this.Title = "BlockStation - " + server.Name;
 
                     status_max_player.Content = server.MaxPlayers;
                     status_motd.Content = server.Motd;
@@ -319,12 +327,12 @@ namespace BlockStation
                 server.WorldType = level_type.Text;
 
 
-                if (server.ServerProcess == true)
+                if (server.Online)
                 {
-                            loadServerProperties();
-                            server.Stop();
-                            server.Start();
-                            loadServerProperties();
+                    loadServerProperties();
+                    server.Stop();
+                    server.Start();
+                    loadServerProperties();
                 }
             }
             catch (System.FormatException)
@@ -338,13 +346,9 @@ namespace BlockStation
         private void StopServer_Click(object sender, RoutedEventArgs e)
         {
             server.Stop();
-            RestartServer.IsEnabled = false;
             StopServer.IsEnabled = false;
-        }
-
-        private void ServerStopped()
-        {
-
+            StartServer.IsEnabled = false;
+            updateTimer.Enabled = false;
         }
 
         private void DeactivateWhitelist_Click(object sender, RoutedEventArgs e)
@@ -427,6 +431,7 @@ namespace BlockStation
 
         private void SendCommand_Click(object sender, RoutedEventArgs e)
         {
+            if(MessageBar.Text != "")
             server.SendCommand("say " + MessageBar.Text);
             MessageBar.Text = "";
         }
@@ -434,6 +439,31 @@ namespace BlockStation
         private void MessageBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             MessageOutput.ScrollToEnd();
+        }
+
+        private void AddPlayerToOPList_Click(object sender, RoutedEventArgs e)
+        {
+            if (AddPlayerToOPListName.Text == "")
+            {
+                Utils.ShowEmptyFieldWarning();
+            }
+            else
+            {
+                server.AddPlayerToOPList(AddPlayerToOPListName.Text);
+                OPList.Items.Refresh();
+                refreshPlayerList();
+                AddPlayerToOPListName.Text = "";
+            }
+        }
+
+        private void RemovePlayerFromOPList_Click(object sender, RoutedEventArgs e)
+        {
+            if (OPList.SelectedValue != null)
+            {
+                server.RemovePlayerFromOPList(OPList.SelectedValue.ToString());
+                OPList.Items.Refresh();
+                refreshPlayerList();
+            }
         }
     }
 }

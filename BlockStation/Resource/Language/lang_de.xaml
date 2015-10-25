@@ -16,10 +16,11 @@ xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="overview">Übersicht</system:String>
     <system:String x:Key="error">Fehler</system:String>
 
+    <system:String x:Key="op">Operator</system:String>
     <system:String x:Key="console">Konsole</system:String>
     <system:String x:Key="chat">Chat</system:String>
     <system:String x:Key="whitelist">Whitelist</system:String>
-    <system:String x:Key="all_players">Alle Spieler</system:String>
+    <system:String x:Key="all_players">Übersicht</system:String>
     <system:String x:Key="last_time_online">Zuletzt online:</system:String>
     <system:String x:Key="first_time_online">Zum ersten mal online:</system:String>
     <system:String x:Key="player_name">Spielername:</system:String>
