@@ -85,7 +85,9 @@ namespace BlockStation
             {
                 PlayerIndex.Add(player.Name, player);
             }
-            List.Add(player);
+
+            if(!List.Contains(player))
+                List.Add(player);
 
             try
             {
@@ -154,13 +156,13 @@ namespace BlockStation
         public Player(string n)
         {
             Name = n;
-
         }
 
         public string Name { get; set; }
         public short Health { get; set; }
         public DateTime LastOnline { get; set; }
         public DateTime FirstTimeOnline { get; set; }
+        public bool Online { get; set; }
 
         public override string ToString()
         {
@@ -178,15 +180,18 @@ namespace BlockStation
             PlayerIndex = new Dictionary<string, Player>();
             query = new Query.MCQuery();
             dir = d;
+
             Whitelist = new PlayerList(dir + fn_whitelist, ref PlayerIndex);
             OPList = new PlayerList(dir + fn_oplist, ref PlayerIndex);
+            IPBanList = new PlayerList(dir + fn_bannedip, ref PlayerIndex);
+            BanList = new PlayerList(dir + fn_bannedplayer, ref PlayerIndex);
 
             // OnlineCheck Hintergrund Thread.
             worker = new BackgroundWorker();
             worker.DoWork += new DoWorkEventHandler(CheckServerAvailability);
 
             ReadServerSettings();
-            ReadPlayerData();
+            ReadPlayerNBTData();
         }
 
         // Konstanten (fn = FileName)
@@ -195,6 +200,8 @@ namespace BlockStation
         const string fn_oplist = "ops.txt";
         const string fn_pocketmine = "pocketmine.yml";
         const string fn_playerdat = "players/*.dat";
+        const string fn_bannedplayer = "banned-players.txt";
+        const string fn_bannedip = "banned-ips.txt";
 
         // Events
         public event EventHandler ServerStarted;
@@ -213,6 +220,8 @@ namespace BlockStation
         // Spieler Listen
         public PlayerList Whitelist;
         public PlayerList OPList;
+        public PlayerList BanList;
+        public PlayerList IPBanList;
 
         // Prozess für PocketMine
         private Process PocketMineProcess;
@@ -284,7 +293,7 @@ namespace BlockStation
                 var info = query.Info();
                 if (Online)
                 {
-                    return info.Plugins;
+                    return info.Version;
                 }
                 else
                 {
@@ -775,7 +784,6 @@ namespace BlockStation
             
         }
 
-
         // Prüft die Server Verfügbarkeit
         private void CheckServerAvailability(object sender, DoWorkEventArgs e)
         {
@@ -800,6 +808,7 @@ namespace BlockStation
                     Online = false;
                     ServerProcess = false;
                 }
+                CheckPlayerStatus();
             }
         }
 
@@ -812,13 +821,13 @@ namespace BlockStation
                 if (e.Data.Contains("joined"))
                 {
                     PlayerJoinedServer.Invoke(this, EventArgs.Empty);
-                    ReadPlayerData();
+                    ReadPlayerNBTData();
                 }
                 // Spieler hat den Server verlassen
                 if (e.Data.Contains("logged out"))
                 {
                     PlayerLeaveServer.Invoke(this, EventArgs.Empty);
-                    ReadPlayerData();
+                    ReadPlayerNBTData();
                 }
                 // Nachricht vom Admin
                 if (e.Data.Contains(" [Server] "))
@@ -1014,7 +1023,7 @@ namespace BlockStation
             OPList.addToList(player);
             if (Online)
             {
-                SendCommand("whitelist add " + playername);
+                SendCommand("op " + playername);
             }
         }
 
@@ -1027,13 +1036,12 @@ namespace BlockStation
             OPList.removeFromList(player);
             if (Online)
             {
-                SendCommand("whitelist remove " + playername);
+                SendCommand("deop " + playername);
             }
         }
 
-
         // Liest alle Spieler ein
-        public void ReadPlayerData()
+        public void ReadPlayerNBTData()
         {
             string[] PlayerDataPath = System.IO.Directory.GetFiles(dir + "\\players\\", "*.dat");
 
@@ -1088,6 +1096,56 @@ namespace BlockStation
             }
             Whitelist.ReadList();
             OPList.ReadList();
+        }
+
+        // Prüft ob die Spieler online sind
+        public void CheckPlayerStatus()
+        {
+            var info = query.Info();
+            if (Online)
+            {
+                foreach(Player p in PlayerIndex.Values)
+                {
+                    p.Online = false;
+                }
+
+                foreach(string name in info.Players)
+                {
+                    Player p = getPlayer(name);
+                    p.Online = true;
+                }
+
+            }
+        }
+
+        // Wirft einen Spieler aus dem server raus
+        public void KickPlayer(Player p, string reason = "")
+        {
+            SendCommand("kick " + p.Name + reason);
+        }
+
+        // Bannt einen Spieler
+        public void BanPlayer(Player p, string reason = "")
+        {
+            if (Online)
+            {
+                SendCommand("ban " + p.Name + " " + reason);
+            }
+        }
+
+        // DeBannt einen Spieler
+        public void PardonPlayer(Player p)
+        {
+            if (Online)
+            {
+                SendCommand("pardon " + p.Name);
+            }
+        }
+
+        // Tötet einen Spieler
+        public void KillPlayer(Player p)
+        {
+            SendCommand("kill " + p.Name);
         }
     }
 

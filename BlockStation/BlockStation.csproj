@@ -39,6 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -51,6 +52,7 @@
     <Prefer32Bit>true</Prefer32Bit>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <DebugSymbols>true</DebugSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>BlockStation.App</StartupObject>
@@ -146,37 +148,37 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Utils.cs" />
-    <Compile Include="Core\properties\javaproperties\JavaProperties.cs" />
-    <Compile Include="Core\properties\javaproperties\JavaPropertyReader.cs" />
-    <Compile Include="Core\properties\javaproperties\JavaPropertyWriter.cs" />
-    <Compile Include="Core\nbt\ByteCountingStream.cs" />
-    <Compile Include="Core\nbt\InvalidReaderStateException.cs" />
-    <Compile Include="Core\nbt\JetBrains.Annotations.cs" />
-    <Compile Include="Core\nbt\NbtBinaryReader.cs" />
-    <Compile Include="Core\nbt\NbtBinaryWriter.cs" />
-    <Compile Include="Core\nbt\NbtCompression.cs" />
-    <Compile Include="Core\nbt\NbtFile.cs" />
-    <Compile Include="Core\nbt\NbtFormatException.cs" />
-    <Compile Include="Core\nbt\NbtParseState.cs" />
-    <Compile Include="Core\nbt\NbtReader.cs" />
-    <Compile Include="Core\nbt\NbtReaderNode.cs" />
-    <Compile Include="Core\nbt\NbtTagType.cs" />
-    <Compile Include="Core\nbt\NbtWriter.cs" />
-    <Compile Include="Core\nbt\NbtWriterNode.cs" />
-    <Compile Include="Core\nbt\TagSelector.cs" />
-    <Compile Include="Core\nbt\tags\NbtByte.cs" />
-    <Compile Include="Core\nbt\tags\NbtByteArray.cs" />
-    <Compile Include="Core\nbt\tags\NbtCompound.cs" />
-    <Compile Include="Core\nbt\tags\NbtDouble.cs" />
-    <Compile Include="Core\nbt\tags\NbtFloat.cs" />
-    <Compile Include="Core\nbt\tags\NbtInt.cs" />
-    <Compile Include="Core\nbt\tags\NbtIntArray.cs" />
-    <Compile Include="Core\nbt\tags\NbtList.cs" />
-    <Compile Include="Core\nbt\tags\NbtLong.cs" />
-    <Compile Include="Core\nbt\tags\NbtShort.cs" />
-    <Compile Include="Core\nbt\tags\NbtString.cs" />
-    <Compile Include="Core\nbt\tags\NbtTag.cs" />
-    <Compile Include="Core\nbt\ZLibStream.cs" />
+    <Compile Include="Core\Properties\javaproperties\JavaProperties.cs" />
+    <Compile Include="Core\Properties\javaproperties\JavaPropertyReader.cs" />
+    <Compile Include="Core\Properties\javaproperties\JavaPropertyWriter.cs" />
+    <Compile Include="Core\NBT\ByteCountingStream.cs" />
+    <Compile Include="Core\NBT\InvalidReaderStateException.cs" />
+    <Compile Include="Core\NBT\JetBrains.Annotations.cs" />
+    <Compile Include="Core\NBT\NbtBinaryReader.cs" />
+    <Compile Include="Core\NBT\NbtBinaryWriter.cs" />
+    <Compile Include="Core\NBT\NbtCompression.cs" />
+    <Compile Include="Core\NBT\NbtFile.cs" />
+    <Compile Include="Core\NBT\NbtFormatException.cs" />
+    <Compile Include="Core\NBT\NbtParseState.cs" />
+    <Compile Include="Core\NBT\NbtReader.cs" />
+    <Compile Include="Core\NBT\NbtReaderNode.cs" />
+    <Compile Include="Core\NBT\NbtTagType.cs" />
+    <Compile Include="Core\NBT\NbtWriter.cs" />
+    <Compile Include="Core\NBT\NbtWriterNode.cs" />
+    <Compile Include="Core\NBT\TagSelector.cs" />
+    <Compile Include="Core\NBT\tags\NbtByte.cs" />
+    <Compile Include="Core\NBT\tags\NbtByteArray.cs" />
+    <Compile Include="Core\NBT\tags\NbtCompound.cs" />
+    <Compile Include="Core\NBT\tags\NbtDouble.cs" />
+    <Compile Include="Core\NBT\tags\NbtFloat.cs" />
+    <Compile Include="Core\NBT\tags\NbtInt.cs" />
+    <Compile Include="Core\NBT\tags\NbtIntArray.cs" />
+    <Compile Include="Core\NBT\tags\NbtList.cs" />
+    <Compile Include="Core\NBT\tags\NbtLong.cs" />
+    <Compile Include="Core\NBT\tags\NbtShort.cs" />
+    <Compile Include="Core\NBT\tags\NbtString.cs" />
+    <Compile Include="Core\NBT\tags\NbtTag.cs" />
+    <Compile Include="Core\NBT\ZLibStream.cs" />
     <Compile Include="View\Info.xaml.cs">
       <DependentUpon>Info.xaml</DependentUpon>
     </Compile>

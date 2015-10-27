@@ -11,6 +11,8 @@ namespace BlockStation
 {
     class Utils
     {
+
+
         public static void ShowEmptyFieldWarning()
         {
             MessageBox.Show("Please input something in the given field.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);

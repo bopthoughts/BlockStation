@@ -5,6 +5,7 @@ using System.Timers;
 using System.Collections.Generic;
 using System.IO;
 using System.ComponentModel;
+using System.Windows.Data;
 
 namespace BlockStation
 {
@@ -15,6 +16,8 @@ namespace BlockStation
 
         PocketMine_MP_Server server;
         System.Timers.Timer updateTimer;
+
+        Player selectedplayer;
 
         // Server Propteries
         public string prop_server_name = "";
@@ -78,7 +81,7 @@ namespace BlockStation
             updateTimer = new System.Timers.Timer(Properties.Settings.Default.UpdateTimer);
             updateTimer.AutoReset = true;
             updateTimer.Elapsed += update;
-            updateTimer.Enabled = false;
+            updateTimer.Enabled = true;
 
             refreshPlayerList();
             server.ServerOutputChanged += receiveServerOutput;
@@ -98,7 +101,6 @@ namespace BlockStation
             {
                 StopServer.IsEnabled = true;
                 StartServer.IsEnabled = false;
-                updateTimer.Enabled = true;
             }
             ));
             Console.WriteLine("Server ist gestartet");
@@ -111,7 +113,6 @@ namespace BlockStation
             Dispatcher.Invoke(new Action(() =>
             {
                 //schaltet den durchgehenden online check aus.
-                updateTimer.Enabled = false;
                 StopServer.IsEnabled = false;
                 StartServer.IsEnabled = true;
                 loadServerInfo();
@@ -154,8 +155,6 @@ namespace BlockStation
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
             server.Start();
-            // Startet den online check
-            updateTimer.Enabled = true;
 
             StopServer.IsEnabled = false;
             StartServer.IsEnabled = false;
@@ -238,6 +237,8 @@ namespace BlockStation
                     status_player_online.Content = server.OnlinePlayers;
                     status_pm_version.Content = server.Version;
                     status_latency.Content = server.Latency;
+
+                    refreshPlayerList();
                 }
                 ));
             }
@@ -348,7 +349,6 @@ namespace BlockStation
             server.Stop();
             StopServer.IsEnabled = false;
             StartServer.IsEnabled = false;
-            updateTimer.Enabled = false;
         }
 
         private void DeactivateWhitelist_Click(object sender, RoutedEventArgs e)
@@ -377,11 +377,7 @@ namespace BlockStation
 
         private void AddPlayerToWhitelist_Click(object sender, RoutedEventArgs e)
         {
-            if(AddPlayerToWhitelistName.Text == "")
-            {
-                Utils.ShowEmptyFieldWarning();
-            }
-            else
+            if(AddPlayerToWhitelistName.Text != "")
             {
                 server.AddPlayerToWhitelist(AddPlayerToWhitelistName.Text);
                 Whitelist.Items.Refresh();
@@ -403,30 +399,64 @@ namespace BlockStation
 
         private void PlayerListview_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Zeigt die Spielerinformationen an
-            try
+            if(PlayerListview.SelectedItem != null)
             {
-                Player tmp;
-                if(PlayerListview.SelectedValue != null)
+                BanPlayer.IsEnabled = false;
+                KickPlayer.IsEnabled = false;
+
+                selectedplayer = server.getPlayer(PlayerListview.SelectedItem.ToString());
+
+                if (selectedplayer.Online)
                 {
-                    server.PlayerIndex.TryGetValue(PlayerListview.SelectedValue.ToString(), out tmp);
-                    playername.Content = tmp.Name;
-                    lastonline.Content = tmp.LastOnline.ToString();
-                    firsttimeonline.Content = tmp.LastOnline.ToString();
+                    KickPlayer.IsEnabled = true;
                 }
 
+                if (server.Online)
+                {
+                    BanPlayer.IsEnabled = true;
+                    PardonPlayer.IsEnabled = true;
+                }
+                SelectedPlayer.Content = selectedplayer.Name;
+
             }
-            catch(System.InvalidOperationException)
-            {}
+
         }
 
         private void refreshPlayerList()
         {
             PlayerListview.Items.Clear();
-            foreach (var pair in server.PlayerIndex)
+
+            var list = new GridView();
+            list.Columns.Add(new GridViewColumn
+             {
+                 Header = "Online",
+                 DisplayMemberBinding = new Binding("Online")
+             });
+            list.Columns.Add(new GridViewColumn
             {
-                PlayerListview.Items.Add(pair.Key);
+                Header = "IGN",
+                DisplayMemberBinding = new Binding("Name")
+            });
+            list.Columns.Add(new GridViewColumn
+            {
+                Header = "-",
+                DisplayMemberBinding = new Binding("LastOnline")
+            });
+            list.Columns.Add(new GridViewColumn
+            {
+                Header = "+",
+                DisplayMemberBinding = new Binding("FirstTimeOnline")
+            });
+
+
+            this.PlayerListview.View = list;
+
+            foreach (Player p in server.PlayerIndex.Values)
+            {
+                PlayerListview.Items.Add(p);
             }
+
+
         }
 
         private void SendCommand_Click(object sender, RoutedEventArgs e)
@@ -443,11 +473,7 @@ namespace BlockStation
 
         private void AddPlayerToOPList_Click(object sender, RoutedEventArgs e)
         {
-            if (AddPlayerToOPListName.Text == "")
-            {
-                Utils.ShowEmptyFieldWarning();
-            }
-            else
+            if (AddPlayerToOPListName.Text != "")
             {
                 server.AddPlayerToOPList(AddPlayerToOPListName.Text);
                 OPList.Items.Refresh();
@@ -465,5 +491,21 @@ namespace BlockStation
                 refreshPlayerList();
             }
         }
+
+        private void KickPlayer_Click(object sender, RoutedEventArgs e)
+        {
+            server.KickPlayer(selectedplayer);
+        }
+
+        private void BanPlayer_Click(object sender, RoutedEventArgs e)
+        {
+            server.BanPlayer(selectedplayer);
+        }
+
+        private void PardonPlayer_Click(object sender, RoutedEventArgs e)
+        {
+            server.PardonPlayer(selectedplayer);
+        }
+
     }
 }

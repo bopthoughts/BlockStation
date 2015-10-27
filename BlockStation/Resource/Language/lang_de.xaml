@@ -15,8 +15,22 @@ xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="about">Info</system:String>
     <system:String x:Key="overview">Übersicht</system:String>
     <system:String x:Key="error">Fehler</system:String>
-
-    <system:String x:Key="op">Operator</system:String>
+    <system:String x:Key="Yes">Ja</system:String>
+    <system:String x:Key="No">Nein</system:String>
+    <system:String x:Key="kick">Kicken</system:String>
+    <system:String x:Key="ban">Bannen</system:String>
+    <system:String x:Key="private_message">Private Nachricht</system:String>
+    <system:String x:Key="give">Item Geben</system:String>
+    <system:String x:Key="ipban">IP-Bann</system:String>
+    <system:String x:Key="pardon">Verzeihen</system:String>
+    <system:String x:Key="pardon-ip">IP Verzeihen</system:String>
+    <system:String x:Key="kill">Töten</system:String>
+    <system:String x:Key="heal">Heilen</system:String>
+    <system:String x:Key="tell">Sagen</system:String>
+    <system:String x:Key="tp">Teleportieren</system:String>
+    <system:String x:Key="op">OP</system:String>
+    <system:String x:Key="deop">DEOP</system:String>
+    
     <system:String x:Key="console">Konsole</system:String>
     <system:String x:Key="chat">Chat</system:String>
     <system:String x:Key="whitelist">Whitelist</system:String>
