@@ -9,7 +9,6 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using Microsoft.Win32;
 using BlockStation.View;
-using BlockStation.gui;
 
 namespace BlockStation
 {
@@ -123,22 +122,6 @@ namespace BlockStation
             }
         }
 
-        private void Info_Click(object sender, RoutedEventArgs e)
-        {
-            Info info = new Info();
-            info.InitializeComponent();
-            info.version.Content = Properties.App.Default.Version + " " + Properties.App.Default.Type;
-            info.build.Content = Properties.App.Default.Build;
-            info.ShowDialog();
-        }
-
-        private void button2_Click_1(object sender, RoutedEventArgs e)
-        {
-            Settings s = new Settings();
-            s.InitializeComponent();
-            s.ShowDialog();
-            Utils.SetLanguage(this);
-        }
 
         private void CloseTab_Click(object sender, RoutedEventArgs e)
         {

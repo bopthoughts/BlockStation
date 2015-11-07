@@ -3,13 +3,13 @@
   <Profiles />
   <Settings>
     <Setting Name="Version" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">0.10.1</Value>
+      <Value Profile="(Default)">0.10.2</Value>
     </Setting>
     <Setting Name="Type" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Alpha</Value>
     </Setting>
     <Setting Name="Build" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">201511071</Value>
+      <Value Profile="(Default)">201511072</Value>
     </Setting>
     <Setting Name="Name" Type="System.String" Scope="User">
       <Value Profile="(Default)">BlockStation</Value>

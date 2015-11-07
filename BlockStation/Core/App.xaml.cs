@@ -1,5 +1,4 @@
-﻿using BlockStation.gui;
-using System;
+﻿using System;
 using System.Windows;
 
 namespace BlockStation
