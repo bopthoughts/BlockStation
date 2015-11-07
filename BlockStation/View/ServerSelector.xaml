@@ -14,7 +14,7 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
-        <Label x:Name="label_server_overview" Content="{DynamicResource txt_overview
+        <Label Content="{DynamicResource txt_overview
             }" Margin="6,2,14,0" VerticalAlignment="Top" Height="23"/>
         <TextBox x:Name="textbox_server_dir" Height="23" Margin="99,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsEnabled="False" HorizontalAlignment="Left" Width="374" BorderBrush="Black"/>
         <Button x:Name="button_select_server" VerticalAlignment="Top" Margin="10,30,0,0" Height="23" Click="button_Click" HorizontalAlignment="Left" Width="90" Content="{DynamicResource select}"/>

@@ -58,7 +58,7 @@
     <StartupObject>BlockStation.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -67,7 +67,7 @@
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
@@ -77,7 +77,8 @@
     </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>key.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -179,8 +180,12 @@
     <Compile Include="Core\NBT\tags\NbtString.cs" />
     <Compile Include="Core\NBT\tags\NbtTag.cs" />
     <Compile Include="Core\NBT\ZLibStream.cs" />
+    <Compile Include="Update\Update.cs" />
     <Compile Include="View\Info.xaml.cs">
       <DependentUpon>Info.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ServerTab.xaml.cs">
+      <DependentUpon>ServerTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
@@ -226,6 +231,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\ServerTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -252,7 +261,6 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="blockstation.update" />
-    <None Include="key.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\App.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -264,6 +272,9 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="start.cmd" />
+    <None Include="Update\blockstation-development.update" />
+    <None Include="Update\blockstation-unstable.update" />
+    <None Include="Update\blockstation-stable.update" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\App.config" />
@@ -300,6 +311,22 @@
     <Resource Include="Resource\Image\Icons\player.png" />
     <Resource Include="Resource\Image\Icons\settings.png" />
     <Resource Include="Resource\Image\Icons\chat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Image\Icons\add.png" />
+    <Resource Include="Resource\Image\Icons\arrow_forward.png" />
+    <Resource Include="Resource\Image\Icons\close.png" />
+    <Resource Include="Resource\Image\Icons\gear.png" />
+    <Resource Include="Resource\Image\Icons\help.png" />
+    <Resource Include="Resource\Image\Icons\home.png" />
+    <Resource Include="Resource\Image\Icons\info.png" />
+    <Resource Include="Resource\Image\Icons\main.png" />
+    <Resource Include="Resource\Image\Icons\offline.png" />
+    <Resource Include="Resource\Image\Icons\online.png" />
+    <Resource Include="Resource\Image\Icons\players.png" />
+    <Resource Include="Resource\Image\Icons\remove.png" />
+    <Resource Include="Resource\Image\Icons\update.png" />
+    <Resource Include="Resource\Image\Icons\warning.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

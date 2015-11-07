@@ -82,17 +82,15 @@ namespace BlockStation
             PocketMine_MP_Server server = new PocketMine_MP_Server(ServerPfad);
             Properties.Settings.Default.LastServerDir = ServerPfad;
             Properties.Settings.Default.Save();
-            MainWindow mw = new MainWindow(server);
-            mw.InitializeComponent();
-            this.Close();
-            mw.Show();
+            //MainWindow mw = new MainWindow(server);
+
         }
 
         private void Info_Click(object sender, RoutedEventArgs e)
         {
             Info info = new Info();
             info.InitializeComponent();
-            info.version.Content = Properties.App.Default.Version + " " + Properties.App.Default.VersionText;
+            info.version.Content = Properties.App.Default.Version + " " + Properties.App.Default.Type;
             info.build.Content = Properties.App.Default.Build;
             info.ShowDialog();
         }

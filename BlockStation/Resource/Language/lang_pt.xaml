@@ -103,4 +103,16 @@ xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="txt_dialog_update_available">Há uma Atualizaçao. Deseja instalá-lo?</system:String>
     <system:String x:Key="txt_dialog_no_update_available">Há uma Atualizaçao.</system:String>
 
+    <system:String x:Key="header_settings">Settings</system:String>
+    <system:String x:Key="header_overview">Overview</system:String>
+    <system:String x:Key="header_updates">Updates</system:String>
+    <system:String x:Key="header_about">About</system:String>
+    <system:String x:Key="header_console">Console</system:String>
+    <system:String x:Key="header_chat">Chat</system:String>
+    <system:String x:Key="header_player_management">Player Management</system:String>
+    <system:String x:Key="txt_save_server_running">Settings can not be changed if the server is online.</system:String>
+    <system:String x:Key="installed">Installed</system:String>
+    <system:String x:Key="install">Install</system:String>
+    <system:String x:Key="message_to">Message to:</system:String>
+
 </ResourceDictionary>

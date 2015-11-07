@@ -25,7 +25,7 @@ namespace BlockStation.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.9.1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.10.0")]
         public string Version {
             get {
                 return ((string)(this["Version"]));
@@ -35,18 +35,30 @@ namespace BlockStation.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Alpha")]
-        public string VersionText {
+        public string Type {
             get {
-                return ((string)(this["VersionText"]));
+                return ((string)(this["Type"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("201510270")]
+        [global::System.Configuration.DefaultSettingValueAttribute("201511070")]
         public string Build {
             get {
                 return ((string)(this["Build"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BlockStation")]
+        public string Name {
+            get {
+                return ((string)(this["Name"]));
+            }
+            set {
+                this["Name"] = value;
             }
         }
     }

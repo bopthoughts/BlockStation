@@ -32,15 +32,7 @@ namespace BlockStation.gui
             Utils.SetLanguage(this);
         }
 
-        private void OpenWebsite_Click(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://github.com/haecker-felix/BlockStation");
-        }
-
-        private void ReportError_Click(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://github.com/haecker-felix/BlockStation/issues/new");
-        }
+        
 
         private void SearchForUpdates_Click(object sender, RoutedEventArgs e)
         {
@@ -50,8 +42,6 @@ namespace BlockStation.gui
             worker.WorkerSupportsCancellation = false;
             worker.DoWork += new DoWorkEventHandler(CheckForUpdates);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(UpdateAction);
-            SearchForUpdates.Content = "...";
-            SearchForUpdates.IsEnabled = false;
             worker.RunWorkerAsync();
         }
 

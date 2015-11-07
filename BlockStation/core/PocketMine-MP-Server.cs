@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Threading;
 using System.IO;
-using Kajabity.Tools.Java;
 using Microsoft.VisualBasic;
 using System.Windows;
 using System.ComponentModel;
 using fNbt;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace BlockStation
 {
@@ -193,6 +195,9 @@ namespace BlockStation
             ReadServerSettings();
             ReadPlayerNBTData();
         }
+
+        // Onlinepic
+
 
         // Konstanten (fn = FileName)
         const string fn_whitelist = "white-list.txt";
@@ -763,6 +768,7 @@ namespace BlockStation
             BackgroundWorker shutdown = new BackgroundWorker();
             shutdown.DoWork += backgroundworker_stop;
             shutdown.RunWorkerAsync();
+            WriteServerSettings();
         }
 
         // Backgroundworker für Stop, da das stoppen länger dauert.
@@ -770,9 +776,10 @@ namespace BlockStation
         {
             if (PocketMineProcess != null)
             {
+                WriteServerSettings();
                 PocketMineProcess.StandardInput.WriteLine("stop");
+                WriteServerSettings();
                 System.Threading.Thread.Sleep(3000);
-                PocketMineProcess.Kill();
                 PocketMineProcess.Close();
                 PocketMineProcess = null;
                 CheckServerAvailability(this, null);
@@ -780,6 +787,7 @@ namespace BlockStation
                 {
                     ProcessStopped.Invoke(this, null);
                 }
+                WriteServerSettings();
             }
             
         }
@@ -871,34 +879,37 @@ namespace BlockStation
         {
             try
             {
-                FileStream fileStream = new FileStream(dir + fn_serverproperties, FileMode.Open);
-                JavaProperties server_settings = new JavaProperties();
-                server_settings.Load(fileStream);
-                fileStream.Close();
-                prop_server_name = server_settings.GetProperty("server-name");
-                prop_server_port = server_settings.GetProperty("server-port");
-                prop_allow_flight = server_settings.GetProperty("allow-flight");
-                prop_announce_player_achievements = server_settings.GetProperty("announce-player-achievements");
-                prop_pvp = server_settings.GetProperty("pvp");
-                prop_memory_limit = server_settings.GetProperty("memory-limit");
-                prop_force_gamemode = server_settings.GetProperty("force-gamemode");
-                prop_spawn_protection = server_settings.GetProperty("spawn-protection");
-                prop_level_name = server_settings.GetProperty("level-name");
-                prop_generator_settings = server_settings.GetProperty("generator-settings");
-                prop_rcon_password = server_settings.GetProperty("rcon.password");
-                prop_enable_rcon = server_settings.GetProperty("enable-rcon");
-                prop_spawn_animals = server_settings.GetProperty("spawn-animals");
-                prop_difficulty = server_settings.GetProperty("difficulty");
-                prop_level_seed = server_settings.GetProperty("level-seed");
-                prop_spawn_mobs = server_settings.GetProperty("spawn-mobs");
-                prop_auto_save = server_settings.GetProperty("auto-save");
-                prop_hardcore = server_settings.GetProperty("hardcore");
-                prop_white_list = server_settings.GetProperty("white-list");
-                prop_enable_query = server_settings.GetProperty("enable-query");
-                prop_level_type = server_settings.GetProperty("level-type");
-                prop_motd = server_settings.GetProperty("motd");
-                prop_max_players = server_settings.GetProperty("max-players");
-                prop_gamemode = server_settings.GetProperty("gamemode");
+                var data = new Dictionary<string, string>();
+                foreach (var row in File.ReadAllLines(dir + fn_serverproperties))
+                {
+                    data.Add(row.Split('=')[0], string.Join("=", row.Split('=').Skip(1).ToArray()));
+                }
+
+
+                prop_server_name = data["server-name"];
+                prop_server_port = data["server-port"];
+                prop_allow_flight = data["allow-flight"];
+                prop_announce_player_achievements = data["announce-player-achievements"];
+                prop_pvp = data["pvp"];
+                prop_memory_limit = data["memory-limit"];
+                prop_force_gamemode = data["force-gamemode"];
+                prop_spawn_protection = data["spawn-protection"];
+                prop_level_name = data["level-name"];
+                prop_generator_settings = data["generator-settings"];
+                prop_rcon_password = data["rcon.password"];
+                prop_enable_rcon = data["enable-rcon"];
+                prop_spawn_animals = data["spawn-animals"];
+                prop_difficulty = data["difficulty"];
+                prop_level_seed = data["level-seed"];
+                prop_spawn_mobs = data["spawn-mobs"];
+                prop_auto_save = data["auto-save"];
+                prop_hardcore = data["hardcore"];
+                prop_white_list = data["white-list"];
+                prop_enable_query = data["enable-query"];
+                prop_level_type = data["level-type"];
+                prop_motd = data["motd"];
+                prop_max_players = data["max-players"];
+                prop_gamemode = data["gamemode"];
             }
             catch (NullReferenceException)
             {
@@ -955,7 +966,7 @@ namespace BlockStation
                 };
 
                 System.IO.File.WriteAllLines(dir + fn_serverproperties, lines, System.Text.Encoding.Default);
-                ReadServerSettings();
+                //ReadServerSettings();
             }
             catch (NullReferenceException)
             {
@@ -976,6 +987,10 @@ namespace BlockStation
             {
                 Utils.ShowLoadError(fn_serverproperties);
                 Environment.Exit(1);
+            }
+            catch
+            {
+                
             }
         }
 

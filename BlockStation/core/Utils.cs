@@ -6,12 +6,43 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace BlockStation
 {
     class Utils
     {
+        public static string RemoveCodeCharacters(string str)
+        {
+            StringBuilder sb = new StringBuilder();
 
+
+            bool special = false; 
+
+            foreach (char c in str)
+            {
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_')
+                {
+                    if((c == '[' || c == ']'))
+                    {
+                        System.Console.WriteLine("safe");
+                    }
+                    else
+                    {
+                        if (special)
+                            sb.Append(c);
+                        special = true;
+                    }
+
+                    
+                }
+                else
+                {
+                    special = false;
+                }
+            }
+            return sb.ToString();
+        }
 
         public static void ShowEmptyFieldWarning()
         {
@@ -53,7 +84,7 @@ namespace BlockStation
             MessageBox.Show("File could not be opened.\n\nFile: \"" + file + "\"", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public static void SetLanguage(Window w)
+        public static void SetLanguage(System.Windows.FrameworkElement w)
         {
             ResourceDictionary dict = new ResourceDictionary();
             switch (Properties.Settings.Default.Language)

@@ -7,27 +7,44 @@ namespace BlockStation
     [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
     public partial class App : System.Windows.Application
     {
+        public static bool UpdateMode = false;
+
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public void InitializeGUI()
         {
-            this.StartupUri = new System.Uri("View\\ServerSelector.xaml", System.UriKind.Relative);
+            this.StartupUri = new System.Uri("View\\MainWindow.xaml", System.UriKind.Relative);
 
         }
 
-        [System.STAThreadAttribute()]
-        [System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public static void Main()
+        protected override void OnStartup(StartupEventArgs e)
         {
             try
             {
-                BlockStation.App app = new BlockStation.App();
-                app.InitializeGUI();
-                app.Run();
+                if (e.Args[0] == "update")
+                {
+                    UpdateMode = true;
+                }
+                else
+                {
+                    System.IO.File.Delete(Utils.ProgramFilesx86() + "\\BlockStation\\BlockStation_old.exe");
+                }
             }
-            catch (Exception e)
+            catch
             {
-                MessageBox.Show("Es ist ein unbekannter Fehler augetreten.\nBitte melden sie diesen Fehler:\n\n" + e, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+
             }
+            
+        }
+
+        [System.STAThreadAttribute()]
+        public static void Main()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+
+            BlockStation.App app = new BlockStation.App();
+            app.InitializeGUI();
+            app.Run();
+
 
         }
     }

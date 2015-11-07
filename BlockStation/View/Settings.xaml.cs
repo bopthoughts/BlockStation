@@ -23,54 +23,9 @@ namespace BlockStation.gui
         {
             InitializeComponent();
             Utils.SetLanguage(this);
-            timebox.Text = Properties.Settings.Default.UpdateTimer.ToString();
-
-            switch (Properties.Settings.Default.Language.ToString())
-            {
-                case "de": rbDeutsch.IsChecked = true; break;
-                case "en": rbEnglisch.IsChecked = true; break;
-                case "pt": rbPortugisisch.IsChecked = true; break;
-            }
-            switch (Properties.Settings.Default.SaveLastServer)
-            {
-                case true: savelastdir.IsChecked = true; break;
-                case false: savelastdir.IsChecked = false; break;
-            }
+            
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.UpdateTimer = int.Parse(timebox.Text);
-
-            if(rbDeutsch.IsChecked == true)
-            {
-                Properties.Settings.Default.Language = "de";
-            }
-            if (rbEnglisch.IsChecked == true)
-            {
-                Properties.Settings.Default.Language = "en";
-            }
-            if (rbPortugisisch.IsChecked == true)
-            {
-                Properties.Settings.Default.Language = "pt";
-            }
-
-
-            if ((bool)savelastdir.IsChecked)
-            {
-                Properties.Settings.Default.SaveLastServer = true;
-            }
-            else
-            {
-                Properties.Settings.Default.SaveLastServer = false;
-            }
-            Properties.Settings.Default.Save();
-            this.Close();
-        }
-
-        private void button_Copy_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
+        
     }
 }

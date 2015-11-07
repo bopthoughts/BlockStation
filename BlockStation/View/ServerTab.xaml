@@ -1,0 +1,254 @@
+﻿<Grid  x:Class="BlockStation.View.ServerTab" 
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:local="clr-namespace:BlockStation.View"
+         xmlns:System="clr-namespace:System;assembly=mscorlib"
+         mc:Ignorable="d" d:DesignWidth="668" d:DesignHeight="405">
+
+    <Grid.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/BlockStation;component/Resource/Language/lang_en.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Grid.Resources>
+
+    <Grid x:Name="Grid" MinWidth="400" MinHeight="200">
+        <Grid.Background>
+            <ImageBrush ImageSource="/BlockStation;component/Resource/Image/bg_info.jpg"/>
+        </Grid.Background>
+        <TabControl x:Name="tabControl1" TabStripPlacement="Left" Margin="7,7,7,37" HorizontalContentAlignment="Center" Background="White">
+            <TabItem x:Name="tabServerConsole">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="32" Source="/BlockStation;component/Resource/Image/Icons/console.png" Width="32" Stretch="None"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid Background="White">
+                    <TextBox x:Name="ServerOutput" VerticalScrollBarVisibility="Auto" TextChanged="ServerOutput_TextChanged" TextWrapping="Wrap" Margin="0,32,0,30" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" FontFamily="Courier New" Foreground="White" ScrollViewer.CanContentScroll="True" Background="Black"/>
+                    <TextBox x:Name="CommandBar" VerticalAlignment="Bottom" ToolTip="Befehl eingeben..." TextWrapping="Wrap" Margin="27,0,10,0" IsEnabled="False" Height="28" FontFamily="Courier New" FontSize="24"/>
+                    <Button x:Name="EnterCommand" Width="28" VerticalAlignment="Bottom" IsEnabled="False" IsDefault="True" Height="28" HorizontalAlignment="Right" Click="EnterCommand_Click">
+                        <Image Height="25" Source="/BlockStation;component/Resource/Image/Icons/arrow_forward.png" Width="25" Stretch="UniformToFill"/>
+                    </Button>
+                    <Button x:Name="HelpCommand" Width="28" VerticalAlignment="Bottom" IsEnabled="False" Height="28" HorizontalAlignment="Left" Click="HelpCommand_Click">
+                        <Image  x:Name="omage" Height="23" Source="/BlockStation;component/Resource/Image/Icons/help.png" Width="23" Stretch="UniformToFill" HorizontalAlignment="Left"/>
+                    </Button>
+                    <Label x:Name="Header" Content="{DynamicResource header_console}" FontSize="14.667" Background="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" FontWeight="Bold" Foreground="White" Height="30" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tabPlayers">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="32" Source="/BlockStation;component/Resource/Image/Icons/players.png" Width="32" Stretch="None"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid Background="White">
+                    <TabControl x:Name="tabControlPlayers" Margin="0,32,0,0">
+                        <TabItem x:Name="tabAllPlayer" Header="{DynamicResource all_players}">
+                            <Grid Background="White" Margin="0">
+                                <Button x:Name="KickPlayer" IsEnabled="False" Content="{DynamicResource kick}" Click="KickPlayer_Click" HorizontalAlignment="Right" Width="140" Height="30" VerticalAlignment="Top"/>
+                                <Button x:Name="BanPlayer" Margin="0,32,0,0" IsEnabled="False" Content="{DynamicResource ban}" Click="BanPlayer_Click" HorizontalAlignment="Right" Width="140" Height="30" VerticalAlignment="Top"/>
+                                <Button x:Name="PardonPlayer" Margin="0,64,0,0" IsEnabled="False" Content="{DynamicResource pardon}" Click="PardonPlayer_Click" RenderTransformOrigin="0.789,0.533" HorizontalAlignment="Right" Width="140" Height="30" VerticalAlignment="Top"/>
+                                <Label x:Name="SelectedPlayer" VerticalAlignment="Bottom" Height="30" HorizontalContentAlignment="Center" Content="" HorizontalAlignment="Right" Width="140"/>
+                                <ListView x:Name="PlayerList" Margin="0,0,142,0" SelectionChanged="PlayerListview_SelectionChanged">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn>
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Width="16" Height="16" Source="{Binding Online}"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                                            <GridViewColumn Header="LastOnline" DisplayMemberBinding="{Binding LastOnline}"/>
+                                            <GridViewColumn Header="FirstOnline" DisplayMemberBinding="{Binding FirstOnline}"/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="tabWhiteList" Header="{DynamicResource whitelist}">
+                            <Grid Background="White">
+                                <ListView x:Name="Whitelist" Margin="0,0,0,37">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                                <Button x:Name="AddPlayerToWhitelist" Width="35" VerticalAlignment="Bottom" Margin="169,0,0,0" IsDefault="True" Height="35" HorizontalAlignment="Left" Click="AddPlayerToWhitelist_Click">
+                                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" x:Name="image" Height="16" Width="16" Source="/BlockStation;component/Resource/Image/Icons/add.png"/>
+                                </Button>
+                                <Button x:Name="ActivateWhitelist" Width="175" VerticalAlignment="Bottom" RenderTransformOrigin="0.28,-0.45" Height="35" HorizontalAlignment="Right" Content="{DynamicResource activate}" Click="ActivateWhitelist_Click"/>
+                                <Button x:Name="DeactivateWhitelist" Width="175" VerticalAlignment="Bottom" Margin="0,0,174,0" Height="35" HorizontalAlignment="Right" Content="{DynamicResource deactivate}" Click="DeactivateWhitelist_Click"/>
+                                <Button x:Name="RemovePlayerFromWhitelist" Width="35" VerticalAlignment="Bottom" Margin="203,0,0,0" Height="35" HorizontalAlignment="Left" Click="RemovePlayerFromWhitelist_Click">
+                                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" x:Name="image_Copy" Height="16" Width="16" Source="/BlockStation;component/Resource/Image/Icons/remove.png" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" UseLayoutRounding="True"/>
+                                </Button>
+                                <TextBox x:Name="AddPlayerToWhitelistName" Width="170" VerticalAlignment="Bottom" TextWrapping="Wrap" Height="35" HorizontalAlignment="Left" Background="{x:Null}"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="tabOperatorList" Header="{DynamicResource op}">
+                            <Grid Background="White">
+                                <ListView x:Name="OPList" Margin="0,0,0,37">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                                <Button x:Name="AddPlayerToOPList" Width="35" VerticalAlignment="Bottom" Margin="169,0,0,0" IsDefault="True" Height="35" HorizontalAlignment="Left" Click="AddPlayerToOPList_Click">
+                                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" x:Name="image_Copy2" Height="16" Width="16" Source="/BlockStation;component/Resource/Image/Icons/add.png"/>
+                                </Button>
+                                <Button x:Name="RemovePlayerFromOPList" Width="35" VerticalAlignment="Bottom" Margin="203,0,0,0" Height="35" HorizontalAlignment="Left" Click="RemovePlayerFromOPList_Click">
+                                    <Image RenderOptions.BitmapScalingMode="NearestNeighbor" x:Name="image_Copy1" Height="16" Width="16" Source="/BlockStation;component/Resource/Image/Icons/remove.png" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Button>
+                                <TextBox x:Name="AddPlayerToOPListName" Width="170" VerticalAlignment="Bottom" TextWrapping="Wrap" Height="35" HorizontalAlignment="Left" Background="{x:Null}"/>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                    <Label x:Name="Header_Copy" Content="{DynamicResource header_player_management}" FontSize="14.667" Background="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" FontWeight="Bold" Foreground="White" Height="30" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tabChat">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image
+                            Height="32" Source="/BlockStation;component/Resource/Image/Icons/chat.png" Width="32"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid Background="White">
+                    <TextBox x:Name="MessageBar" VerticalAlignment="Bottom" ToolTip="" TextWrapping="Wrap" Margin="226,0,20,0" IsEnabled="False" Height="28" FontFamily="Courier New" FontSize="24"/>
+                    <Button x:Name="SendMessage" Width="28" VerticalAlignment="Bottom" IsEnabled="False" IsDefault="True" Height="28" HorizontalAlignment="Right" Click="SendCommand_Click">
+                        <Image Height="25" Source="/BlockStation;component/Resource/Image/Icons/arrow_forward.png" Width="25" Stretch="UniformToFill"/>
+                    </Button>
+                    <TextBox x:Name="MessageOutput" VerticalScrollBarVisibility="Auto" TextChanged="MessageBox_TextChanged" TextWrapping="Wrap" Margin="226,32,0,30" IsReadOnly="True" Foreground="White" Background="Black"/>
+                    <Label x:Name="Header_Copy1" Content="{DynamicResource header_chat}" FontSize="14.667" Background="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" FontWeight="Bold" Foreground="White" Height="30" VerticalAlignment="Top"/>
+                    <ListView x:Name="ChatPlayerList" Margin="0,32,0,30" BorderBrush="Black" HorizontalAlignment="Left" Width="224" SelectionChanged="ChatPlayerListview_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Width="16" Height="16" Source="{Binding Online}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Grid x:Name="PrivateMessagePanel" HorizontalAlignment="Left" Width="224" Background="{DynamicResource {x:Static SystemColors.GradientActiveCaptionBrushKey}}" Height="28" VerticalAlignment="Bottom" Visibility="Hidden">
+                        <Label x:Name="PrivateMessage" Content="{DynamicResource message_to}" HorizontalAlignment="Left" Margin="0" FontWeight="Bold"/>
+                        <Button x:Name="ClosePrivateMessage" Margin="203,0,0,0" Click="ClosePrivateMessage_Click" Height="28" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="21" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                            <Image x:Name="image_Copy3" Height="16" Width="16" Source="/BlockStation;component/Resource/Image/Icons/close.png" Stretch="None" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                        </Button>
+                        <Label x:Name="PrivateMessageTo" Content="Player" HorizontalAlignment="Left" Margin="85,0,0,0" Width="118"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tabServerProperties">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image RenderOptions.BitmapScalingMode="NearestNeighbor" Height="32" Source="/BlockStation;component/Resource/Image/Icons/gear.png" Width="32" Stretch="None"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Button x:Name="Apply" VerticalAlignment="Bottom" Height="35" Content="{DynamicResource save}" Click="Apply_Click" Width="175" HorizontalAlignment="Right"/>
+                    <Grid Margin="0,30,0,35">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                            <Grid Width="639" VerticalAlignment="Top" Height="504" HorizontalAlignment="Center">
+                                <GroupBox x:Name="Allgemein1" Width="618" VerticalAlignment="Top" Margin="10,12,0,0" Height="86" HorizontalAlignment="Left" Header="{DynamicResource general}" BorderBrush="Black">
+                                    <Grid Margin="0,0,-2,-10">
+                                        <Label x:Name="label21" Width="63" VerticalAlignment="Top" Margin="0,5,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource name}"/>
+                                        <Label x:Name="label25" Width="111" VerticalAlignment="Top" Margin="303,5,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource port}"/>
+                                        <Label x:Name="label26" Width="63" VerticalAlignment="Top" Margin="0,31,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource motd}"/>
+                                        <Label x:Name="label27" Width="111" VerticalAlignment="Top" Margin="303,31,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource max_player}"/>
+                                        <TextBox x:Name="server_name" Width="230" VerticalAlignment="Top" TextWrapping="Wrap" Margin="68,9,0,0" Height="20" HorizontalAlignment="Left"/>
+                                        <TextBox x:Name="motd" Width="230" VerticalAlignment="Top" TextWrapping="Wrap" Margin="68,35,0,0" Height="20" HorizontalAlignment="Left"/>
+                                        <TextBox x:Name="server_port" Width="179" VerticalAlignment="Top" TextWrapping="Wrap" Margin="419,9,0,0" Height="20" HorizontalAlignment="Left"/>
+                                        <TextBox x:Name="max_players" Width="179" VerticalAlignment="Top" TextWrapping="Wrap" Margin="419,35,0,0" Height="20" HorizontalAlignment="Left"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox x:Name="World1" Width="618" VerticalAlignment="Top" Margin="10,101,0,0" Height="136" HorizontalAlignment="Left" Header="{DynamicResource world}" BorderBrush="Black">
+                                    <Grid Margin="0,2,-2,-12">
+                                        <Label x:Name="label28" Width="139" VerticalAlignment="Top" Margin="10,82,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource level_type}"/>
+                                        <Label x:Name="label29" Width="137" VerticalAlignment="Top" RenderTransformOrigin="0.159,-0.538" Margin="306,79,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource level_name}"/>
+                                        <Label x:Name="label30" Width="140" VerticalAlignment="Top" Margin="303,5,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource generator_settings}"/>
+                                        <Label x:Name="label31" Width="139" VerticalAlignment="Top" Margin="10,56,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource auto_save}"/>
+                                        <Label x:Name="label32" Width="139" VerticalAlignment="Top" RenderTransformOrigin="-0.105,-0.385" Margin="10,30,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource spawn_animals}"/>
+                                        <Label x:Name="label33" Width="139" VerticalAlignment="Top" RenderTransformOrigin="-0.079,-0.423" Margin="10,5,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource spawn_monster}"/>
+                                        <Label x:Name="test1" Width="140" VerticalAlignment="Top" Margin="303,31,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource seed}"/>
+                                        <Label x:Name="label34" Width="140" VerticalAlignment="Top" Margin="303,56,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource spawn_protection}"/>
+                                        <TextBox x:Name="level_name" Width="150" VerticalAlignment="Top" TextWrapping="Wrap" Margin="448,85,0,0" Height="20" HorizontalAlignment="Left"/>
+                                        <TextBox x:Name="level_type" Width="147" VerticalAlignment="Top" TextWrapping="Wrap" Margin="154,85,0,0" Height="20" HorizontalAlignment="Left"/>
+                                        <TextBox x:Name="spawn_protection" Width="150" VerticalAlignment="Top" TextWrapping="Wrap" Margin="448,60,0,0" Height="20" HorizontalAlignment="Left"/>
+                                        <TextBox x:Name="generator_settings" Width="150" VerticalAlignment="Top" TextWrapping="Wrap" Margin="448,9,0,0" Height="20" HorizontalAlignment="Left"/>
+                                        <TextBox x:Name="level_seed" Width="150" VerticalAlignment="Top" TextWrapping="Wrap" Margin="448,35,0,0" Height="20" HorizontalAlignment="Left"/>
+                                        <CheckBox x:Name="spawn_animals" VerticalAlignment="Top" Margin="154,36,0,0" Height="20" HorizontalAlignment="Left" Content="{DynamicResource activate}"/>
+                                        <CheckBox x:Name="spawn_mobs" VerticalAlignment="Top" Margin="154,11,0,0" Height="20" HorizontalAlignment="Left" Content="{DynamicResource activate}"/>
+                                        <CheckBox x:Name="auto_save" VerticalAlignment="Top" Margin="154,62,0,0" Height="20" HorizontalAlignment="Left" Content="{DynamicResource activate}"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox x:Name="Game" Width="618" VerticalAlignment="Top" Margin="10,244,0,0" Height="138" HorizontalAlignment="Left" Header="{DynamicResource game}" BorderBrush="Black">
+                                    <Grid Margin="0,0,-2,-10">
+                                        <Label x:Name="label35" Width="207" VerticalAlignment="Top" Margin="215,31,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource difficulty}"/>
+                                        <Label x:Name="label36" Width="122" VerticalAlignment="Top" Margin="10,31,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource force_gamemode}"/>
+                                        <Label x:Name="label37" Width="207" VerticalAlignment="Top" Margin="215,5,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource fly}"/>
+                                        <Label x:Name="label38" Width="122" VerticalAlignment="Top" Margin="10,57,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource hardcore}"/>
+                                        <Label x:Name="label39" Width="122" VerticalAlignment="Top" Margin="10,83,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="Errungenschaften:"/>
+                                        <Label x:Name="label40" Width="207" VerticalAlignment="Top" RenderTransformOrigin="2.068,0.769" Margin="215,57,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource gamemode}"/>
+                                        <Label x:Name="label41" Width="122" VerticalAlignment="Top" Margin="10,5,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource pvp}"/>
+                                        <TextBox x:Name="gamemode" Width="171" VerticalAlignment="Top" TextWrapping="Wrap" Margin="427,63,0,0" Height="20" HorizontalAlignment="Left"/>
+                                        <TextBox x:Name="difficulty" Width="171" VerticalAlignment="Top" TextWrapping="Wrap" Margin="427,37,0,0" Height="20" HorizontalAlignment="Left"/>
+                                        <CheckBox x:Name="pvp" VerticalAlignment="Top" Margin="137,11,0,0" Height="20" HorizontalAlignment="Left" Content="{DynamicResource activate}"/>
+                                        <CheckBox x:Name="hardcore" VerticalAlignment="Top" Margin="137,63,0,0" Height="20" HorizontalAlignment="Left" Content="{DynamicResource activate}"/>
+                                        <CheckBox x:Name="allow_flight" VerticalAlignment="Top" Margin="427,11,0,0" Height="20" HorizontalAlignment="Left" Content="{DynamicResource activate}"/>
+                                        <CheckBox x:Name="announce_player_achievements" VerticalAlignment="Top" Margin="137,89,0,0" Height="20" HorizontalAlignment="Left" Content="{DynamicResource activate}"/>
+                                        <CheckBox x:Name="force_gamemode" VerticalAlignment="Top" Margin="137,37,0,0" Height="20" HorizontalAlignment="Left" Content="{DynamicResource activate}"/>
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox x:Name="Other" Width="618" VerticalAlignment="Top" Margin="10,387,0,0" Height="113" HorizontalAlignment="Left" Header="{DynamicResource other}" BorderBrush="Black">
+                                    <Grid Margin="0,0,-2,-10">
+                                        <Label x:Name="label42" Width="89" VerticalAlignment="Top" Margin="10,5,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource rcon}"/>
+                                        <Label x:Name="label43" Width="220" VerticalAlignment="Top" Margin="182,32,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource rcon_password}"/>
+                                        <Label x:Name="label44" Width="220" VerticalAlignment="Top" Margin="182,5,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource max_ram}"/>
+                                        <Label x:Name="label45" Width="89" VerticalAlignment="Top" Margin="10,30,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="{DynamicResource query}"/>
+                                        <Label x:Name="label46" Width="89" VerticalAlignment="Top" Margin="10,57,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Content="Whitelist:"/>
+                                        <TextBox x:Name="memory_limit" Width="191" VerticalAlignment="Top" TextWrapping="Wrap" Margin="407,9,0,0" Height="20" HorizontalAlignment="Left"/>
+                                        <TextBox x:Name="rcon_password" VerticalAlignment="Top" TextWrapping="Wrap" Margin="407,36,10,0" Height="20"/>
+                                        <CheckBox x:Name="enable_query" VerticalAlignment="Top" Margin="104,36,0,0" Height="20" HorizontalAlignment="Left" Content="{DynamicResource activate}"/>
+                                        <CheckBox x:Name="whitelist" VerticalAlignment="Top" Margin="104,63,0,0" Height="20" HorizontalAlignment="Left" Content="{DynamicResource activate}"/>
+                                        <CheckBox x:Name="enable_rcon" VerticalAlignment="Top" Margin="104,11,0,0" Height="20" HorizontalAlignment="Left" Content="{DynamicResource activate}"/>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+
+                    <Label x:Name="Header_Copy2" Content="{DynamicResource header_settings}" FontSize="14.667" Background="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" FontWeight="Bold" Foreground="White" Height="30" VerticalAlignment="Top"/>
+                    <Label x:Name="SaveWarning" Content="{DynamicResource txt_save_server_running}" Margin="0,0,175,0" VerticalContentAlignment="Center" Height="35" VerticalAlignment="Bottom" Visibility="Hidden"/>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+        <StatusBar VerticalAlignment="Bottom" Margin="160,0,0,0" Height="30" Background="White">
+            <Label x:Name="status_online" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="Bold" Content="{DynamicResource offline}"/>
+            <Label x:Name="label2" Height="30" FontWeight="Bold" Content="{DynamicResource players}"/>
+            <Label x:Name="status_player_online" Content="" VerticalAlignment="Top"/>
+            <Label x:Name="label1" Content="/"/>
+            <Label x:Name="status_max_player" Content="" VerticalAlignment="Top"/>
+            <Label x:Name="label3" Margin="10,0,0,0" FontWeight="Bold" Content="{DynamicResource version}"/>
+            <Label x:Name="status_pm_version" VerticalAlignment="Top" HorizontalAlignment="Center" Content=""/>
+            <Label x:Name="label3_Copy1" Margin="10,0,0,0" FontWeight="Bold" Content="{DynamicResource motd}"/>
+            <Label x:Name="status_motd" VerticalAlignment="Top" HorizontalAlignment="Left" Content=""/>
+            <Label x:Name="label3_Copy" Height="30" FontWeight="Bold" Content="{DynamicResource latency}"/>
+            <Label x:Name="status_latency" Content="" HorizontalAlignment="Right"/>
+        </StatusBar>
+        <Button x:Name="StartServer" Width="80" VerticalAlignment="Bottom" Margin="0" Height="30" HorizontalAlignment="Left" Content="{DynamicResource start}" Click="StartServer_Click" Background="#FF00FF23"/>
+        <Button x:Name="StopServer" Width="80" VerticalAlignment="Bottom" Margin="80,0,0,0" IsEnabled="False" Height="30" HorizontalAlignment="Left" Content="{DynamicResource stop}" Click="StopServer_Click" Background="#FFF94230"/>
+    </Grid>
+</Grid>
+

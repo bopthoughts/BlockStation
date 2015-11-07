@@ -94,5 +94,17 @@ xmlns:system="clr-namespace:System;assembly=mscorlib">
     <system:String x:Key="txt_settings_update">Update alle:</system:String>
     <system:String x:Key="txt_settings_save_last_server">Letzten Server Ordner speichern:</system:String>
 
+    <system:String x:Key="header_settings">Einstellungen</system:String>
+    <system:String x:Key="header_overview">Übersicht</system:String>
+    <system:String x:Key="header_updates">Aktualisierungen</system:String>
+    <system:String x:Key="header_about">Info</system:String>
+    <system:String x:Key="header_console">Konsole</system:String>
+    <system:String x:Key="header_chat">Chat</system:String>
+    <system:String x:Key="header_player_management">Spieler Verwaltung</system:String>
+    <system:String x:Key="txt_save_server_running">Einstellungen können nicht geändert werden, wenn der Server online ist.</system:String>
+    <system:String x:Key="installed">Installiert</system:String>
+    <system:String x:Key="install">Installieren</system:String>
+    <system:String x:Key="message_to">Nachricht an:</system:String>
+
     <system:String x:Key="txt_dialog_language_info">Die Sprache wird beim nächsten Start komplett geändert.</system:String>
 </ResourceDictionary>

@@ -6,506 +6,260 @@ using System.Collections.Generic;
 using System.IO;
 using System.ComponentModel;
 using System.Windows.Data;
+using System.Windows.Documents;
+using Microsoft.Win32;
+using BlockStation.View;
+using BlockStation.gui;
 
 namespace BlockStation
 {
 
     public partial class MainWindow : Window
     {
-        bool ExitApp = false;
-
-        PocketMine_MP_Server server;
-        System.Timers.Timer updateTimer;
-
-        Player selectedplayer;
-
-        // Server Propteries
-        public string prop_server_name = "";
-        public string prop_server_port = "";
-        public string prop_max_players = "";
-        public string prop_motd = "";
-        public string prop_spawn_mobs = "";
-        public string prop_allow_flight = "";
-        public string prop_enable_query = "";
-        public string prop_enable_rcon = "";
-        public string prop_white_list = "";
-        public string prop_spawn_protection = "";
-        public string prop_level_name = "";
-        public string prop_generator_settings = "";
-        public string prop_announce_player_achievements = "";
-        public string prop_spawn_animals = "";
-        public string prop_difficulty = "";
-        public string prop_level_seed = "";
-        public string prop_pvp = "";
-        public string prop_memory_limit = "";
-        public string prop_rcon_password = "";
-        public string prop_auto_save = "";
-        public string prop_hardcore = "";
-        public string prop_force_gamemode = "";
-        public string prop_gamemode = "";
-        public string prop_level_type = "";
+        Update.Update u;
+        string ServerPfad;
+        public PocketMine_MP_Server server;
+        BackgroundWorker worker;
 
 
-        public MainWindow(PocketMine_MP_Server s)
+        public MainWindow()
         {
-            // GUI Stuff
             InitializeComponent();
             Utils.SetLanguage(this);
 
-            //Setzt den Server
-            server = s;
-
-            //Whitelist einstellungen laden
-            if (server.EnableWhitelist)
+            if (Properties.Settings.Default.SaveLastServer == true && Properties.Settings.Default.LastServerDir != "")
             {
-                ActivateWhitelist.IsEnabled = false;
-            }
-            else if(server.EnableWhitelist == false)
-            {
-                DeactivateWhitelist.IsEnabled = false;
+                ServerPfad = Properties.Settings.Default.LastServerDir;
+                textbox_server_dir.Text = Properties.Settings.Default.LastServerDir;
+                button_open.IsEnabled = true;
             }
 
+            Name.Content = Properties.App.Default.Name;
+            Version.Content = Properties.App.Default.Version;
+            Build.Content = Properties.App.Default.Build;
 
-            Whitelist.IsSynchronizedWithCurrentItem = true;
-            Whitelist.ItemsSource = server.Whitelist.getListData();
-            OPList.ItemsSource = server.OPList.getListData();
-            Whitelist.SelectionMode = SelectionMode.Single;
+            worker = new BackgroundWorker();
+            u = new Update.Update(worker);
 
-            PlayerListview.SelectionMode = SelectionMode.Single;
-
-            // Servereinstellungen laden
-            loadServerInfo();
-            loadServerProperties();
-
-            // Timer für updates
-            updateTimer = new System.Timers.Timer(Properties.Settings.Default.UpdateTimer);
-            updateTimer.AutoReset = true;
-            updateTimer.Elapsed += update;
-            updateTimer.Enabled = true;
-
-            refreshPlayerList();
-            server.ServerOutputChanged += receiveServerOutput;
-            server.ServerGetOnline += ServerGetOnline;
-            server.ServerGetOffline += ServerGetOffline;
-            server.PlayerJoinedServer += PlayerJoinedServer;
-            server.PlayerLeaveServer += PlayerLeaveServer;
-            server.NewChatMessage += NewChatMessage;
-            server.ServerCrash += ServerCrash;
-            server.ProcessStopped += ServerProcessStopped;
-            server.ServerStarted += ServerStarted;
+            if (App.UpdateMode)
+            {
+                ServerControl.Visibility = Visibility.Hidden;
+                u.InstallUpdate();
+            }
         }
 
-        private void ServerStarted(object sender, EventArgs e)
+        private void button1_Click(object sender, RoutedEventArgs e)
         {
-            Dispatcher.Invoke(new Action(() =>
-            {
-                StopServer.IsEnabled = true;
-                StartServer.IsEnabled = false;
-            }
-            ));
-            Console.WriteLine("Server ist gestartet");
-
+            System.Diagnostics.Process.Start("https://www.pocketmine.net/?lang=en");
         }
 
-        private void ServerProcessStopped(object sender, EventArgs e)
+        private void button_Click(object sender, RoutedEventArgs e)
         {
+            string Pfad = string.Empty;
 
-            Dispatcher.Invoke(new Action(() =>
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Filter = "PocketMine-MP.phar Datei|PocketMine-MP.phar";
+            if (openFileDialog1.ShowDialog() == true)
             {
-                //schaltet den durchgehenden online check aus.
-                StopServer.IsEnabled = false;
-                StartServer.IsEnabled = true;
-                loadServerInfo();
-
-
-                if (ExitApp == true)
+                Pfad = openFileDialog1.FileName;
+                int i = 0;
+                while (i < 18)
                 {
-                    Environment.Exit(0);
+                    Pfad = Pfad.Remove(Pfad.Length - 1, 1);
+                    i++;
                 }
+                if (Utils.checkServerFolder(Pfad))
+                {
+                    textbox_server_dir.Text = Pfad;
+                    ServerPfad = Pfad;
+                    button_open.IsEnabled = true;
+                }
+                else
+                {
+                    MessageBox.Show("PocketMine Server kann nicht geöffnet werden, da eine benötigte\nDatei fehlt.\n\nFehlende Datei: \"" + Utils.getMissingFile(Pfad) + "\"", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
             }
-            ));
-            Console.WriteLine("Serverprozess wurde gestoppt.");
-        }
-
-        private void ServerCrash(object sender, EventArgs e)
-        {
-            MessageBox.Show("Server crash");
-        }
-
-        private void PlayerLeaveServer(object sender, EventArgs e)
-        {
-
 
         }
 
-        private void PlayerJoinedServer(object sender, EventArgs e)
+        private void button2_Click(object sender, RoutedEventArgs e)
         {
+            PocketMine_MP_Server server = new PocketMine_MP_Server(ServerPfad);
 
-        }
+            Properties.Settings.Default.LastServerDir = ServerPfad;
+            Properties.Settings.Default.Save();
 
-        private void receiveServerOutput(object sender, EventArgs e)
-        {
-            Dispatcher.Invoke(new Action(() =>
+            ServerTab st = new ServerTab(server);
+            st.InitializeComponent();
+
+            TabItem new_tab = new TabItem();
+            new_tab.Content = st;
+            new_tab.Header = server.Name;
+
+            ServerControl.Items.Add(new_tab);
+
+            timebox.Text = Properties.Settings.Default.UpdateTimer.ToString();
+
+            switch (Properties.Settings.Default.Language.ToString())
             {
-                ServerOutput.Text = server.ServerOutput;
+                case "de": rbDeutsch.IsChecked = true; break;
+                case "en": rbEnglisch.IsChecked = true; break;
+                case "pt": rbPortugisisch.IsChecked = true; break;
             }
-            ));
-        }
-
-        private void StartServer_Click(object sender, RoutedEventArgs e)
-        {
-            server.Start();
-
-            StopServer.IsEnabled = false;
-            StartServer.IsEnabled = false;
-
-            HelpCommand.IsEnabled = false;
-        }
-
-        private void EnterCommand_Click(object sender, RoutedEventArgs e)
-        {
-            server.SendCommand(CommandBar.Text);
-            CommandBar.Text = "";
-        }
-
-        private void MainWindow1_Closed(object sender, CancelEventArgs e)
-        {
-            if(server.ServerProcess)
+            switch (Properties.Settings.Default.SaveLastServer)
             {
-                server.Stop();
-                ExitApp = true;
-                e.Cancel = true;
+                case true: savelastdir.IsChecked = true; break;
+                case false: savelastdir.IsChecked = false; break;
+            }
+        }
+
+        private void Info_Click(object sender, RoutedEventArgs e)
+        {
+            Info info = new Info();
+            info.InitializeComponent();
+            info.version.Content = Properties.App.Default.Version + " " + Properties.App.Default.Type;
+            info.build.Content = Properties.App.Default.Build;
+            info.ShowDialog();
+        }
+
+        private void button2_Click_1(object sender, RoutedEventArgs e)
+        {
+            Settings s = new Settings();
+            s.InitializeComponent();
+            s.ShowDialog();
+            Utils.SetLanguage(this);
+        }
+
+        private void CloseTab_Click(object sender, RoutedEventArgs e)
+        {
+            ServerControl.Items.Remove(ServerControl.SelectedItem);
+            ServerControl.SelectedItem = MainTab;
+        }
+
+        private void ServerControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ServerControl.SelectedItem == MainTab)
+                CloseTab.Visibility = Visibility.Hidden;
+            else
+                CloseTab.Visibility = Visibility.Visible;
+        }
+
+        private void OpenTab_Click(object sender, RoutedEventArgs e)
+        {
+            ServerControl.SelectedItem = MainTab;
+        }
+
+        private void OpenWebsite_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/haecker-felix/BlockStation");
+        }
+
+        private void ReportError_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/haecker-felix/BlockStation/issues/new");
+        }
+
+        private void SaveSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.UpdateTimer = int.Parse(timebox.Text);
+
+            if (rbDeutsch.IsChecked == true)
+            {
+                Properties.Settings.Default.Language = "de";
+            }
+            if (rbEnglisch.IsChecked == true)
+            {
+                Properties.Settings.Default.Language = "en";
+            }
+            if (rbPortugisisch.IsChecked == true)
+            {
+                Properties.Settings.Default.Language = "pt";
+            }
+
+
+            if ((bool)savelastdir.IsChecked)
+            {
+                Properties.Settings.Default.SaveLastServer = true;
+            }
+            else
+            {
+                Properties.Settings.Default.SaveLastServer = false;
+            }
+            Properties.Settings.Default.Save();
+            this.Close();
+        }
+
+        private void button_Copy_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void SearchUpdatesClick(object sender, RoutedEventArgs e)
+        {
+
+            SearchForUpdates.IsEnabled = false;
+
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = false;
+            worker.DoWork += new DoWorkEventHandler(u.Search);
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(UpdateSearchIsFinish);
+            worker.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
+            worker.RunWorkerAsync();
+        }
+
+        private void UpdateSearchIsFinish(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ProgressBar.Value = 0;
+            if (u.update[1])
+            {
+                StableBuild.Content = u.build[1];
+                StableChangeLog.Text = u.changelog[1];
+                StableVersion.Content = u.version[1];
+            }
+            if (u.update[2])
+            {
+                UnstableBuild.Content = u.build[2];
+                UnstableChangeLog.Text = u.changelog[2];
+                UnstableVersion.Content = u.version[2];
+            }
+            if (u.update[3])
+            {
+                DevelopmentBuild.Content = u.build[3];
+                DevelopmentChangeLog.Text = u.changelog[3];
+                DevelopmentVersion.Content = u.version[3];
+            }
+            UpdateChannel_SelectionChanged(null, null);
+        }
+
+        void ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            // The progress percentage is a property of e
+            ProgressBar.Value = e.ProgressPercentage;
+        }
+
+        private void UpdateChannel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (u.update[UpdateChannel.SelectedIndex+1])
+            {
+                InstallVersion.IsEnabled = true;
+            }
+            else
+            {
+                InstallVersion.IsEnabled = false;
             }
             
         }
 
-        private void update(Object source, ElapsedEventArgs e)
+        private void InstallVersion_Click(object sender, RoutedEventArgs e)
         {
-            loadServerInfo();
+            u.channel = UpdateChannel.SelectedIndex + 1;
+
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = false;
+            worker.DoWork += new DoWorkEventHandler(u.PrepareUpdate);
+            worker.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
+            worker.RunWorkerAsync();
         }
-
-        private void ServerGetOnline(object sender, EventArgs e)
-        {
-            Dispatcher.Invoke(new Action(() =>
-            {
-                status_online.Content = "Online";
-
-                EnterCommand.IsEnabled = true;
-                CommandBar.IsEnabled = true;
-                HelpCommand.IsEnabled = true;
-
-                SendMessage.IsEnabled = true;
-                MessageBar.IsEnabled = true;
-            }
-            ));
-        }
-
-        private void ServerGetOffline(object sender, EventArgs e)
-        {
-            Dispatcher.Invoke(new Action(() =>
-            {
-                status_online.Content = "Offline";
-                EnterCommand.IsEnabled = false;
-                CommandBar.IsEnabled = false;
-                HelpCommand.IsEnabled = false;
-
-                SendMessage.IsEnabled = false;
-                MessageBar.IsEnabled = false;
-            }
-            ));
-        }
-
-        private void NewChatMessage(object sender, EventArgs e)
-        {
-            Dispatcher.Invoke(new Action(() =>
-            {
-                MessageOutput.Text += server.message[1] + ":" + server.message[2] + "\n";
-            }
-            ));
-        }
-
-        private void loadServerInfo()
-        {
-            try
-            {
-                Dispatcher.Invoke(new Action(() =>
-                {
-                    this.Title = "BlockStation - " + server.Name;
-
-                    status_max_player.Content = server.MaxPlayers;
-                    status_motd.Content = server.Motd;
-                    status_player_online.Content = server.OnlinePlayers;
-                    status_pm_version.Content = server.Version;
-                    status_latency.Content = server.Latency;
-
-                    refreshPlayerList();
-                }
-                ));
-            }
-            catch(Exception)
-            {
-                //
-            }
-        }
-
-        private void loadServerProperties()
-        {
-            try
-            {
-                level_type.Text = server.WorldType;
-                gamemode.Text = server.Gamemode.ToString();
-                server_name.Text = server.Name;
-                enable_query.IsChecked = server.EnableQuery;
-                whitelist.IsChecked = server.EnableWhitelist;
-                hardcore.IsChecked = server.EnableHardcore;
-                auto_save.IsChecked = server.EnableAutoSave;
-                spawn_mobs.IsChecked = server.SpawnMobs;
-                level_seed.Text = server.WorldSeed;
-                difficulty.Text = server.Difficulty.ToString();
-                spawn_animals.IsChecked = server.SpawnAnimals;
-                enable_rcon.IsChecked = server.EnableRCON;
-                rcon_password.Text = server.RCONPassword;
-                motd.Text = server.Motd;
-                generator_settings.Text = server.GeneratorSettings;
-                level_name.Text = server.WorldName;
-                spawn_protection.Text = server.SpawnProtectionRadius.ToString();
-                force_gamemode.IsChecked = server.ForceGamemode;
-                memory_limit.Text = server.MemoryLimit.ToString();
-                server_port.Text = server.Port.ToString();
-                pvp.IsChecked = server.EnablePVP;
-                max_players.Text = server.MaxPlayers.ToString();
-                announce_player_achievements.IsChecked = server.EnablePlayerAchievements;
-                allow_flight.IsChecked = server.AllowFlight;
-
-            }
-            catch(Exception)
-            {
-                server.WriteServerSettings();
-                server.ReadServerSettings();
-                loadServerProperties();
-                Console.WriteLine("Incomplete server.properties file");
-            }
-
-        }
-
-        private void ServerOutput_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ServerOutput.ScrollToEnd();
-        }
-
-        private void Help_Click(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("http://minecraft-de.gamepedia.com/Server.properties");
-        }
-
-        private void Apply_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                server.Name = server_name.Text;
-                server.Port = int.Parse(server_port.Text);
-                server.Motd = motd.Text;
-                server.MaxPlayers = int.Parse(max_players.Text);
-                server.AllowFlight = (bool)allow_flight.IsChecked;
-                server.EnablePlayerAchievements = (bool)announce_player_achievements.IsChecked;
-                server.EnablePVP = (bool)pvp.IsChecked;
-                server.MemoryLimit = memory_limit.Text;
-                server.ForceGamemode = (bool)force_gamemode.IsChecked;
-                server.SpawnProtectionRadius = int.Parse(spawn_protection.Text);
-                server.WorldName = level_name.Text;
-                server.GeneratorSettings = generator_settings.Text;
-                server.RCONPassword = rcon_password.Text;
-                server.EnableRCON = (bool)enable_rcon.IsChecked;
-                server.SpawnAnimals = (bool)spawn_animals.IsChecked;
-                server.Difficulty = int.Parse(difficulty.Text);
-                server.WorldSeed = level_seed.Text;
-                server.SpawnMobs = (bool)spawn_mobs.IsChecked;
-                server.EnableAutoSave = (bool)auto_save.IsChecked;
-                server.EnableHardcore = (bool)hardcore.IsChecked;
-                server.EnableWhitelist = (bool)whitelist.IsChecked;
-                server.EnableQuery = (bool)enable_query.IsChecked;
-                server.Gamemode = int.Parse(gamemode.Text);
-                server.WorldType = level_type.Text;
-
-
-                if (server.Online)
-                {
-                    loadServerProperties();
-                    server.Stop();
-                    server.Start();
-                    loadServerProperties();
-                }
-            }
-            catch (System.FormatException)
-            {
-                Utils.ShowInvalidFieldWarning();
-                loadServerProperties();
-            }
-
-        }
-
-        private void StopServer_Click(object sender, RoutedEventArgs e)
-        {
-            server.Stop();
-            StopServer.IsEnabled = false;
-            StartServer.IsEnabled = false;
-        }
-
-        private void DeactivateWhitelist_Click(object sender, RoutedEventArgs e)
-        {
-            server.EnableWhitelist = false;
-            server.SendCommand("whitelist off");
-            loadServerProperties();
-            ActivateWhitelist.IsEnabled = true;
-            DeactivateWhitelist.IsEnabled = false;
-
-        }
-
-        private void ActivateWhitelist_Click(object sender, RoutedEventArgs e)
-        {
-            server.EnableWhitelist = true;
-            server.SendCommand("whitelist on");
-            loadServerProperties();
-            ActivateWhitelist.IsEnabled = false;
-            DeactivateWhitelist.IsEnabled = true;
-        }
-
-        private void HelpCommand_Click(object sender, RoutedEventArgs e)
-        {
-            server.SendCommand("help");
-        }
-
-        private void AddPlayerToWhitelist_Click(object sender, RoutedEventArgs e)
-        {
-            if(AddPlayerToWhitelistName.Text != "")
-            {
-                server.AddPlayerToWhitelist(AddPlayerToWhitelistName.Text);
-                Whitelist.Items.Refresh();
-                refreshPlayerList();
-                AddPlayerToWhitelistName.Text = "";
-            }
-
-        }
-
-        private void RemovePlayerFromWhitelist_Click(object sender, RoutedEventArgs e)
-        {
-            if(Whitelist.SelectedValue != null)
-            {
-                server.RemovePlayerFromWhitelist(Whitelist.SelectedValue.ToString());
-                Whitelist.Items.Refresh();
-                refreshPlayerList();
-            }
-        }
-
-        private void PlayerListview_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if(PlayerListview.SelectedItem != null)
-            {
-                BanPlayer.IsEnabled = false;
-                KickPlayer.IsEnabled = false;
-
-                selectedplayer = server.getPlayer(PlayerListview.SelectedItem.ToString());
-
-                if (selectedplayer.Online)
-                {
-                    KickPlayer.IsEnabled = true;
-                }
-
-                if (server.Online)
-                {
-                    BanPlayer.IsEnabled = true;
-                    PardonPlayer.IsEnabled = true;
-                }
-                SelectedPlayer.Content = selectedplayer.Name;
-
-            }
-
-        }
-
-        private void refreshPlayerList()
-        {
-            PlayerListview.Items.Clear();
-
-            var list = new GridView();
-            list.Columns.Add(new GridViewColumn
-             {
-                 Header = "Online",
-                 DisplayMemberBinding = new Binding("Online")
-             });
-            list.Columns.Add(new GridViewColumn
-            {
-                Header = "IGN",
-                DisplayMemberBinding = new Binding("Name")
-            });
-            list.Columns.Add(new GridViewColumn
-            {
-                Header = "-",
-                DisplayMemberBinding = new Binding("LastOnline")
-            });
-            list.Columns.Add(new GridViewColumn
-            {
-                Header = "+",
-                DisplayMemberBinding = new Binding("FirstTimeOnline")
-            });
-
-
-            this.PlayerListview.View = list;
-
-            foreach (Player p in server.PlayerIndex.Values)
-            {
-                PlayerListview.Items.Add(p);
-            }
-
-
-        }
-
-        private void SendCommand_Click(object sender, RoutedEventArgs e)
-        {
-            if(MessageBar.Text != "")
-            server.SendCommand("say " + MessageBar.Text);
-            MessageBar.Text = "";
-        }
-
-        private void MessageBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            MessageOutput.ScrollToEnd();
-        }
-
-        private void AddPlayerToOPList_Click(object sender, RoutedEventArgs e)
-        {
-            if (AddPlayerToOPListName.Text != "")
-            {
-                server.AddPlayerToOPList(AddPlayerToOPListName.Text);
-                OPList.Items.Refresh();
-                refreshPlayerList();
-                AddPlayerToOPListName.Text = "";
-            }
-        }
-
-        private void RemovePlayerFromOPList_Click(object sender, RoutedEventArgs e)
-        {
-            if (OPList.SelectedValue != null)
-            {
-                server.RemovePlayerFromOPList(OPList.SelectedValue.ToString());
-                OPList.Items.Refresh();
-                refreshPlayerList();
-            }
-        }
-
-        private void KickPlayer_Click(object sender, RoutedEventArgs e)
-        {
-            server.KickPlayer(selectedplayer);
-        }
-
-        private void BanPlayer_Click(object sender, RoutedEventArgs e)
-        {
-            server.BanPlayer(selectedplayer);
-        }
-
-        private void PardonPlayer_Click(object sender, RoutedEventArgs e)
-        {
-            server.PardonPlayer(selectedplayer);
-        }
-
     }
 }
