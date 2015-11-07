@@ -46,6 +46,15 @@ namespace BlockStation
                 ServerControl.Visibility = Visibility.Hidden;
                 u.InstallUpdate();
             }
+
+            savelastdir.IsChecked = Properties.Settings.Default.SaveLastServer;
+            timebox.Text = Properties.Settings.Default.UpdateTimer.ToString();
+            switch (Properties.Settings.Default.Language)
+            {
+                case "de": rbDeutsch.IsChecked = true; break;
+                case "en": rbEnglisch.IsChecked = true; break;
+                case "pt": rbPortugisisch.IsChecked = true; break;
+            }
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
@@ -162,32 +171,40 @@ namespace BlockStation
 
         private void SaveSettings_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.UpdateTimer = int.Parse(timebox.Text);
+            try
+            {
+                Properties.Settings.Default.UpdateTimer = int.Parse(timebox.Text);
 
-            if (rbDeutsch.IsChecked == true)
-            {
-                Properties.Settings.Default.Language = "de";
-            }
-            if (rbEnglisch.IsChecked == true)
-            {
-                Properties.Settings.Default.Language = "en";
-            }
-            if (rbPortugisisch.IsChecked == true)
-            {
-                Properties.Settings.Default.Language = "pt";
-            }
+                if (rbDeutsch.IsChecked == true)
+                {
+                    Properties.Settings.Default.Language = "de";
+                }
+                if (rbEnglisch.IsChecked == true)
+                {
+                    Properties.Settings.Default.Language = "en";
+                }
+                if (rbPortugisisch.IsChecked == true)
+                {
+                    Properties.Settings.Default.Language = "pt";
+                }
 
 
-            if ((bool)savelastdir.IsChecked)
-            {
-                Properties.Settings.Default.SaveLastServer = true;
+                if ((bool)savelastdir.IsChecked)
+                {
+                    Properties.Settings.Default.SaveLastServer = true;
+                }
+                else
+                {
+                    Properties.Settings.Default.SaveLastServer = false;
+                }
+                Properties.Settings.Default.Save();
+                this.InitializeComponent();
             }
-            else
+            catch
             {
-                Properties.Settings.Default.SaveLastServer = false;
+
             }
-            Properties.Settings.Default.Save();
-            this.Close();
+            
         }
 
         private void button_Copy_Click(object sender, RoutedEventArgs e)
