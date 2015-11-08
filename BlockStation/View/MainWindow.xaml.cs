@@ -40,12 +40,6 @@ namespace BlockStation
             worker = new BackgroundWorker();
             u = new Update.Update(worker);
 
-            if (App.UpdateMode)
-            {
-                ServerControl.Visibility = Visibility.Hidden;
-                u.InstallUpdate();
-            }
-
             savelastdir.IsChecked = Properties.Settings.Default.SaveLastServer;
             timebox.Text = Properties.Settings.Default.UpdateTimer.ToString();
             switch (Properties.Settings.Default.Language)
@@ -53,6 +47,10 @@ namespace BlockStation
                 case "de": rbDeutsch.IsChecked = true; break;
                 case "en": rbEnglisch.IsChecked = true; break;
                 case "pt": rbPortugisisch.IsChecked = true; break;
+            }
+            if (App.UpdateMode)
+            {
+                ServerControl.Visibility = Visibility.Hidden;
             }
         }
 
@@ -260,6 +258,15 @@ namespace BlockStation
             worker.DoWork += new DoWorkEventHandler(u.PrepareUpdate);
             worker.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
             worker.RunWorkerAsync();
+        }
+
+        private void MainWindow1_Activated(object sender, EventArgs e)
+        {
+            if (App.UpdateMode)
+            {
+                ServerControl.Visibility = Visibility.Hidden;
+                u.InstallUpdate();
+            }
         }
     }
 }

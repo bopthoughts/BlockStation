@@ -147,7 +147,12 @@ namespace BlockStation.Update
             System.IO.File.Move(Utils.ProgramFilesx86() + "\\BlockStation\\BlockStation.exe", Utils.ProgramFilesx86() + "\\BlockStation\\BlockStation_old.exe");
             System.IO.File.Move(System.IO.Path.GetTempPath() + "BlockStation_new.exe", Utils.ProgramFilesx86() + "\\BlockStation\\BlockStation.exe");
 
-            // Neustarten mit admin rechte im Update modus
+            System.IO.File.Delete(System.IO.Path.GetTempPath() + "BlockStation_new.exe");
+            System.IO.File.Delete(Utils.ProgramFilesx86() + "\\BlockStation\\BlockStation_old.exe");
+
+            MessageBox.Show("New version has been successfully installed.", "Update", MessageBoxButton.OK, MessageBoxImage.Information);
+ 
+            // Neue Version starten
             ProcessStartInfo proc = new ProcessStartInfo();
             proc.UseShellExecute = true;
             proc.WorkingDirectory = Environment.CurrentDirectory;

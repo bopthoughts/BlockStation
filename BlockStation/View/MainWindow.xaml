@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BlockStation"
         mc:Ignorable="d"
-        Title="BlockStation "  Width="645.5" Height="529.3" Icon="/BlockStation;component/Resource/Image/blockstation_logo.ico" MinWidth="750" MinHeight="400" >
+        Title="BlockStation "  Width="645.5" Height="529.3" Icon="/BlockStation;component/Resource/Image/blockstation_logo.ico" MinWidth="750" MinHeight="400" Activated="MainWindow1_Activated" >
 
 
 

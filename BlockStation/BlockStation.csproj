@@ -61,7 +61,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -125,6 +125,12 @@
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <DebugSymbols>true</DebugSymbols>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>19BEFA100E7305F12C5A8E295CFB5A4A33AE0662</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>BlockStation_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -238,6 +244,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="blockstation.update" />
+    <None Include="BlockStation_TemporaryKey.pfx" />
     <None Include="key.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\App.settings">
